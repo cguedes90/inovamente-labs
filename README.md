@@ -1,13 +1,38 @@
-# InovaMente Labs - Sistema de Gestão de Clientes e Tickets
+# 🚀 InovaMente Labs - Sistema Completo de Gestão
 
-Sistema completo de gestão de clientes e tickets de suporte desenvolvido com Next.js, TypeScript, PostgreSQL e Tailwind CSS.
+Uma plataforma completa de gestão empresarial construída com **Next.js 15**, **TypeScript**, **Neon PostgreSQL** e **Tailwind CSS**.
 
-## 🚀 Funcionalidades
+## ✨ Funcionalidades Principais
 
-### Portal do Cliente (/chamados)
-- ✅ Sistema de autenticação JWT
-- ✅ Dashboard de tickets personalizado
-- ✅ Criação e acompanhamento de chamados
+### 👥 **Portal do Cliente**
+- 🎫 **Sistema de Tickets** - Criação e acompanhamento de chamados
+- 🔐 **Autenticação Segura** - Login com JWT
+- 📱 **Interface Responsiva** - Funciona em todos os dispositivos
+- 📊 **Dashboard Personalizado** - Visão geral dos chamados
+- 💬 **Sistema de Respostas** - Comunicação direta com suporte
+
+### 👨‍💼 **Painel Administrativo**
+- 📈 **Dashboard Completo** - Métricas e estatísticas
+- 👥 **Gestão de Clientes** - CRUD completo de usuários
+- 🎫 **Gestão de Tickets** - Visualização e resposta a chamados
+- 📝 **Sistema de Blog** - CMS completo para posts
+- 🤖 **Gestão de Chatbot** - Visualização de conversas e leads
+- 📞 **Gestão de Contatos** - Organização por assunto
+- 🔒 **Acesso Restrito** - Autenticação administrativa
+
+### 🤖 **Chatbot Inteligente**
+- 💬 **Captura de Leads** - Coleta automática de dados
+- 📋 **Fluxo Conversacional** - Interação natural
+- 💾 **Persistência de Dados** - Todas as conversas salvas
+- 📊 **Analytics** - Métricas de engajamento
+
+### 📝 **Sistema de Blog**
+- ✏️ **Editor Completo** - Criação e edição de posts
+- 🎯 **SEO Otimizado** - Meta tags e URLs amigáveis
+- 📷 **Suporte a Imagens** - Upload e emojis
+- 🏷️ **Sistema de Categorias** - Organização por temas
+- ⏱️ **Tempo de Leitura** - Cálculo automático
+- 📱 **Design Responsivo** - Perfeito em todos os dispositivos
 - ✅ Filtros por status e categoria
 - ✅ Interface responsiva e intuitiva
 
