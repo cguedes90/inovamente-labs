@@ -299,10 +299,7 @@ export default function AdminPage() {
               Credenciais de Teste:
             </h3>
             <p style={{color: 'rgba(255, 255, 255, 0.8)', fontSize: '14px', margin: '5px 0'}}>
-              Usuário: admin
-            </p>
-            <p style={{color: 'rgba(255, 255, 255, 0.8)', fontSize: '14px', margin: '5px 0'}}>
-              Senha: admin123
+              Acesso administrativo
             </p>
           </div>
         </div>

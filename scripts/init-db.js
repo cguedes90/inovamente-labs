@@ -87,13 +87,13 @@ async function initDatabase() {
     console.log('✅ Tabela chat_messages criada');
 
     // Inserir cliente de teste
-    const hashedPassword = await bcrypt.hash('123456', 12);
+    const hashedPassword = await bcrypt.hash('ClienteSeguro2025!', 12);
     await client.query(`
       INSERT INTO clients (name, email, password, company, phone, status)
       VALUES ('Cliente Teste', 'cliente@teste.com', $1, 'Empresa Teste', '(11) 99999-9999', 'active')
       ON CONFLICT (email) DO NOTHING;
     `, [hashedPassword]);
-    console.log('✅ Cliente de teste criado (cliente@teste.com / 123456)');
+    console.log('✅ Cliente de teste criado');
 
     // Criar alguns tickets de exemplo
     const clientResult = await client.query('SELECT id FROM clients WHERE email = $1', ['cliente@teste.com']);
@@ -112,9 +112,9 @@ async function initDatabase() {
     }
 
     console.log('🎉 Banco de dados configurado com sucesso!');
-    console.log('📋 Credenciais de teste:');
-    console.log('   Admin: admin / admin123 (acesso em /admin)');
-    console.log('   Cliente: cliente@teste.com / 123456 (acesso em /chamados)');
+    console.log('📋 Sistema pronto para uso!');
+    console.log('   Acesse /admin para painel administrativo');
+    console.log('   Acesse /chamados para portal do cliente');
 
   } catch (error) {
     console.error('❌ Erro ao configurar banco de dados:', error);

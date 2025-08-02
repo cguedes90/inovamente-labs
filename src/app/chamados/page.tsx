@@ -264,10 +264,7 @@ export default function ClientPortalPage() {
               Credenciais de Teste:
             </h3>
             <p style={{color: 'rgba(255, 255, 255, 0.8)', fontSize: '14px', margin: '5px 0'}}>
-              Email: cliente@exemplo.com
-            </p>
-            <p style={{color: 'rgba(255, 255, 255, 0.8)', fontSize: '14px', margin: '5px 0'}}>
-              Senha: 123456
+              Faça login com suas credenciais
             </p>
           </div>
         </div>

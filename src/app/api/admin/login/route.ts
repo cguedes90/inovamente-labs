@@ -15,7 +15,7 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    if (password !== 'admin123') {
+    if (password !== 'InovaAdmin2025!') {
       return NextResponse.json(
         { message: 'Credenciais inválidas' },
         { status: 401 }
