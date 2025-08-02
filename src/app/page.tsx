@@ -1,6 +1,24 @@
+import { Metadata } from 'next'
 import Link from 'next/link'
 import Navbar from '@/components/Navbar'
 import Chatbot from '@/components/Chatbot'
+
+export const metadata: Metadata = {
+  title: 'InovaMente Labs - Página Inicial | Soluções Tecnológicas Inovadoras',
+  description: 'Bem-vindo à InovaMente Labs. Oferecemos portal de clientes, sistema de tickets, desenvolvimento de software e soluções tecnológicas inovadoras. Acesse nossos serviços agora!',
+  openGraph: {
+    title: 'InovaMente Labs - Soluções Tecnológicas Inovadoras',
+    description: 'Portal de clientes, sistema de tickets e desenvolvimento de software. Soluções tecnológicas completas para sua empresa.',
+    images: [
+      {
+        url: '/og-image.svg',
+        width: 1200,
+        height: 630,
+        alt: 'InovaMente Labs - Portal de entrada',
+      }
+    ],
+  },
+}
 
 export default function HomePage() {
   return (
