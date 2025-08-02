@@ -4,12 +4,13 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "prisma generate && next build",
     "start": "next start",
     "lint": "next lint",
     "db:push": "node scripts/init-db.js",
     "check": "tsc --noEmit",
-    "deploy": "git add . && git commit -m 'Deploy update' && git push origin main"
+    "deploy": "git add . && git commit -m 'Deploy update' && git push origin main",
+    "postinstall": "prisma generate"
   },
   "keywords": [
     "nextjs",
