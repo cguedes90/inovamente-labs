@@ -313,6 +313,21 @@ export default function AdminPage() {
 // Componente do Dashboard do Admin
 function AdminDashboard({ onLogout }: { onLogout: () => void }) {
   const [activeTab, setActiveTab] = useState('dashboard');
+  const [notification, setNotification] = useState<{ message: string; type: 'success' | 'error' } | null>(null);
+
+  // Auto-remove notification after 3 seconds
+  useEffect(() => {
+    if (notification) {
+      const timer = setTimeout(() => {
+        setNotification(null);
+      }, 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [notification]);
+
+  const showNotification = (message: string, type: 'success' | 'error') => {
+    setNotification({ message, type });
+  };
 
   const tabs = [
     { key: 'dashboard', label: 'Dashboard', icon: '📊' },
@@ -361,6 +376,17 @@ function AdminDashboard({ onLogout }: { onLogout: () => void }) {
         </div>
       </header>
 
+      {/* Notification */}
+      {notification && (
+        <div className={`fixed top-4 right-4 z-50 px-6 py-3 rounded-lg shadow-lg ${
+          notification.type === 'success' 
+            ? 'bg-green-500 text-white' 
+            : 'bg-red-500 text-white'
+        }`}>
+          {notification.message}
+        </div>
+      )}
+
       {/* Navigation Moderna */}
       <nav className="bg-white/5 backdrop-blur-sm border-b border-white/10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -387,8 +413,8 @@ function AdminDashboard({ onLogout }: { onLogout: () => void }) {
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="bg-white/10 backdrop-blur-md rounded-2xl p-6 border border-white/20 min-h-[600px]">
           {activeTab === 'dashboard' && <DashboardContent />}
-          {activeTab === 'clients' && <ClientsContent />}
-          {activeTab === 'tickets' && <TicketsContent />}
+          {activeTab === 'clients' && <ClientsContent showNotification={showNotification} />}
+          {activeTab === 'tickets' && <TicketsContent showNotification={showNotification} />}
           {activeTab === 'blog' && <BlogContent />}
           {activeTab === 'chatbot' && <ChatbotContent />}
           {activeTab === 'contacts' && <ContactsContent />}
@@ -503,38 +529,92 @@ function DashboardContent() {
   );
 }
 
-function ClientsContent() {
+function ClientsContent({ showNotification }: { showNotification: (message: string, type: 'success' | 'error') => void }) {
   const [clients, setClients] = useState<Client[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState('');
+  const [showNewClientModal, setShowNewClientModal] = useState(false);
+  const [isCreatingClient, setIsCreatingClient] = useState(false);
+  const [newClientData, setNewClientData] = useState({
+    name: '',
+    email: '',
+    password: '',
+    company: '',
+    phone: ''
+  });
 
   useEffect(() => {
-    async function fetchClients() {
-      try {
-        const token = localStorage.getItem('admin_token');
-        
-        const response = await fetch('/api/clients', {
-          headers: {
-            'Authorization': `Bearer ${token}`
-          }
-        });
-        
-        if (!response.ok) {
-          throw new Error('Erro ao carregar clientes');
-        }
-        
-        const data = await response.json();
-        setClients(data);
-      } catch (error: any) {
-        setError(error.message || 'Erro ao carregar clientes');
-        console.error('Erro ao carregar clientes:', error);
-      } finally {
-        setIsLoading(false);
-      }
-    }
-
     fetchClients();
   }, []);
+
+  const fetchClients = async () => {
+    try {
+      const token = localStorage.getItem('admin_token');
+      
+      const response = await fetch('/api/clients', {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+      
+      if (!response.ok) {
+        throw new Error('Erro ao carregar clientes');
+      }
+      
+      const data = await response.json();
+      setClients(data);
+    } catch (error: any) {
+      setError(error.message || 'Erro ao carregar clientes');
+      console.error('Erro ao carregar clientes:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleCreateClient = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    try {
+      setIsCreatingClient(true);
+      const token = localStorage.getItem('admin_token');
+      
+      const response = await fetch('/api/clients', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify(newClientData)
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Erro ao criar cliente');
+      }
+
+      const result = await response.json();
+      
+      // Atualizar lista de clientes
+      await fetchClients();
+      
+      // Resetar formulário e fechar modal
+      setNewClientData({
+        name: '',
+        email: '',
+        password: '',
+        company: '',
+        phone: ''
+      });
+      setShowNewClientModal(false);
+      
+      showNotification('Cliente criado com sucesso!', 'success');
+    } catch (error: any) {
+      console.error('Erro ao criar cliente:', error);
+      showNotification(error.message || 'Erro ao criar cliente', 'error');
+    } finally {
+      setIsCreatingClient(false);
+    }
+  };
 
   if (isLoading) {
     return (
@@ -574,10 +654,109 @@ function ClientsContent() {
     <div>
       <div className="flex justify-between items-center mb-8">
         <h1 className="text-3xl font-bold text-gray-900">Gerenciar Clientes</h1>
-        <button className="btn-admin">
-          Novo Cliente
+        <button 
+          onClick={() => setShowNewClientModal(true)}
+          className="btn-admin bg-admin-600 hover:bg-admin-700 text-white px-6 py-2 rounded-lg transition-colors"
+        >
+          + Novo Cliente
         </button>
       </div>
+
+      {/* Modal para Novo Cliente */}
+      {showNewClientModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg p-6 w-full max-w-md mx-4">
+            <h2 className="text-xl font-bold text-gray-900 mb-4">Criar Novo Cliente</h2>
+            
+            <form onSubmit={handleCreateClient} className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Nome *
+                </label>
+                <input
+                  type="text"
+                  required
+                  value={newClientData.name}
+                  onChange={(e) => setNewClientData(prev => ({ ...prev, name: e.target.value }))}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-admin-500 focus:border-admin-500"
+                  placeholder="Nome completo"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Email *
+                </label>
+                <input
+                  type="email"
+                  required
+                  value={newClientData.email}
+                  onChange={(e) => setNewClientData(prev => ({ ...prev, email: e.target.value }))}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-admin-500 focus:border-admin-500"
+                  placeholder="cliente@exemplo.com"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Senha *
+                </label>
+                <input
+                  type="password"
+                  required
+                  value={newClientData.password}
+                  onChange={(e) => setNewClientData(prev => ({ ...prev, password: e.target.value }))}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-admin-500 focus:border-admin-500"
+                  placeholder="Senha do cliente"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Empresa
+                </label>
+                <input
+                  type="text"
+                  value={newClientData.company}
+                  onChange={(e) => setNewClientData(prev => ({ ...prev, company: e.target.value }))}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-admin-500 focus:border-admin-500"
+                  placeholder="Nome da empresa"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Telefone
+                </label>
+                <input
+                  type="tel"
+                  value={newClientData.phone}
+                  onChange={(e) => setNewClientData(prev => ({ ...prev, phone: e.target.value }))}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-admin-500 focus:border-admin-500"
+                  placeholder="(11) 99999-9999"
+                />
+              </div>
+
+              <div className="flex space-x-3 pt-4">
+                <button
+                  type="button"
+                  onClick={() => setShowNewClientModal(false)}
+                  className="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50 transition-colors"
+                >
+                  Cancelar
+                </button>
+                <button
+                  type="submit"
+                  disabled={isCreatingClient}
+                  className="flex-1 px-4 py-2 bg-admin-600 text-white rounded-md hover:bg-admin-700 disabled:opacity-50 transition-colors"
+                >
+                  {isCreatingClient ? 'Criando...' : 'Criar Cliente'}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
 
       <div className="card">
         {clients.length === 0 ? (
@@ -645,65 +824,118 @@ function ClientsContent() {
   );
 }
 
-function TicketsContent() {
+function TicketsContent({ showNotification }: { showNotification: (message: string, type: 'success' | 'error') => void }) {
   const [tickets, setTickets] = useState<Ticket[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState('');
+  const [updatingStatus, setUpdatingStatus] = useState<string | null>(null);
 
   useEffect(() => {
-    async function fetchTickets() {
-      try {
-        const token = localStorage.getItem('admin_token');
-        
-        const response = await fetch('/api/tickets', {
-          headers: {
-            'Authorization': `Bearer ${token}`
-          }
-        });
-        
-        if (!response.ok) {
-          throw new Error('Erro ao carregar tickets');
-        }
-        
-        const data = await response.json();
-        setTickets(data.tickets || []); // Acessar a propriedade tickets do objeto retornado
-      } catch (error: any) {
-        setError(error.message || 'Erro ao carregar tickets');
-        console.error('Erro ao carregar tickets:', error);
-      } finally {
-        setIsLoading(false);
-      }
-    }
-
     fetchTickets();
   }, []);
 
+  const fetchTickets = async () => {
+    try {
+      const token = localStorage.getItem('admin_token');
+      
+      const response = await fetch('/api/tickets', {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+      
+      if (!response.ok) {
+        throw new Error('Erro ao carregar tickets');
+      }
+      
+      const data = await response.json();
+      setTickets(data.tickets || []);
+    } catch (error: any) {
+      setError(error.message || 'Erro ao carregar tickets');
+      console.error('Erro ao carregar tickets:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const updateTicketStatus = async (ticketId: number, newStatus: string) => {
+    try {
+      setUpdatingStatus(ticketId.toString());
+      const token = localStorage.getItem('admin_token');
+      
+      const response = await fetch(`/api/tickets/${ticketId}/status`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({ status: newStatus })
+      });
+
+      if (!response.ok) {
+        throw new Error('Erro ao atualizar status');
+      }
+
+      const updatedTicket = await response.json();
+      
+      // Atualizar ticket na lista local
+      setTickets(prevTickets => 
+        prevTickets.map(ticket => 
+          ticket.id === ticketId 
+            ? { ...ticket, status: updatedTicket.status }
+            : ticket
+        )
+      );
+
+      showNotification('Status atualizado com sucesso!', 'success');
+    } catch (error: any) {
+      console.error('Erro ao atualizar status:', error);
+      showNotification('Erro ao atualizar status do ticket', 'error');
+    } finally {
+      setUpdatingStatus(null);
+    }
+  };
+
   const getStatusBadge = (status: string) => {
     const statusMap = {
-      'OPEN': 'badge-open',
-      'IN_PROGRESS': 'badge-progress', 
-      'RESOLVED': 'badge-resolved',
-      'CLOSED': 'badge-closed'
+      'ABERTO': 'badge-open',
+      'EM_ANDAMENTO': 'badge-progress', 
+      'AGUARDANDO_CLIENTE': 'badge-waiting',
+      'RESOLVIDO': 'badge-resolved',
+      'FECHADO': 'badge-closed'
     };
     return statusMap[status as keyof typeof statusMap] || 'badge-open';
   };
 
   const getStatusText = (status: string) => {
     const statusMap = {
-      'OPEN': 'Aberto',
-      'IN_PROGRESS': 'Em Progresso',
-      'RESOLVED': 'Resolvido', 
-      'CLOSED': 'Fechado'
+      'ABERTO': 'Aberto',
+      'EM_ANDAMENTO': 'Em Progresso',
+      'AGUARDANDO_CLIENTE': 'Aguardando Cliente',
+      'RESOLVIDO': 'Resolvido', 
+      'FECHADO': 'Fechado'
     };
     return statusMap[status as keyof typeof statusMap] || status;
   };
 
+  const getStatusOptions = (currentStatus: string) => {
+    const allStatuses = [
+      { value: 'ABERTO', label: 'Aberto' },
+      { value: 'EM_ANDAMENTO', label: 'Em Progresso' },
+      { value: 'AGUARDANDO_CLIENTE', label: 'Aguardando Cliente' },
+      { value: 'RESOLVIDO', label: 'Resolvido' },
+      { value: 'FECHADO', label: 'Fechado' }
+    ];
+    
+    return allStatuses.filter(status => status.value !== currentStatus);
+  };
+
   const getPriorityText = (priority: string) => {
     const priorityMap = {
-      'LOW': 'Baixa',
-      'MEDIUM': 'Média',
-      'HIGH': 'Alta',
-      'URGENT': 'Urgente'
+      'BAIXA': 'Baixa',
+      'MEDIA': 'Média',
+      'ALTA': 'Alta',
+      'URGENTE': 'Urgente'
     };
     return priorityMap[priority as keyof typeof priorityMap] || priority;
   };
@@ -746,29 +978,126 @@ function TicketsContent() {
       <h1 className="text-3xl font-bold text-gray-900 mb-8">Todos os Tickets</h1>
 
       <div className="card">
-        {tickets.length === 0 ? (
+        {isLoading ? (
+          <div className="text-center py-8">
+            <p className="text-gray-500">Carregando tickets...</p>
+          </div>
+        ) : tickets.length === 0 ? (
           <div className="text-center py-8">
             <p className="text-gray-500">Nenhum ticket encontrado</p>
+            <p className="text-sm text-gray-400 mt-2">
+              Os clientes podem criar tickets através do portal em <a href="/chamados" className="text-blue-600 hover:underline">/chamados</a>
+            </p>
           </div>
         ) : (
           <div className="space-y-4">
             {tickets.map((ticket) => (
-              <div key={ticket.id} className="border border-gray-200 rounded-lg p-4">
-                <div className="flex justify-between items-start mb-3">
-                  <div>
-                    <h3 className="font-semibold text-gray-900">#{ticket.id.toString().padStart(3, '0')} - {ticket.title}</h3>
-                    <p className="text-sm text-gray-600 mt-1">
-                      Cliente: {ticket.client.name} ({ticket.client.company || ticket.client.email})
-                    </p>
-                    <p className="text-sm text-gray-600">
+              <div key={ticket.id} className="border border-gray-200 rounded-lg p-6 bg-white hover:shadow-md transition-shadow">
+                <div className="flex justify-between items-start">
+                  <div className="flex-1">
+                    <div className="flex items-center space-x-3 mb-3">
+                      <h3 className="font-semibold text-lg text-gray-900">
+                        #{ticket.id.toString().padStart(4, '0')} - {ticket.title}
+                      </h3>
+                      <span className={getStatusBadge(ticket.status)}>
+                        {getStatusText(ticket.status)}
+                      </span>
+                    </div>
+                    
+                    <div className="mb-3">
+                      <p className="text-sm text-gray-600 mb-1">
+                        <strong>Cliente:</strong> {ticket.client.name} {ticket.client.company && `(${ticket.client.company})`}
+                      </p>
+                      <p className="text-sm text-gray-600">
+                        <strong>Email:</strong> {ticket.client.email}
+                      </p>
+                    </div>
+                    
+                    <p className="text-gray-700 mb-4 leading-relaxed">
                       {ticket.description}
                     </p>
+                    
+                    <div className="flex flex-wrap gap-4 text-sm text-gray-500">
+                      <span className="flex items-center">
+                        <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
+                        </svg>
+                        {getCategoryText(ticket.category)}
+                      </span>
+                      <span className="flex items-center">
+                        <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 14.5c-.77.833.192 2.5 1.732 2.5z" />
+                        </svg>
+                        Prioridade: {getPriorityText(ticket.priority)}
+                      </span>
+                      <span className="flex items-center">
+                        <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3a4 4 0 118 0v4m-4 8l6-6m0 0v6m0-6H6" />
+                        </svg>
+                        {new Date(ticket.createdAt).toLocaleDateString('pt-BR', { 
+                          day: '2-digit', 
+                          month: '2-digit', 
+                          year: 'numeric',
+                          hour: '2-digit',
+                          minute: '2-digit'
+                        })}
+                      </span>
+                    </div>
                   </div>
-                  <span className={getStatusBadge(ticket.status)}>{getStatusText(ticket.status)}</span>
-                </div>
-                <div className="flex justify-between items-center text-sm text-gray-500">
-                  <span>{getCategoryText(ticket.category)} • Prioridade: {getPriorityText(ticket.priority)}</span>
-                  <span>{new Date(ticket.createdAt).toLocaleDateString('pt-BR')}</span>
+                  
+                  <div className="ml-6 flex flex-col space-y-3">
+                    <div className="text-right">
+                      <label className="block text-xs font-medium text-gray-700 mb-2">
+                        Alterar Status
+                      </label>
+                      <select
+                        value=""
+                        onChange={(e) => {
+                          if (e.target.value) {
+                            updateTicketStatus(ticket.id, e.target.value);
+                            e.target.value = '';
+                          }
+                        }}
+                        disabled={updatingStatus === ticket.id.toString()}
+                        className="min-w-[160px] text-sm border border-gray-300 rounded-lg px-3 py-2 bg-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
+                      >
+                        <option value="">
+                          {updatingStatus === ticket.id.toString() ? 'Atualizando...' : 'Selecionar status'}
+                        </option>
+                        {getStatusOptions(ticket.status).map((option) => (
+                          <option key={option.value} value={option.value}>
+                            {option.label}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                    
+                    <div className="space-y-2">
+                      <button
+                        onClick={() => updateTicketStatus(ticket.id, 'RESOLVIDO')}
+                        disabled={updatingStatus === ticket.id.toString() || ticket.status === 'RESOLVIDO'}
+                        className="w-full px-4 py-2 bg-green-600 text-white text-sm font-medium rounded-lg hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                      >
+                        ✓ Resolver
+                      </button>
+                      
+                      <button
+                        onClick={() => updateTicketStatus(ticket.id, 'FECHADO')}
+                        disabled={updatingStatus === ticket.id.toString() || ticket.status === 'FECHADO'}
+                        className="w-full px-4 py-2 bg-gray-600 text-white text-sm font-medium rounded-lg hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                      >
+                        🔒 Fechar
+                      </button>
+                      
+                      <button
+                        onClick={() => updateTicketStatus(ticket.id, 'AGUARDANDO_CLIENTE')}
+                        disabled={updatingStatus === ticket.id.toString() || ticket.status === 'AGUARDANDO_CLIENTE'}
+                        className="w-full px-4 py-2 bg-orange-600 text-white text-sm font-medium rounded-lg hover:bg-orange-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                      >
+                        ⏳ Aguardar Cliente
+                      </button>
+                    </div>
+                  </div>
                 </div>
               </div>
             ))}
