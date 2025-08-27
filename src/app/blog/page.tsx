@@ -3,6 +3,8 @@ import Link from 'next/link';
 import Navbar from '@/components/Navbar';
 import Chatbot from '@/components/Chatbot';
 import { Breadcrumbs } from '@/components/Breadcrumbs';
+import BlogCard from '@/components/BlogCard';
+import SidebarPostLink from '@/components/SidebarPostLink';
 
 export const metadata: Metadata = {
   title: 'Blog - Tecnologia e Inovação Digital | InovaMente Labs',

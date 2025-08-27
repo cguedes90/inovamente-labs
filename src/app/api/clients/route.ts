@@ -27,10 +27,8 @@ async function getClientsHandler(request: NextRequest) {
   // Validar query parameters
   const url = new URL(request.url);
   const queryParams = Object.fromEntries(url.searchParams);
-  const { page, limit, sortBy, sortOrder, search, status, company } = validateRequest(
-    listClientsSchema,
-    queryParams
-  );
+  const validatedParams = validateRequest(listClientsSchema, queryParams);
+  const { page, limit, sortBy, sortOrder, search, status, company } = validatedParams as z.infer<typeof listClientsSchema>;
 
   // Construir filtros
   const where: any = {};
@@ -102,7 +100,8 @@ async function createClientHandler(request: NextRequest) {
   
   // Validar dados de entrada
   const requestData = await request.json();
-  const clientData = validateRequest(adminCreateClientSchema, requestData);
+  const validatedClientData = validateRequest(adminCreateClientSchema, requestData);
+  const clientData = validatedClientData as z.infer<typeof adminCreateClientSchema>;
 
   // Verificar se email já existe
   const existingClient = await prisma.client.findUnique({

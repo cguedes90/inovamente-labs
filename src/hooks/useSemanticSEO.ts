@@ -116,7 +116,12 @@ export function useContentOptimization(content: string, keywords: SemanticKeywor
 
 // Hook para métricas de performance de SEO
 export function useSEOMetrics(url: string) {
-  const [metrics, setMetrics] = useState({
+  const [metrics, setMetrics] = useState<{
+    coreWebVitals: { lcp: number; fid: number; cls: number } | null;
+    mobileUsability: { score: number; issues: number } | null;
+    structuredDataValidation: { isValid: boolean; errors: number; warnings: number } | null;
+    isLoading: boolean;
+  }>({
     coreWebVitals: null,
     mobileUsability: null,
     structuredDataValidation: null,
@@ -131,7 +136,8 @@ export function useSEOMetrics(url: string) {
       // Simular delay de API
       await new Promise(resolve => setTimeout(resolve, 1000));
 
-      setMetrics({
+      setMetrics(prev => ({
+        ...prev,
         coreWebVitals: {
           lcp: Math.random() * 3 + 1, // Largest Contentful Paint
           fid: Math.random() * 100 + 50, // First Input Delay
@@ -147,7 +153,7 @@ export function useSEOMetrics(url: string) {
           warnings: Math.floor(Math.random() * 3)
         },
         isLoading: false
-      });
+      }));
     };
 
     if (url) {

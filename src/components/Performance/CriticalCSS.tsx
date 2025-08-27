@@ -165,25 +165,26 @@ export const LazySection: React.FC<{
   );
 };
 
-// Web Vitals measurement
+// Web Vitals measurement (requires 'web-vitals' package)
 export const measureWebVitals = () => {
   if (typeof window === 'undefined') return;
 
+  console.log('Web Vitals measurement disabled - install web-vitals package to enable');
+  
   // Measure Core Web Vitals
-  const measureVitals = async () => {
-    const { getCLS, getFID, getFCP, getLCP, getTTFB } = await import('web-vitals');
-
-    getCLS(metric => console.log('CLS:', metric.value));
-    getFID(metric => console.log('FID:', metric.value));
-    getFCP(metric => console.log('FCP:', metric.value));
-    getLCP(metric => console.log('LCP:', metric.value));
-    getTTFB(metric => console.log('TTFB:', metric.value));
-  };
+  // const measureVitals = async () => {
+  //   const { getCLS, getFID, getFCP, getLCP, getTTFB } = await import('web-vitals');
+  //   getCLS(metric => console.log('CLS:', metric.value));
+  //   getFID(metric => console.log('FID:', metric.value));
+  //   getFCP(metric => console.log('FCP:', metric.value));
+  //   getLCP(metric => console.log('LCP:', metric.value));
+  //   getTTFB(metric => console.log('TTFB:', metric.value));
+  // };
 
   // Only measure in production
-  if (process.env.NODE_ENV === 'production') {
-    measureVitals();
-  }
+  // if (process.env.NODE_ENV === 'production') {
+  //   measureVitals();
+  // }
 };
 
 // Resource hints component

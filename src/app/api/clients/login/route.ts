@@ -48,9 +48,10 @@ export async function POST(req: NextRequest) {
 
     // Gerar token
     const token = generateToken({
-      id: client.id,
+      id: client.id.toString(),
       email: client.email,
-      role: 'client'
+      type: 'client',
+      name: client.name
     });
 
     // Remover senha da resposta

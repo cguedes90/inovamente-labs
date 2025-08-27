@@ -154,7 +154,7 @@ export function generateSEOMetadata(seoData: SEOData): Metadata {
         }
       ],
       locale: 'pt_BR',
-      type: seoData.ogType || 'website'
+      type: (seoData.ogType === 'service' ? 'website' : seoData.ogType) || 'website'
     },
     
     twitter: {

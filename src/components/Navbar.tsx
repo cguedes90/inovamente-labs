@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
-export default function Navbar() {
+function Navbar() {
   const pathname = usePathname();
 
   const navItems = [
@@ -135,3 +135,7 @@ export default function Navbar() {
     </nav>
   );
 }
+
+// Exportações para compatibilidade
+export { Navbar };
+export default Navbar;

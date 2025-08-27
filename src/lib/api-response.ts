@@ -116,7 +116,7 @@ export function createErrorResponse(
         success: false,
         error: 'Dados inválidos',
         code: ApiErrorCode.VALIDATION_ERROR,
-        details: error.errors.map(err => ({
+        details: error.issues.map(err => ({
           field: err.path.join('.'),
           message: err.message
         }))
@@ -153,7 +153,7 @@ export function withErrorHandling(
         console.error('Stack trace:', error);
       }
 
-      return createErrorResponse(error);
+      return createErrorResponse(error as Error);
     }
   };
 }
@@ -171,7 +171,7 @@ export function validateRequest<T>(schema: any, data: unknown): T {
     return schema.parse(data);
   } catch (error) {
     if (error instanceof ZodError) {
-      throw new ValidationError('Dados de entrada inválidos', error.errors);
+      throw new ValidationError('Dados de entrada inválidos', error.issues);
     }
     throw error;
   }

@@ -1,5 +1,4 @@
 import Link from 'next/link';
-import { ChevronRightIcon, HomeIcon } from '@heroicons/react/24/outline';
 
 interface BreadcrumbItem {
   label: string;
@@ -39,10 +38,15 @@ export function Breadcrumbs({ items, className = '' }: BreadcrumbsProps) {
               {breadcrumbItems.map((item, index) => (
                 <li key={index} className="flex items-center">
                   {index > 0 && (
-                    <ChevronRightIcon 
+                    <svg 
                       className="h-4 w-4 text-gray-400 mx-2" 
-                      aria-hidden="true" 
-                    />
+                      fill="none" 
+                      stroke="currentColor" 
+                      viewBox="0 0 24 24"
+                      aria-hidden="true"
+                    >
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                    </svg>
                   )}
                   
                   {index === 0 ? (
@@ -51,7 +55,15 @@ export function Breadcrumbs({ items, className = '' }: BreadcrumbsProps) {
                       className="text-blue-600 hover:text-blue-800 flex items-center"
                       aria-label="Voltar ao início"
                     >
-                      <HomeIcon className="h-4 w-4 mr-1" aria-hidden="true" />
+                      <svg 
+                        className="h-4 w-4 mr-1" 
+                        fill="none" 
+                        stroke="currentColor" 
+                        viewBox="0 0 24 24"
+                        aria-hidden="true"
+                      >
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                      </svg>
                       {item.label}
                     </Link>
                   ) : item.current || !item.href ? (

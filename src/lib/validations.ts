@@ -159,7 +159,7 @@ export const paginationSchema = z.object({
 // Search schema
 export const searchSchema = z.object({
   query: z.string().min(1).max(100),
-  filter: z.record(z.any()).optional()
+  filter: z.record(z.string(), z.any()).optional()
 });
 
 // Generic ID schema

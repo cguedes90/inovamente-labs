@@ -313,7 +313,7 @@ export default function AdminPage() {
 // Componente do Dashboard do Admin
 function AdminDashboard({ onLogout }: { onLogout: () => void }) {
   const [activeTab, setActiveTab] = useState('dashboard');
-  const [notification, setNotification] = useState<{ message: string; type: 'success' | 'error' } | null>(null);
+  const [notification, setNotification] = useState<{ message: string; type: 'success' | 'error'; link?: string } | null>(null);
 
   // Auto-remove notification after 3 seconds
   useEffect(() => {
@@ -378,12 +378,35 @@ function AdminDashboard({ onLogout }: { onLogout: () => void }) {
 
       {/* Notification */}
       {notification && (
-        <div className={`fixed top-4 right-4 z-50 px-6 py-3 rounded-lg shadow-lg ${
+        <div className={`fixed top-4 right-4 z-50 px-6 py-4 rounded-lg shadow-lg border max-w-md ${
           notification.type === 'success' 
-            ? 'bg-green-500 text-white' 
-            : 'bg-red-500 text-white'
+            ? 'bg-green-500 border-green-400 text-white' 
+            : 'bg-red-500 border-red-400 text-white'
         }`}>
-          {notification.message}
+          <div className="flex items-start justify-between">
+            <div className="flex-1">
+              <p className="font-medium mb-1">{notification.message}</p>
+              {notification.link && (
+                <a 
+                  href={notification.link} 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="text-white/90 hover:text-white text-sm underline flex items-center gap-1"
+                >
+                  🔗 Ver Post Publicado
+                  <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                  </svg>
+                </a>
+              )}
+            </div>
+            <button 
+              onClick={() => setNotification(null)}
+              className="text-white/70 hover:text-white ml-2"
+            >
+              ✕
+            </button>
+          </div>
         </div>
       )}
 
@@ -1599,12 +1622,21 @@ function BlogContent() {
     }
   };
 
+  // Estado para notificações
+  const [notification, setNotification] = useState<{ message: string; type: 'success' | 'error'; link?: string } | null>(null);
+
+  // Mostrar notificação
+  const showNotification = (message: string, type: 'success' | 'error', link?: string) => {
+    setNotification({ message, type, link });
+    setTimeout(() => setNotification(null), 5000);
+  };
+
   // Salvar post
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
     if (!formData.title || !formData.content || !formData.excerpt || !formData.category) {
-      alert('Preencha todos os campos obrigatórios');
+      showNotification('❌ Preencha todos os campos obrigatórios', 'error');
       return;
     }
 
@@ -1626,16 +1658,23 @@ function BlogContent() {
       });
 
       if (response.ok) {
+        const savedPost = await response.json();
         await fetchPosts();
+        
+        const blogLink = `/blog/${formData.slug}`;
+        const successMessage = editingPost 
+          ? '✅ Post atualizado com sucesso!' 
+          : '🎉 Post criado e publicado com sucesso!';
+        
+        showNotification(successMessage, 'success', blogLink);
         resetForm();
-        alert(editingPost ? 'Post atualizado com sucesso!' : 'Post criado com sucesso!');
       } else {
         const error = await response.json();
-        alert(`Erro: ${error.error}`);
+        showNotification(`❌ Erro ao salvar: ${error.error || 'Erro desconhecido'}`, 'error');
       }
     } catch (error) {
       console.error('Erro ao salvar post:', error);
-      alert('Erro ao salvar post');
+      showNotification('❌ Erro de conexão ao salvar post', 'error');
     } finally {
       setIsSubmitting(false);
     }
@@ -1860,13 +1899,78 @@ function BlogContent() {
               <label className="block text-white/90 font-medium mb-2">
                 Conteúdo *
               </label>
+              
+              {/* Toolbar para inserção de imagens */}
+              <div className="mb-2 p-3 bg-white/5 border border-white/10 rounded-t-lg flex items-center space-x-3">
+                <span className="text-white/70 text-sm font-medium">Ferramentas:</span>
+                
+                <button
+                  type="button"
+                  onClick={() => {
+                    const imageUrl = prompt('Digite a URL da imagem:');
+                    if (imageUrl) {
+                      const imageMarkdown = `![Descrição da imagem](${imageUrl})\n\n`;
+                      setFormData(prev => ({
+                        ...prev,
+                        content: prev.content + imageMarkdown
+                      }));
+                    }
+                  }}
+                  className="flex items-center space-x-1 px-3 py-1 bg-white/10 hover:bg-white/20 text-white/80 rounded-lg text-sm transition-colors"
+                  title="Inserir imagem via URL"
+                >
+                  <span>🖼️</span>
+                  <span>Imagem</span>
+                </button>
+                
+                <button
+                  type="button"
+                  onClick={() => {
+                    const markdowns = [
+                      { label: '**Negrito**', syntax: '**texto**' },
+                      { label: '_Itálico_', syntax: '_texto_' },
+                      { label: '# Título', syntax: '# ' },
+                      { label: '## Subtítulo', syntax: '## ' },
+                      { label: '- Lista', syntax: '- ' },
+                      { label: '> Citação', syntax: '> ' },
+                      { label: '`Código`', syntax: '`código`' },
+                      { label: '[Link](url)', syntax: '[texto](url)' }
+                    ];
+                    
+                    const choice = prompt(
+                      'Escolha o formato:\n\n' + 
+                      markdowns.map((m, i) => `${i + 1}. ${m.label}`).join('\n') +
+                      '\n\nDigite o número:'
+                    );
+                    
+                    const index = parseInt(choice || '0') - 1;
+                    if (index >= 0 && index < markdowns.length) {
+                      const selected = markdowns[index];
+                      setFormData(prev => ({
+                        ...prev,
+                        content: prev.content + selected.syntax + '\n'
+                      }));
+                    }
+                  }}
+                  className="flex items-center space-x-1 px-3 py-1 bg-white/10 hover:bg-white/20 text-white/80 rounded-lg text-sm transition-colors"
+                  title="Inserir formatação Markdown"
+                >
+                  <span>📝</span>
+                  <span>Markdown</span>
+                </button>
+                
+                <div className="text-white/50 text-xs">
+                  💡 Suporte a Markdown: **negrito**, _itálico_, # títulos, ![imagem](url), etc.
+                </div>
+              </div>
+              
               <textarea
                 name="content"
                 value={formData.content}
                 onChange={handleInputChange}
                 rows={12}
-                className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-white/30"
-                placeholder="Conteúdo completo do post (suporte básico a Markdown)"
+                className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-b-lg text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-white/30"
+                placeholder="Conteúdo completo do post (suporte completo a Markdown)&#10;&#10;Exemplos:&#10;# Título Principal&#10;## Subtítulo&#10;**Texto em negrito**&#10;_Texto em itálico_&#10;![Imagem](https://exemplo.com/imagem.jpg)&#10;[Link](https://exemplo.com)&#10;> Citação&#10;`código`&#10;- Item de lista"
                 required
               />
             </div>

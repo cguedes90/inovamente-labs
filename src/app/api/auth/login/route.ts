@@ -9,9 +9,7 @@ import { withErrorHandling, createSuccessResponse, createErrorResponse, Authenti
 const loginSchema = z.object({
   email: z.string().min(1, 'Email/usuário é obrigatório'),
   password: z.string().min(1, 'Senha é obrigatória'),
-  type: z.enum(['admin', 'client'], { 
-    errorMap: () => ({ message: 'Tipo deve ser "admin" ou "client"' })
-  })
+  type: z.enum(['admin', 'client']).optional().default('client')
 });
 
 async function loginHandler(request: NextRequest) {
@@ -19,7 +17,8 @@ async function loginHandler(request: NextRequest) {
   
   // Validar dados de entrada
   const requestData = await request.json();
-  const { email, password, type } = validateRequest(loginSchema, requestData);
+  const validatedData = validateRequest(loginSchema, requestData);
+  const { email, password, type } = validatedData as z.infer<typeof loginSchema>;
 
   console.log(`Login attempt: ${email} as ${type} [${Date.now() - startTime}ms]`);
 

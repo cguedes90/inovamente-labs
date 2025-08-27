@@ -36,11 +36,17 @@ export async function comparePassword(password: string, hash: string): Promise<b
 
 // Funções de JWT
 export function generateToken(payload: Omit<TokenPayload, 'iat' | 'exp'>): string {
+  if (!JWT_SECRET) {
+    throw new Error('JWT_SECRET is not defined');
+  }
   const validatedPayload = TokenPayloadSchema.omit({ iat: true, exp: true }).parse(payload);
   return jwt.sign(validatedPayload, JWT_SECRET, { expiresIn: '24h' });
 }
 
 export function verifyToken(token: string): TokenPayload {
+  if (!JWT_SECRET) {
+    throw new Error('JWT_SECRET is not defined');
+  }
   try {
     const decoded = jwt.verify(token, JWT_SECRET);
     return TokenPayloadSchema.parse(decoded);

@@ -24,17 +24,19 @@ export async function POST(req: NextRequest) {
 
     // Gerar token
     const token = generateToken({
-      id: 1,
-      username: 'admin',
-      role: 'admin'
+      id: '1',
+      email: 'admin@inovamentelabs.com',
+      type: 'admin' as const,
+      name: 'Administrador'
     });
 
     return NextResponse.json({
       token,
-      admin: {
-        id: 1,
-        username: 'admin',
-        role: 'admin'
+      user: {
+        id: '1',
+        email: 'admin@inovamentelabs.com',
+        type: 'admin',
+        name: 'Administrador'
       }
     });
 
