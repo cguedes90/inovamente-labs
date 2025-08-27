@@ -46,43 +46,64 @@ export default function BlogCard({ post }: BlogCardProps) {
           display: 'block'
         }}
       >
+        {/* Image Header */}
+        <div style={{
+          width: '100%',
+          height: '200px',
+          position: 'relative',
+          overflow: 'hidden'
+        }}>
+          <img 
+            src={post.image}
+            alt={post.title}
+            style={{
+              width: '100%',
+              height: '100%',
+              objectFit: 'cover',
+              transition: 'transform 0.3s ease'
+            }}
+            onMouseEnter={(e) => {
+              (e.target as HTMLImageElement).style.transform = 'scale(1.05)';
+            }}
+            onMouseLeave={(e) => {
+              (e.target as HTMLImageElement).style.transform = 'scale(1)';
+            }}
+          />
+          <div style={{
+            position: 'absolute',
+            top: '15px',
+            left: '15px',
+            display: 'flex',
+            gap: '8px'
+          }}>
+            <span style={{
+              background: 'linear-gradient(45deg, #3b82f6, #8b5cf6)',
+              color: 'white',
+              padding: '6px 12px',
+              borderRadius: '20px',
+              fontSize: '12px',
+              fontWeight: '600',
+              backdropFilter: 'blur(10px)'
+            }}>
+              {post.category}
+            </span>
+            <span style={{
+              background: 'rgba(0, 0, 0, 0.7)',
+              color: 'white',
+              padding: '6px 12px',
+              borderRadius: '20px',
+              fontSize: '12px',
+              fontWeight: '500',
+              backdropFilter: 'blur(10px)'
+            }}>
+              {post.readTime}
+            </span>
+          </div>
+        </div>
+
         <div style={{
           padding: '30px'
         }}>
-          <div style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: '12px',
-            marginBottom: '20px'
-          }}>
-            <span style={{
-              fontSize: '2rem'
-            }}>
-              {post.image}
-            </span>
-            <div style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: '12px'
-            }}>
-              <span style={{
-                background: 'linear-gradient(45deg, #3b82f6, #8b5cf6)',
-                color: 'white',
-                padding: '4px 12px',
-                borderRadius: '20px',
-                fontSize: '12px',
-                fontWeight: '600'
-              }}>
-                {post.category}
-              </span>
-              <span style={{
-                color: '#64748b',
-                fontSize: '14px'
-              }}>
-                {post.readTime}
-              </span>
-            </div>
-          </div>
           
           <h2 style={{
             fontSize: '1.5rem',
