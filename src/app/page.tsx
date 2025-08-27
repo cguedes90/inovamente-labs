@@ -2,6 +2,8 @@ import { Metadata } from 'next'
 import Link from 'next/link'
 import Navbar from '@/components/Navbar'
 import Chatbot from '@/components/Chatbot'
+import { VoiceSearchOptimizer } from '@/components/SEO/VoiceSearchOptimizer'
+import { SEODashboard } from '@/components/SEO/SEODashboard'
 
 export const metadata: Metadata = {
   title: 'InovaMente Labs - Página Inicial | Soluções Tecnológicas Inovadoras',
@@ -20,16 +22,31 @@ export const metadata: Metadata = {
   },
 }
 
+const primaryKeyword = 'desenvolvimento de software';
+const pageContent = `
+InovaMente Labs oferece soluções completas em desenvolvimento de software, aplicativos mobile, automação de processos e infraestrutura em nuvem. Nossa equipe especializada utiliza tecnologias modernas como React, Next.js, Python e AWS para criar soluções inovadoras.
+`;
+
 export default function HomePage() {
   return (
-    <div style={{
-      minHeight: '100vh',
-      background: 'linear-gradient(135deg, #f8fafc 0%, #ffffff 50%, #f1f5f9 100%)',
-      color: '#1e293b',
-      fontFamily: 'system-ui, -apple-system, sans-serif'
-    }}>
-      <Navbar />
-      <Chatbot />
+    <>
+      <VoiceSearchOptimizer
+        primaryKeyword={primaryKeyword}
+        content={pageContent}
+        title="InovaMente Labs - Soluções Tecnológicas Inovadoras"
+        description="Portal de clientes, sistema de tickets e desenvolvimento de software. Soluções tecnológicas completas para sua empresa."
+        url="https://www.inovamentelabs.com.br"
+      />
+      
+      <div style={{
+        minHeight: '100vh',
+        background: 'linear-gradient(135deg, #f8fafc 0%, #ffffff 50%, #f1f5f9 100%)',
+        color: '#1e293b',
+        fontFamily: 'system-ui, -apple-system, sans-serif'
+      }}>
+        <Navbar />
+        <Chatbot />
+        <SEODashboard showFloating={true} />
       
       <div style={{
         maxWidth: '1200px',
@@ -346,6 +363,7 @@ export default function HomePage() {
           </div>
         </div>
       </div>
-    </div>
+      </div>
+    </>
   )
 }

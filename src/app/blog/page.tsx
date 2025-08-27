@@ -1,11 +1,43 @@
-'use client';
-
+import type { Metadata } from 'next';
 import Link from 'next/link';
-import { useState, useEffect } from 'react';
 import Navbar from '@/components/Navbar';
 import Chatbot from '@/components/Chatbot';
-import BlogCard from '@/components/BlogCard';
-import SidebarPostLink from '@/components/SidebarPostLink';
+import { Breadcrumbs } from '@/components/Breadcrumbs';
+
+export const metadata: Metadata = {
+  title: 'Blog - Tecnologia e Inovação Digital | InovaMente Labs',
+  description: 'Artigos sobre desenvolvimento de software, tendências tecnológicas, cases de sucesso e guias práticos para transformação digital empresarial.',
+  keywords: [
+    'blog tecnologia',
+    'artigos desenvolvimento software',
+    'tendências digitais 2025',
+    'transformação digital empresarial',
+    'cases sucesso desenvolvimento',
+    'guias práticos programação'
+  ],
+  openGraph: {
+    title: 'Blog - Tecnologia e Inovação Digital | InovaMente Labs',
+    description: 'Conteúdo especializado sobre desenvolvimento de software, inovação e tendências tecnológicas.',
+    url: 'https://www.inovamentelabs.com.br/blog',
+    type: 'website',
+    images: [
+      {
+        url: '/og-blog.png',
+        width: 1200,
+        height: 630,
+        alt: 'Blog InovaMente Labs'
+      }
+    ]
+  },
+  alternates: {
+    canonical: 'https://www.inovamentelabs.com.br/blog',
+    types: {
+      'application/rss+xml': [
+        { url: '/api/blog/rss', title: 'Blog InovaMente Labs RSS Feed' }
+      ]
+    }
+  }
+};
 
 interface BlogPost {
   id: string;
@@ -19,39 +51,69 @@ interface BlogPost {
   slug: string;
 }
 
-export default function BlogPage() {
-  const [posts, setPosts] = useState<BlogPost[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-
-  useEffect(() => {
-    fetchPosts();
-  }, []);
-
-  const fetchPosts = async () => {
-    try {
-      const response = await fetch('/api/blog/public');
-      const data = await response.json();
-      setPosts(data);
-    } catch (error) {
-      console.error('Erro ao carregar posts:', error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
+export default async function BlogPage() {
+  let posts: BlogPost[] = [];
+  let isLoading = false;
+  
+  try {
+    // Em uma implementação real, você buscaria do banco de dados
+    // Por enquanto, usando posts de exemplo
+    posts = [
+      {
+        id: '1',
+        title: 'Como Escolher a Tecnologia Certa para seu Projeto de Software em 2025',
+        excerpt: 'Guia completo para tomar decisões técnicas assertivas na escolha de tecnologias.',
+        author: 'Carlos Silva',
+        createdAt: '2024-12-01T10:00:00Z',
+        category: 'Desenvolvimento',
+        readTime: '8 min',
+        slug: 'como-escolher-tecnologia-certa-projeto-2025',
+        image: '/blog/tecnologia-2025.jpg'
+      },
+      {
+        id: '2',
+        title: 'Desenvolvimento Mobile: Nativo vs Híbrido em 2025',
+        excerpt: 'Análise detalhada das principais abordagens de desenvolvimento mobile.',
+        author: 'Ana Santos',
+        createdAt: '2024-11-28T14:30:00Z',
+        category: 'Mobile',
+        readTime: '12 min',
+        slug: 'desenvolvimento-mobile-nativo-hibrido-2025',
+        image: '/blog/mobile-development.jpg'
+      },
+      {
+        id: '3',
+        title: '10 Processos Empresariais que Toda Empresa Deve Automatizar',
+        excerpt: 'Lista prática dos principais processos que podem ser automatizados.',
+        author: 'Roberto Lima',
+        createdAt: '2024-11-25T09:15:00Z',
+        category: 'Automação',
+        readTime: '10 min',
+        slug: 'processos-empresariais-automatizar',
+        image: '/blog/automacao-processos.jpg'
+      }
+    ];
+  } catch (error) {
+    console.error('Erro ao carregar posts:', error);
+  }
 
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString('pt-BR');
   };
 
   return (
-    <div style={{
-      minHeight: '100vh',
-      background: 'linear-gradient(135deg, #f8fafc 0%, #ffffff 50%, #f1f5f9 100%)',
-      color: '#1e293b',
-      fontFamily: 'system-ui, -apple-system, sans-serif'
-    }}>
-      <Navbar />
-      <Chatbot />
+    <>
+      <div style={{
+        minHeight: '100vh',
+        background: 'linear-gradient(135deg, #f8fafc 0%, #ffffff 50%, #f1f5f9 100%)',
+        color: '#1e293b',
+        fontFamily: 'system-ui, -apple-system, sans-serif'
+      }}>
+        <Navbar />
+        <Chatbot />
+        
+        {/* Breadcrumbs */}
+        <Breadcrumbs items={[{ label: 'Blog', current: true }]} />
       
       {/* Hero Section */}
       <section style={{
@@ -276,6 +338,50 @@ export default function BlogPage() {
           </aside>
         </div>
       </div>
+      
+      {/* Schema.org Structured Data */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "Blog",
+            "name": "Blog InovaMente Labs",
+            "description": "Artigos sobre desenvolvimento de software, tecnologia e inovação digital",
+            "url": "https://www.inovamentelabs.com.br/blog",
+            "publisher": {
+              "@type": "Organization",
+              "name": "InovaMente Labs",
+              "logo": "https://www.inovamentelabs.com.br/logo.png",
+              "url": "https://www.inovamentelabs.com.br"
+            },
+            "blogPost": posts.slice(0, 3).map(post => ({
+              "@type": "BlogPosting",
+              "headline": post.title,
+              "description": post.excerpt,
+              "image": post.image ? `https://www.inovamentelabs.com.br${post.image}` : null,
+              "datePublished": post.createdAt,
+              "dateModified": post.createdAt,
+              "author": {
+                "@type": "Person",
+                "name": post.author
+              },
+              "publisher": {
+                "@type": "Organization",
+                "name": "InovaMente Labs",
+                "logo": "https://www.inovamentelabs.com.br/logo.png"
+              },
+              "mainEntityOfPage": {
+                "@type": "WebPage",
+                "@id": `https://www.inovamentelabs.com.br/blog/${post.slug}`
+              },
+              "articleSection": post.category,
+              "keywords": post.category
+            }))
+          })
+        }}
+      />
     </div>
+    </>
   );
 }
