@@ -3,7 +3,6 @@ import Link from 'next/link'
 import Navbar from '@/components/Navbar'
 import Chatbot from '@/components/Chatbot'
 import { VoiceSearchOptimizer } from '@/components/SEO/VoiceSearchOptimizer'
-import { SEODashboard } from '@/components/SEO/SEODashboard'
 
 export const metadata: Metadata = {
   title: 'InovaMente Labs - Página Inicial | Soluções Tecnológicas Inovadoras',
@@ -46,7 +45,6 @@ export default function HomePage() {
       }}>
         <Navbar />
         <Chatbot />
-        <SEODashboard showFloating={true} />
       
       <div style={{
         maxWidth: '1200px',
