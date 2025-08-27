@@ -70,7 +70,13 @@ export async function POST(request: NextRequest) {
       ]
     );
 
-    return NextResponse.json(result.rows[0]);
+    const newPost = result.rows[0];
+    
+    return NextResponse.json({
+      message: 'Post criado com sucesso!',
+      post: newPost,
+      url: `/blog/${newPost.id}`
+    });
   } catch (error) {
     if (error instanceof z.ZodError) {
       return NextResponse.json(

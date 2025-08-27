@@ -1,12 +1,15 @@
 'use client';
 
 import { useState } from 'react';
+import CreatePostForm from '@/components/CreatePostForm';
 
 export default function AdminPage() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [showCreatePost, setShowCreatePost] = useState(false);
+  const [successMessage, setSuccessMessage] = useState('');
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -34,6 +37,14 @@ export default function AdminPage() {
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const handleCreatePostSuccess = (response: any) => {
+    setShowCreatePost(false);
+    setSuccessMessage(`✅ Post criado com sucesso! <a href="${response.url}" target="_blank" style="color: #3b82f6; text-decoration: underline;">Clique aqui para ver</a>`);
+    
+    // Remover mensagem após 8 segundos
+    setTimeout(() => setSuccessMessage(''), 8000);
   };
 
   if (!isLoggedIn) {
@@ -184,6 +195,20 @@ export default function AdminPage() {
           </button>
         </div>
 
+        {/* Mensagem de Sucesso */}
+        {successMessage && (
+          <div style={{
+            background: 'rgba(34, 197, 94, 0.1)',
+            border: '1px solid rgba(34, 197, 94, 0.3)',
+            borderRadius: '10px',
+            padding: '20px',
+            marginBottom: '30px',
+            color: '#22c55e'
+          }}>
+            <div dangerouslySetInnerHTML={{ __html: successMessage }} />
+          </div>
+        )}
+
         <div style={{
           display: 'grid',
           gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
@@ -206,7 +231,34 @@ export default function AdminPage() {
             border: '1px solid rgba(255, 255, 255, 0.1)'
           }}>
             <h2 style={{ fontSize: '1.5rem', marginBottom: '20px' }}>📝 Blog</h2>
-            <p>Em breve: Sistema completo de gerenciamento de blog.</p>
+            <p style={{ marginBottom: '20px' }}>Gerencie os posts do seu blog.</p>
+            <button
+              onClick={() => setShowCreatePost(true)}
+              style={{
+                padding: '12px 24px',
+                background: 'linear-gradient(45deg, #3b82f6, #1d4ed8)',
+                color: 'white',
+                border: 'none',
+                borderRadius: '10px',
+                fontSize: '16px',
+                fontWeight: '600',
+                cursor: 'pointer',
+                transition: 'all 0.3s ease',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '8px'
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.transform = 'translateY(-2px)';
+                e.currentTarget.style.boxShadow = '0 10px 30px rgba(59, 130, 246, 0.4)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.transform = 'translateY(0)';
+                e.currentTarget.style.boxShadow = 'none';
+              }}
+            >
+              ✍️ Criar Novo Post
+            </button>
           </div>
 
           <div style={{
@@ -242,6 +294,14 @@ export default function AdminPage() {
           </p>
         </div>
       </div>
+
+      {/* Modal de Criar Post */}
+      {showCreatePost && (
+        <CreatePostForm 
+          onClose={() => setShowCreatePost(false)}
+          onSuccess={handleCreatePostSuccess}
+        />
+      )}
     </div>
   );
 }

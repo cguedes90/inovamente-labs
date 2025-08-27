@@ -53,14 +53,23 @@ interface BlogPost {
   slug: string;
 }
 
-export default async function BlogPage() {
-  let posts: BlogPost[] = [];
-  let isLoading = false;
-  
+async function fetchPosts(): Promise<BlogPost[]> {
   try {
-    // Em uma implementação real, você buscaria do banco de dados
-    // Por enquanto, usando posts de exemplo
-    posts = [
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3002'}/api/blog/posts`, {
+      cache: 'no-store' // Sempre buscar dados atualizados
+    });
+    
+    if (!response.ok) {
+      throw new Error('Erro ao buscar posts');
+    }
+    
+    const posts = await response.json();
+    return posts;
+  } catch (error) {
+    console.error('Erro ao carregar posts do banco:', error);
+    
+    // Fallback: posts de exemplo caso a API falhe
+    return [
       {
         id: '1',
         title: 'Como Escolher a Tecnologia Certa para seu Projeto de Software em 2025',
@@ -70,7 +79,7 @@ export default async function BlogPage() {
         category: 'Desenvolvimento',
         readTime: '8 min',
         slug: 'como-escolher-tecnologia-certa-projeto-2025',
-        image: '/blog/tecnologia-2025.jpg'
+        image: 'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=800&h=400&fit=crop&auto=format'
       },
       {
         id: '2',
@@ -81,7 +90,7 @@ export default async function BlogPage() {
         category: 'Mobile',
         readTime: '12 min',
         slug: 'desenvolvimento-mobile-nativo-hibrido-2025',
-        image: '/blog/mobile-development.jpg'
+        image: 'https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?w=800&h=400&fit=crop&auto=format'
       },
       {
         id: '3',
@@ -92,12 +101,14 @@ export default async function BlogPage() {
         category: 'Automação',
         readTime: '10 min',
         slug: 'processos-empresariais-automatizar',
-        image: '/blog/automacao-processos.jpg'
+        image: 'https://images.unsplash.com/photo-1485827404703-89b55fcc595e?w=800&h=400&fit=crop&auto=format'
       }
     ];
-  } catch (error) {
-    console.error('Erro ao carregar posts:', error);
   }
+}
+
+export default async function BlogPage() {
+  const posts = await fetchPosts();
 
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString('pt-BR');
@@ -169,6 +180,16 @@ export default async function BlogPage() {
               }}>
                 Carregando posts...
               </div>
+            ) : posts.length === 0 ? (
+              <div style={{
+                textAlign: 'center',
+                padding: '60px 20px',
+                color: '#64748b'
+              }}>
+                <div style={{ fontSize: '3rem', marginBottom: '20px' }}>📝</div>
+                <h3 style={{ fontSize: '1.5rem', marginBottom: '10px' }}>Nenhum post encontrado</h3>
+                <p>Os posts criados no painel admin aparecerão aqui.</p>
+              </div>
             ) : (
               <div style={{
                 display: 'grid',
@@ -181,7 +202,7 @@ export default async function BlogPage() {
                       ...post,
                       id: parseInt(post.id),
                       date: formatDate(post.createdAt),
-                      image: post.image || '📝'
+                      image: post.image || 'https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?w=800&h=400&fit=crop&auto=format'
                     }} 
                   />
                 ))}
