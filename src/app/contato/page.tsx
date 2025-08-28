@@ -1,8 +1,69 @@
+'use client';
+
+import { useState } from 'react';
 import Navbar from '@/components/Navbar'
 import WhatsAppButton from '@/components/WhatsAppButton'
 import WhatsAppCtaButton from '@/components/WhatsAppCtaButton'
 
 export default function ContatoPage() {
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    phone: '',
+    company: '',
+    subject: '',
+    message: ''
+  });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showSuccess, setShowSuccess] = useState(false);
+  const [error, setError] = useState('');
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+    setError('');
+
+    try {
+      const response = await fetch('/api/contact', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
+
+      if (!response.ok) {
+        throw new Error('Erro ao enviar mensagem');
+      }
+
+      // Limpar formulário
+      setFormData({
+        name: '',
+        email: '',
+        phone: '',
+        company: '',
+        subject: '',
+        message: ''
+      });
+
+      // Mostrar mensagem de sucesso
+      setShowSuccess(true);
+      
+      // Ocultar mensagem após 5 segundos
+      setTimeout(() => setShowSuccess(false), 5000);
+
+    } catch (error: any) {
+      console.error('Erro ao enviar:', error);
+      setError('Erro ao enviar mensagem. Tente novamente.');
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
   return (
     <div style={{
       minHeight: '100vh',
@@ -94,7 +155,37 @@ export default function ContatoPage() {
               Preencha o formulário e nossa equipe entrará em contato em até 24 horas.
             </p>
 
-            <form style={{
+            {/* Mensagem de Sucesso */}
+            {showSuccess && (
+              <div style={{
+                background: '#dcfce7',
+                border: '1px solid #16a34a',
+                color: '#16a34a',
+                padding: '16px',
+                borderRadius: '12px',
+                marginBottom: '20px',
+                textAlign: 'center'
+              }}>
+                ✅ Mensagem enviada com sucesso! Entraremos em contato em breve.
+              </div>
+            )}
+
+            {/* Mensagem de Erro */}
+            {error && (
+              <div style={{
+                background: '#fee2e2',
+                border: '1px solid #dc2626',
+                color: '#dc2626',
+                padding: '16px',
+                borderRadius: '12px',
+                marginBottom: '20px',
+                textAlign: 'center'
+              }}>
+                ❌ {error}
+              </div>
+            )}
+
+            <form onSubmit={handleSubmit} style={{
               display: 'flex',
               flexDirection: 'column',
               gap: '20px'
@@ -116,7 +207,11 @@ export default function ContatoPage() {
                   </label>
                   <input
                     type="text"
+                    name="name"
+                    value={formData.name}
+                    onChange={handleInputChange}
                     placeholder="Seu nome"
+                    required
                     style={{
                       width: '100%',
                       padding: '14px 16px',
@@ -141,7 +236,11 @@ export default function ContatoPage() {
                   </label>
                   <input
                     type="email"
+                    name="email"
+                    value={formData.email}
+                    onChange={handleInputChange}
                     placeholder="seu@email.com"
+                    required
                     style={{
                       width: '100%',
                       padding: '14px 16px',
@@ -173,6 +272,9 @@ export default function ContatoPage() {
                   </label>
                   <input
                     type="tel"
+                    name="phone"
+                    value={formData.phone}
+                    onChange={handleInputChange}
                     placeholder="(11) 99999-9999"
                     style={{
                       width: '100%',
@@ -198,6 +300,9 @@ export default function ContatoPage() {
                   </label>
                   <input
                     type="text"
+                    name="company"
+                    value={formData.company}
+                    onChange={handleInputChange}
                     placeholder="Nome da empresa"
                     style={{
                       width: '100%',
@@ -223,7 +328,12 @@ export default function ContatoPage() {
                 }}>
                   Assunto <span style={{ color: '#ef4444' }}>*</span>
                 </label>
-                <select style={{
+                <select
+                  name="subject"
+                  value={formData.subject}
+                  onChange={handleInputChange}
+                  required
+                  style={{
                   width: '100%',
                   padding: '14px 16px',
                   border: '2px solid #e5e7eb',
@@ -253,6 +363,9 @@ export default function ContatoPage() {
                   Mensagem
                 </label>
                 <textarea
+                  name="message"
+                  value={formData.message}
+                  onChange={handleInputChange}
                   placeholder="Conte-nos sobre seu projeto ou necessidade..."
                   rows={5}
                   style={{
@@ -271,6 +384,7 @@ export default function ContatoPage() {
 
               <button
                 type="submit"
+                disabled={isSubmitting}
                 style={{
                   background: 'linear-gradient(45deg, #3b82f6, #8b5cf6)',
                   color: 'white',
@@ -288,7 +402,7 @@ export default function ContatoPage() {
                   gap: '8px'
                 }}
               >
-                ✉️ Enviar Solicitação
+                {isSubmitting ? '⏳ Enviando...' : '✉️ Enviar Solicitação'}
               </button>
             </form>
           </div>
