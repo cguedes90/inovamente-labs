@@ -4,7 +4,7 @@ import { verifyToken, checkRateLimit } from './lib/auth';
 
 // Rotas que requerem autenticação
 const PROTECTED_ROUTES = {
-  ADMIN: ['/admin'],
+  ADMIN: ['/admin/dashboard'], // Apenas painel admin autenticado, não a página de login
   CLIENT: ['/client', '/dashboard'],
   API_ADMIN: ['/api/admin', '/api/tickets', '/api/clients'],
   API_CLIENT: ['/api/client'],
@@ -20,7 +20,9 @@ const PUBLIC_ROUTES = [
   '/chamados',
   '/desenvolvimento',
   '/solucoes',
+  '/admin', // Página de login do admin é pública
   '/api/auth/login',
+  '/api/admin/login', // API de login do admin é pública
   '/api/contact',
   '/api/blog/posts',
   '/api/blog/public',
@@ -118,7 +120,7 @@ async function handleAuthentication(request: NextRequest): Promise<NextResponse 
     return null;
   }
   
-  // Verificar autenticação para rotas da web
+  // Verificar autenticação para rotas admin específicas (dashboard, etc)
   if (requiresAdminAuth(pathname) && !pathname.startsWith('/api')) {
     const token = request.cookies.get('admin_token')?.value;
     
