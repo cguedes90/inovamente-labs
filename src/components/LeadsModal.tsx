@@ -26,6 +26,8 @@ export default function LeadsModal({ onClose }: LeadsModalProps) {
   const [isLoading, setIsLoading] = useState(true);
   const [filter, setFilter] = useState<string>('all');
   const [error, setError] = useState('');
+  const [editingLead, setEditingLead] = useState<Lead | null>(null);
+  const [isUpdating, setIsUpdating] = useState(false);
 
   useEffect(() => {
     fetchLeads();
@@ -89,6 +91,119 @@ export default function LeadsModal({ onClose }: LeadsModalProps) {
 
   const getTypeIcon = (type: string) => {
     return type === 'contact_form' ? '📧' : '🤖';
+  };
+
+  const handleEdit = (lead: Lead) => {
+    setEditingLead(lead);
+  };
+
+  const handleDelete = async (leadId: string, leadType: string) => {
+    if (!confirm('Tem certeza que deseja deletar este lead? Esta ação não pode ser desfeita.')) {
+      return;
+    }
+
+    setIsUpdating(true);
+    try {
+      const response = await fetch(`/api/admin/leads/${leadId}`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ type: leadType })
+      });
+
+      if (!response.ok) {
+        throw new Error('Erro ao deletar lead');
+      }
+
+      // Remover da lista local
+      setLeads(prevLeads => prevLeads.filter(lead => lead.id !== leadId));
+      
+      // Atualizar estatísticas
+      fetchLeads();
+      
+    } catch (error: any) {
+      console.error('Erro ao deletar lead:', error);
+      setError(error.message);
+    } finally {
+      setIsUpdating(false);
+    }
+  };
+
+  const handleArchive = async (leadId: string, leadType: string) => {
+    setIsUpdating(true);
+    try {
+      const response = await fetch(`/api/admin/leads/${leadId}`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ 
+          type: leadType,
+          status: 'ARCHIVED'
+        })
+      });
+
+      if (!response.ok) {
+        throw new Error('Erro ao arquivar lead');
+      }
+
+      // Atualizar na lista local
+      setLeads(prevLeads => 
+        prevLeads.map(lead => 
+          lead.id === leadId 
+            ? { ...lead, status: 'ARCHIVED' }
+            : lead
+        )
+      );
+      
+    } catch (error: any) {
+      console.error('Erro ao arquivar lead:', error);
+      setError(error.message);
+    } finally {
+      setIsUpdating(false);
+    }
+  };
+
+  const handleUpdateLead = async (updatedLead: Lead) => {
+    setIsUpdating(true);
+    try {
+      const response = await fetch(`/api/admin/leads/${updatedLead.id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          type: updatedLead.type,
+          name: updatedLead.name,
+          email: updatedLead.email,
+          phone: updatedLead.phone,
+          company: updatedLead.company,
+          subject: updatedLead.subject,
+          message: updatedLead.message,
+          status: updatedLead.status
+        })
+      });
+
+      if (!response.ok) {
+        throw new Error('Erro ao atualizar lead');
+      }
+
+      // Atualizar na lista local
+      setLeads(prevLeads => 
+        prevLeads.map(lead => 
+          lead.id === updatedLead.id ? updatedLead : lead
+        )
+      );
+      
+      setEditingLead(null);
+      
+    } catch (error: any) {
+      console.error('Erro ao atualizar lead:', error);
+      setError(error.message);
+    } finally {
+      setIsUpdating(false);
+    }
   };
 
   return (
@@ -335,23 +450,488 @@ export default function LeadsModal({ onClose }: LeadsModalProps) {
                   </p>
                 </div>
 
-                {lead.company && (
-                  <div style={{
-                    background: '#e0f2fe',
-                    color: '#0369a1',
-                    padding: '8px 12px',
-                    borderRadius: '8px',
-                    fontSize: '12px',
-                    fontWeight: '600',
-                    display: 'inline-block'
-                  }}>
-                    🏢 {lead.company}
+                <div style={{
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                  marginTop: '15px'
+                }}>
+                  <div>
+                    {lead.company && (
+                      <div style={{
+                        background: '#e0f2fe',
+                        color: '#0369a1',
+                        padding: '8px 12px',
+                        borderRadius: '8px',
+                        fontSize: '12px',
+                        fontWeight: '600',
+                        display: 'inline-block'
+                      }}>
+                        🏢 {lead.company}
+                      </div>
+                    )}
                   </div>
-                )}
+                  
+                  {/* Botões de Ação */}
+                  <div style={{
+                    display: 'flex',
+                    gap: '8px'
+                  }}>
+                    <button
+                      onClick={() => handleEdit(lead)}
+                      disabled={isUpdating}
+                      style={{
+                        background: '#3b82f6',
+                        color: 'white',
+                        border: 'none',
+                        borderRadius: '8px',
+                        padding: '6px 12px',
+                        fontSize: '12px',
+                        fontWeight: '600',
+                        cursor: isUpdating ? 'not-allowed' : 'pointer',
+                        opacity: isUpdating ? 0.6 : 1,
+                        transition: 'all 0.3s ease',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '4px'
+                      }}
+                      onMouseEnter={(e) => {
+                        if (!isUpdating) {
+                          e.currentTarget.style.background = '#2563eb';
+                        }
+                      }}
+                      onMouseLeave={(e) => {
+                        if (!isUpdating) {
+                          e.currentTarget.style.background = '#3b82f6';
+                        }
+                      }}
+                    >
+                      ✏️ Editar
+                    </button>
+
+                    <button
+                      onClick={() => handleArchive(lead.id, lead.type)}
+                      disabled={isUpdating || lead.status === 'ARCHIVED'}
+                      style={{
+                        background: lead.status === 'ARCHIVED' ? '#9ca3af' : '#f59e0b',
+                        color: 'white',
+                        border: 'none',
+                        borderRadius: '8px',
+                        padding: '6px 12px',
+                        fontSize: '12px',
+                        fontWeight: '600',
+                        cursor: (isUpdating || lead.status === 'ARCHIVED') ? 'not-allowed' : 'pointer',
+                        opacity: (isUpdating || lead.status === 'ARCHIVED') ? 0.6 : 1,
+                        transition: 'all 0.3s ease',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '4px'
+                      }}
+                      onMouseEnter={(e) => {
+                        if (!isUpdating && lead.status !== 'ARCHIVED') {
+                          e.currentTarget.style.background = '#d97706';
+                        }
+                      }}
+                      onMouseLeave={(e) => {
+                        if (!isUpdating && lead.status !== 'ARCHIVED') {
+                          e.currentTarget.style.background = '#f59e0b';
+                        }
+                      }}
+                    >
+                      {lead.status === 'ARCHIVED' ? '📦 Arquivado' : '📦 Arquivar'}
+                    </button>
+
+                    <button
+                      onClick={() => handleDelete(lead.id, lead.type)}
+                      disabled={isUpdating}
+                      style={{
+                        background: '#ef4444',
+                        color: 'white',
+                        border: 'none',
+                        borderRadius: '8px',
+                        padding: '6px 12px',
+                        fontSize: '12px',
+                        fontWeight: '600',
+                        cursor: isUpdating ? 'not-allowed' : 'pointer',
+                        opacity: isUpdating ? 0.6 : 1,
+                        transition: 'all 0.3s ease',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '4px'
+                      }}
+                      onMouseEnter={(e) => {
+                        if (!isUpdating) {
+                          e.currentTarget.style.background = '#dc2626';
+                        }
+                      }}
+                      onMouseLeave={(e) => {
+                        if (!isUpdating) {
+                          e.currentTarget.style.background = '#ef4444';
+                        }
+                      }}
+                    >
+                      🗑️ Deletar
+                    </button>
+                  </div>
+                </div>
               </div>
             ))}
           </div>
         )}
+      </div>
+
+      {/* Modal de Edição */}
+      {editingLead && (
+        <EditLeadModal 
+          lead={editingLead}
+          onClose={() => setEditingLead(null)}
+          onUpdate={handleUpdateLead}
+          isUpdating={isUpdating}
+        />
+      )}
+    </div>
+  );
+}
+
+// Componente Modal de Edição
+interface EditLeadModalProps {
+  lead: Lead;
+  onClose: () => void;
+  onUpdate: (lead: Lead) => void;
+  isUpdating: boolean;
+}
+
+function EditLeadModal({ lead, onClose, onUpdate, isUpdating }: EditLeadModalProps) {
+  const [formData, setFormData] = useState({
+    name: lead.name || '',
+    email: lead.email || '',
+    phone: lead.phone || '',
+    company: lead.company || '',
+    subject: lead.subject || '',
+    message: lead.message || '',
+    status: lead.status || 'PENDING'
+  });
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    const updatedLead: Lead = {
+      ...lead,
+      name: formData.name,
+      email: formData.email,
+      phone: formData.phone,
+      company: formData.company,
+      subject: formData.subject,
+      message: formData.message,
+      status: formData.status
+    };
+
+    onUpdate(updatedLead);
+  };
+
+  return (
+    <div style={{
+      position: 'fixed',
+      top: 0,
+      left: 0,
+      right: 0,
+      bottom: 0,
+      background: 'rgba(0, 0, 0, 0.8)',
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
+      zIndex: 1001,
+      padding: '20px'
+    }}>
+      <div style={{
+        background: 'white',
+        borderRadius: '20px',
+        padding: '30px',
+        width: '100%',
+        maxWidth: '600px',
+        maxHeight: '90vh',
+        overflow: 'auto',
+        boxShadow: '0 20px 60px rgba(0, 0, 0, 0.4)'
+      }}>
+        <div style={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          marginBottom: '25px'
+        }}>
+          <h3 style={{
+            fontSize: '1.5rem',
+            fontWeight: '700',
+            color: '#1e293b',
+            margin: 0
+          }}>
+            ✏️ Editar Lead
+          </h3>
+          <button
+            onClick={onClose}
+            style={{
+              background: 'none',
+              border: 'none',
+              fontSize: '1.5rem',
+              cursor: 'pointer',
+              color: '#64748b'
+            }}
+          >
+            ✕
+          </button>
+        </div>
+
+        <form onSubmit={handleSubmit}>
+          <div style={{
+            display: 'grid',
+            gridTemplateColumns: '1fr 1fr',
+            gap: '15px',
+            marginBottom: '15px'
+          }}>
+            <div>
+              <label style={{
+                display: 'block',
+                marginBottom: '5px',
+                fontWeight: '600',
+                color: '#374151',
+                fontSize: '14px'
+              }}>
+                Nome *
+              </label>
+              <input
+                type="text"
+                name="name"
+                value={formData.name}
+                onChange={handleInputChange}
+                required
+                style={{
+                  width: '100%',
+                  padding: '10px',
+                  border: '1px solid #d1d5db',
+                  borderRadius: '8px',
+                  fontSize: '14px'
+                }}
+              />
+            </div>
+            <div>
+              <label style={{
+                display: 'block',
+                marginBottom: '5px',
+                fontWeight: '600',
+                color: '#374151',
+                fontSize: '14px'
+              }}>
+                Email *
+              </label>
+              <input
+                type="email"
+                name="email"
+                value={formData.email}
+                onChange={handleInputChange}
+                required
+                style={{
+                  width: '100%',
+                  padding: '10px',
+                  border: '1px solid #d1d5db',
+                  borderRadius: '8px',
+                  fontSize: '14px'
+                }}
+              />
+            </div>
+          </div>
+
+          <div style={{
+            display: 'grid',
+            gridTemplateColumns: '1fr 1fr',
+            gap: '15px',
+            marginBottom: '15px'
+          }}>
+            <div>
+              <label style={{
+                display: 'block',
+                marginBottom: '5px',
+                fontWeight: '600',
+                color: '#374151',
+                fontSize: '14px'
+              }}>
+                Telefone
+              </label>
+              <input
+                type="tel"
+                name="phone"
+                value={formData.phone}
+                onChange={handleInputChange}
+                style={{
+                  width: '100%',
+                  padding: '10px',
+                  border: '1px solid #d1d5db',
+                  borderRadius: '8px',
+                  fontSize: '14px'
+                }}
+              />
+            </div>
+            <div>
+              <label style={{
+                display: 'block',
+                marginBottom: '5px',
+                fontWeight: '600',
+                color: '#374151',
+                fontSize: '14px'
+              }}>
+                Empresa
+              </label>
+              <input
+                type="text"
+                name="company"
+                value={formData.company}
+                onChange={handleInputChange}
+                style={{
+                  width: '100%',
+                  padding: '10px',
+                  border: '1px solid #d1d5db',
+                  borderRadius: '8px',
+                  fontSize: '14px'
+                }}
+              />
+            </div>
+          </div>
+
+          <div style={{
+            display: 'grid',
+            gridTemplateColumns: '1fr 1fr',
+            gap: '15px',
+            marginBottom: '15px'
+          }}>
+            <div>
+              <label style={{
+                display: 'block',
+                marginBottom: '5px',
+                fontWeight: '600',
+                color: '#374151',
+                fontSize: '14px'
+              }}>
+                Assunto *
+              </label>
+              <input
+                type="text"
+                name="subject"
+                value={formData.subject}
+                onChange={handleInputChange}
+                required
+                style={{
+                  width: '100%',
+                  padding: '10px',
+                  border: '1px solid #d1d5db',
+                  borderRadius: '8px',
+                  fontSize: '14px'
+                }}
+              />
+            </div>
+            <div>
+              <label style={{
+                display: 'block',
+                marginBottom: '5px',
+                fontWeight: '600',
+                color: '#374151',
+                fontSize: '14px'
+              }}>
+                Status
+              </label>
+              <select
+                name="status"
+                value={formData.status}
+                onChange={handleInputChange}
+                style={{
+                  width: '100%',
+                  padding: '10px',
+                  border: '1px solid #d1d5db',
+                  borderRadius: '8px',
+                  fontSize: '14px'
+                }}
+              >
+                <option value="PENDING">Pendente</option>
+                <option value="ACTIVE">Ativo</option>
+                <option value="REVIEWED">Analisado</option>
+                <option value="RESPONDED">Respondido</option>
+                <option value="COMPLETED">Concluído</option>
+                <option value="ARCHIVED">Arquivado</option>
+              </select>
+            </div>
+          </div>
+
+          <div style={{ marginBottom: '20px' }}>
+            <label style={{
+              display: 'block',
+              marginBottom: '5px',
+              fontWeight: '600',
+              color: '#374151',
+              fontSize: '14px'
+            }}>
+              Mensagem
+            </label>
+            <textarea
+              name="message"
+              value={formData.message}
+              onChange={handleInputChange}
+              rows={4}
+              style={{
+                width: '100%',
+                padding: '10px',
+                border: '1px solid #d1d5db',
+                borderRadius: '8px',
+                fontSize: '14px',
+                resize: 'vertical'
+              }}
+            />
+          </div>
+
+          <div style={{
+            display: 'flex',
+            gap: '10px',
+            justifyContent: 'flex-end'
+          }}>
+            <button
+              type="button"
+              onClick={onClose}
+              disabled={isUpdating}
+              style={{
+                padding: '10px 20px',
+                background: '#f3f4f6',
+                color: '#374151',
+                border: 'none',
+                borderRadius: '8px',
+                fontSize: '14px',
+                fontWeight: '600',
+                cursor: isUpdating ? 'not-allowed' : 'pointer',
+                opacity: isUpdating ? 0.6 : 1
+              }}
+            >
+              Cancelar
+            </button>
+            <button
+              type="submit"
+              disabled={isUpdating}
+              style={{
+                padding: '10px 20px',
+                background: isUpdating ? '#9ca3af' : '#3b82f6',
+                color: 'white',
+                border: 'none',
+                borderRadius: '8px',
+                fontSize: '14px',
+                fontWeight: '600',
+                cursor: isUpdating ? 'not-allowed' : 'pointer',
+                opacity: isUpdating ? 0.6 : 1
+              }}
+            >
+              {isUpdating ? 'Salvando...' : 'Salvar Alterações'}
+            </button>
+          </div>
+        </form>
       </div>
     </div>
   );

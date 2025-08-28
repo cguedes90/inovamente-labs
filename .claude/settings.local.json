@@ -9,7 +9,8 @@
       "Bash(npm run dev:*)",
       "Bash(curl:*)",
       "Bash(mv:*)",
-      "Bash(start http://localhost:3004/contato)"
+      "Bash(start http://localhost:3004/contato)",
+      "Bash(node:*)"
     ],
     "deny": [],
     "ask": []
