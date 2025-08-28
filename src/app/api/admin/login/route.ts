@@ -1,11 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { generateToken } from '@/lib/auth';
-import { loginSchema } from '@/lib/validations';
+import { adminLoginSchema } from '@/lib/validations';
 
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
-    const { email, password } = loginSchema.parse(body);
+    const { email, password } = adminLoginSchema.parse(body);
 
     // Credenciais fixas do admin
     if (email !== 'admin' && email !== 'admin@inovamentelabs.com') {

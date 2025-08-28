@@ -1,5 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server'
 import pool from '@/lib/db'
+import { randomBytes } from 'crypto'
+
+function generateId(): string {
+  return 'cm' + randomBytes(10).toString('base64url')
+}
 
 export async function POST(request: NextRequest) {
   try {
@@ -12,12 +17,15 @@ export async function POST(request: NextRequest) {
       )
     }
 
+    // Generate a unique ID
+    const id = generateId()
+
     // Salvar no banco de dados
     const result = await pool.query(`
-      INSERT INTO contact_forms (name, email, phone, company, subject, message, status, "createdAt", "updatedAt")
-      VALUES ($1, $2, $3, $4, $5, $6, $7, NOW(), NOW())
+      INSERT INTO contact_forms (id, name, email, phone, company, subject, message, status, "createdAt", "updatedAt")
+      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, NOW(), NOW())
       RETURNING *
-    `, [name, email, phone || null, company || null, subject, message || '', 'PENDING'])
+    `, [id, name, email, phone || null, company || null, subject, message || '', 'PENDING'])
 
     const contact = result.rows[0]
 

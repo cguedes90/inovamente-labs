@@ -5,7 +5,11 @@
       "Bash(git push:*)",
       "Bash(npm run build:*)",
       "Bash(npx next build:*)",
-      "Bash(rm:*)"
+      "Bash(rm:*)",
+      "Bash(npm run dev:*)",
+      "Bash(curl:*)",
+      "Bash(mv:*)",
+      "Bash(start http://localhost:3004/contato)"
     ],
     "deny": [],
     "ask": []
