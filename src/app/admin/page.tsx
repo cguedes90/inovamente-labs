@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import CreatePostForm from '@/components/CreatePostForm';
+import LeadsModal from '@/components/LeadsModal';
 
 export default function AdminPage() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -9,6 +10,7 @@ export default function AdminPage() {
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [showCreatePost, setShowCreatePost] = useState(false);
+  const [showLeads, setShowLeads] = useState(false);
   const [successMessage, setSuccessMessage] = useState('');
 
   const handleLogin = async (e: React.FormEvent) => {
@@ -177,22 +179,63 @@ export default function AdminPage() {
           <h1 style={{ fontSize: '2rem', fontWeight: 'bold' }}>
             👑 Painel Administrativo
           </h1>
-          <button
-            onClick={() => {
-              localStorage.removeItem('adminToken');
-              setIsLoggedIn(false);
-            }}
-            style={{
-              padding: '10px 20px',
-              background: 'rgba(239, 68, 68, 0.8)',
-              color: 'white',
-              border: 'none',
-              borderRadius: '8px',
-              cursor: 'pointer'
-            }}
-          >
-            Sair
-          </button>
+          <div style={{ display: 'flex', gap: '15px', alignItems: 'center' }}>
+            <a
+              href="https://www.inovamentelabs.com.br"
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{
+                padding: '10px 20px',
+                background: 'linear-gradient(45deg, #3b82f6, #1d4ed8)',
+                color: 'white',
+                border: 'none',
+                borderRadius: '8px',
+                cursor: 'pointer',
+                textDecoration: 'none',
+                fontSize: '14px',
+                fontWeight: '600',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '8px',
+                transition: 'all 0.3s ease'
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.transform = 'translateY(-2px)';
+                e.currentTarget.style.boxShadow = '0 10px 30px rgba(59, 130, 246, 0.4)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.transform = 'translateY(0)';
+                e.currentTarget.style.boxShadow = 'none';
+              }}
+            >
+              🌐 Voltar para o Site
+            </a>
+            <button
+              onClick={() => {
+                localStorage.removeItem('adminToken');
+                setIsLoggedIn(false);
+              }}
+              style={{
+                padding: '10px 20px',
+                background: 'rgba(239, 68, 68, 0.8)',
+                color: 'white',
+                border: 'none',
+                borderRadius: '8px',
+                cursor: 'pointer',
+                fontSize: '14px',
+                fontWeight: '600',
+                transition: 'all 0.3s ease'
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.background = 'rgba(239, 68, 68, 1)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.background = 'rgba(239, 68, 68, 0.8)';
+              }}
+            >
+              🚪 Sair
+            </button>
+          </div>
         </div>
 
         {/* Mensagem de Sucesso */}
@@ -278,7 +321,34 @@ export default function AdminPage() {
             border: '1px solid rgba(255, 255, 255, 0.1)'
           }}>
             <h2 style={{ fontSize: '1.5rem', marginBottom: '20px' }}>👥 Clientes</h2>
-            <p>Em breve: Gerenciamento de clientes.</p>
+            <p style={{ marginBottom: '20px' }}>Visualize todos os leads capturados pelo formulário de contato e chatbot.</p>
+            <button
+              onClick={() => setShowLeads(true)}
+              style={{
+                padding: '12px 24px',
+                background: 'linear-gradient(45deg, #10b981, #059669)',
+                color: 'white',
+                border: 'none',
+                borderRadius: '10px',
+                fontSize: '16px',
+                fontWeight: '600',
+                cursor: 'pointer',
+                transition: 'all 0.3s ease',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '8px'
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.transform = 'translateY(-2px)';
+                e.currentTarget.style.boxShadow = '0 10px 30px rgba(16, 185, 129, 0.4)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.transform = 'translateY(0)';
+                e.currentTarget.style.boxShadow = 'none';
+              }}
+            >
+              👀 Ver Leads e Clientes
+            </button>
           </div>
         </div>
 
@@ -300,6 +370,13 @@ export default function AdminPage() {
         <CreatePostForm 
           onClose={() => setShowCreatePost(false)}
           onSuccess={handleCreatePostSuccess}
+        />
+      )}
+
+      {/* Modal de Leads */}
+      {showLeads && (
+        <LeadsModal 
+          onClose={() => setShowLeads(false)}
         />
       )}
     </div>
