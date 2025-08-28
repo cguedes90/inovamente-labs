@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import CreatePostForm from '@/components/CreatePostForm';
 import LeadsModal from '@/components/LeadsModal';
+import TicketsModal from '@/components/TicketsModal';
 
 export default function AdminPage() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -11,6 +12,7 @@ export default function AdminPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [showCreatePost, setShowCreatePost] = useState(false);
   const [showLeads, setShowLeads] = useState(false);
+  const [showTickets, setShowTickets] = useState(false);
   const [successMessage, setSuccessMessage] = useState('');
 
   const handleLogin = async (e: React.FormEvent) => {
@@ -143,14 +145,47 @@ export default function AdminPage() {
             </button>
           </form>
 
-          <p style={{
-            color: 'rgba(255, 255, 255, 0.7)',
-            textAlign: 'center',
-            marginTop: '20px',
-            fontSize: '14px'
+          <div style={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            marginTop: '20px'
           }}>
-            🔐 Entre com suas credenciais de administrador
-          </p>
+            <p style={{
+              color: 'rgba(255, 255, 255, 0.7)',
+              fontSize: '14px',
+              margin: 0
+            }}>
+              🔐 Entre com suas credenciais de administrador
+            </p>
+            <a
+              href="https://www.inovamentelabs.com.br"
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{
+                color: 'rgba(255, 255, 255, 0.8)',
+                textDecoration: 'none',
+                fontSize: '14px',
+                padding: '6px 12px',
+                borderRadius: '20px',
+                border: '1px solid rgba(255, 255, 255, 0.2)',
+                transition: 'all 0.3s ease',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '6px'
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.background = 'rgba(255, 255, 255, 0.1)';
+                e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.4)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.background = 'transparent';
+                e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.2)';
+              }}
+            >
+              🌐 Voltar ao Site
+            </a>
+          </div>
         </div>
       </div>
     );
@@ -311,7 +346,34 @@ export default function AdminPage() {
             border: '1px solid rgba(255, 255, 255, 0.1)'
           }}>
             <h2 style={{ fontSize: '1.5rem', marginBottom: '20px' }}>🎫 Tickets</h2>
-            <p>Em breve: Gerenciamento de tickets de suporte.</p>
+            <p style={{ marginBottom: '20px' }}>Gerencie todos os tickets de suporte criados pelos clientes.</p>
+            <button
+              onClick={() => setShowTickets(true)}
+              style={{
+                padding: '12px 24px',
+                background: 'linear-gradient(45deg, #8b5cf6, #7c3aed)',
+                color: 'white',
+                border: 'none',
+                borderRadius: '10px',
+                fontSize: '16px',
+                fontWeight: '600',
+                cursor: 'pointer',
+                transition: 'all 0.3s ease',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '8px'
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.transform = 'translateY(-2px)';
+                e.currentTarget.style.boxShadow = '0 10px 30px rgba(139, 92, 246, 0.4)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.transform = 'translateY(0)';
+                e.currentTarget.style.boxShadow = 'none';
+              }}
+            >
+              🎫 Ver Tickets de Suporte
+            </button>
           </div>
 
           <div style={{
@@ -377,6 +439,13 @@ export default function AdminPage() {
       {showLeads && (
         <LeadsModal 
           onClose={() => setShowLeads(false)}
+        />
+      )}
+
+      {/* Modal de Tickets */}
+      {showTickets && (
+        <TicketsModal 
+          onClose={() => setShowTickets(false)}
         />
       )}
     </div>
