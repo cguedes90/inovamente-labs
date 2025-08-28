@@ -170,17 +170,7 @@ export default async function BlogPage() {
         }}>
           {/* Posts Grid */}
           <div>
-            {isLoading ? (
-              <div style={{
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
-                height: '300px',
-                color: '#64748b'
-              }}>
-                Carregando posts...
-              </div>
-            ) : posts.length === 0 ? (
+            {posts.length === 0 ? (
               <div style={{
                 textAlign: 'center',
                 padding: '60px 20px',
