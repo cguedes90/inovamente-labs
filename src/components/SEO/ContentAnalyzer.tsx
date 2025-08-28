@@ -237,9 +237,9 @@ export function InlineContentSuggestions({
           <div className="mt-6 p-4 bg-white rounded-lg border border-blue-200">
             <h5 className="font-semibold text-gray-900 mb-2">📝 Exemplo de Otimização:</h5>
             <p className="text-sm text-gray-700 leading-relaxed">
-              "Para quem busca <strong>{primaryKeyword}</strong>, é importante entender que isso envolve{' '}
+              &ldquo;Para quem busca <strong>{primaryKeyword}</strong>, é importante entender que isso envolve{' '}
               {keywords[0]?.semantic.slice(0, 2).join(' e ')}. Utilizamos tecnologias como{' '}
-              {keywords[0]?.entities.slice(0, 2).join(' e ')} para garantir os melhores resultados."
+              {keywords[0]?.entities.slice(0, 2).join(' e ')} para garantir os melhores resultados.&rdquo;
             </p>
           </div>
         </div>

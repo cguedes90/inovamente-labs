@@ -621,7 +621,7 @@ export default function StartupsPage() {
                 </div>
                 
                 <blockquote className="text-gray-700 mb-6 italic">
-                  "{testimonial.quote}"
+                  &ldquo;{testimonial.quote}&rdquo;
                 </blockquote>
                 
                 <div className="flex justify-between text-sm">

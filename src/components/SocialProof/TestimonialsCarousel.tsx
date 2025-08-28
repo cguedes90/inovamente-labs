@@ -255,7 +255,7 @@ export const TestimonialsCarousel: React.FC = () => {
                   <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609L24 4.266c-4.017 1.096-6.11 3.787-6.11 7.907v.931C19.612 13.773 21.612 15.1 23.78 15.1c1.378 0 2.22 1.096 2.22 2.456v7.391c0 1.36-.842 2.456-2.22 2.456h-7.56c-1.378 0-2.203-1.096-2.203-2.456zM0 21v-7.391c0-5.704 3.748-9.57 9-10.609L10 4.266C5.983 5.362 3.89 8.053 3.89 12.173v.931C5.612 13.773 7.612 15.1 9.78 15.1c1.378 0 2.22 1.096 2.22 2.456v7.391c0 1.36-.842 2.456-2.22 2.456H2.22C.842 23.456 0 22.36 0 21z"/>
                 </svg>
                 <blockquote className="text-xl md:text-2xl text-gray-800 leading-relaxed">
-                  "{currentTestimonial.content}"
+                  &ldquo;{currentTestimonial.content}&rdquo;
                 </blockquote>
               </div>
 
