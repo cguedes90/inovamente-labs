@@ -414,17 +414,6 @@ export default function AdminPage() {
           </div>
         </div>
 
-        <div style={{
-          marginTop: '40px',
-          padding: '20px',
-          background: 'rgba(34, 197, 94, 0.1)',
-          border: '1px solid rgba(34, 197, 94, 0.3)',
-          borderRadius: '10px'
-        }}>
-          <p style={{ margin: 0, color: '#22c55e' }}>
-            ✅ Painel Admin funcionando corretamente! Versão simplificada temporária ativa.
-          </p>
-        </div>
       </div>
 
       {/* Modal de Criar Post */}
