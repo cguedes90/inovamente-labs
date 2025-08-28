@@ -4,10 +4,10 @@ import pool from '@/lib/db'
 // GET individual lead
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { id } = params
+    const { id } = await params
     
     // Try to find in contact_forms first
     let result = await pool.query(`
@@ -45,10 +45,10 @@ export async function GET(
 // PUT - Update lead
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { id } = params
+    const { id } = await params
     const { 
       type, 
       name, 
@@ -131,10 +131,10 @@ export async function PUT(
 // PATCH - Update specific fields (like status for archiving)
 export async function PATCH(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { id } = params
+    const { id } = await params
     const { type, status } = await request.json()
 
     if (!type || !status) {
@@ -199,10 +199,10 @@ export async function PATCH(
 // DELETE - Delete lead
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { id } = params
+    const { id } = await params
     const { type } = await request.json()
 
     if (!type) {
