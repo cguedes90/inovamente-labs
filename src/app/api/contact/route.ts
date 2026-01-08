@@ -30,7 +30,7 @@ export async function POST(request: NextRequest) {
 
     const contact = result.rows[0]
 
-    // Enviar emails de notificação (executa em paralelo, não bloqueia a resposta)
+    // Enviar emails de notificação (executa em paralelo e aguarda resultado)
     const emailTasks = {
       adminNotification: emailService.sendContactFormNotification({
         name,
@@ -68,7 +68,7 @@ export async function POST(request: NextRequest) {
       email,
     })
 
-    Promise.all(
+    const results = await Promise.all(
       Object.entries(emailTasks).map(([key, task]) =>
         task
           .then(result => ({ key, result }))
@@ -80,20 +80,17 @@ export async function POST(request: NextRequest) {
             },
           }))
       )
-    ).then(results => {
-      const summary = results.reduce((acc: Record<string, string>, entry) => {
-        acc[entry.key] = entry.result.success ? '✅' : `❌ ${entry.result.error || 'Erro desconhecido'}`
-        return acc
-      }, {})
+    )
 
-      console.log('📧 Resultado dos envios de contato:', {
-        contactId: contact.id,
-        results: summary,
-      })
+    const summary = results.reduce((acc: Record<string, string>, entry) => {
+      acc[entry.key] = entry.result.success ? '✅' : `❌ ${entry.result.error || 'Erro desconhecido'}`
+      return acc
+    }, {})
+
+    console.log('📧 Resultado dos envios de contato:', {
+      contactId: contact.id,
+      results: summary,
     })
-      .catch(error => {
-        console.error('❌ Erro inesperado ao enviar emails (não bloqueante):', error)
-      })
 
     return NextResponse.json({
       success: true,
