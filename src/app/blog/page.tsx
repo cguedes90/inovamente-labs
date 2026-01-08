@@ -189,11 +189,9 @@ export default async function BlogPage() {
                   <BlogCard 
                     key={post.id} 
                     post={{
-                      ...post,
-                      id: parseInt(post.id),
                       date: formatDate(post.createdAt),
                       image: post.image || 'https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?w=800&h=400&fit=crop&auto=format'
-                    }} 
+                    }}
                   />
                 ))}
               </div>

@@ -4,7 +4,6 @@ import Link from 'next/link'
 
 interface BlogCardProps {
   post: {
-    id: number
     title: string
     excerpt: string
     author: string
@@ -12,6 +11,7 @@ interface BlogCardProps {
     date: string
     image: string
     readTime: string
+    slug: string
   }
 }
 
@@ -39,7 +39,7 @@ export default function BlogCard({ post }: BlogCardProps) {
       }}
     >
       <Link
-        href={`/blog/${post.id}`}
+        href={`/blog/${post.slug}`}
         style={{
           textDecoration: 'none',
           color: 'inherit',

@@ -1,4 +1,6 @@
+import type { Metadata } from 'next';
 import Link from 'next/link';
+import { notFound } from 'next/navigation';
 import Navbar from '@/components/Navbar';
 import WhatsAppButton from '@/components/WhatsAppButton';
 
@@ -8,19 +10,223 @@ interface BlogPostProps {
   }>;
 }
 
+interface BlogPost {
+  id: string;
+  title: string;
+  content: string;
+  excerpt: string;
+  author: string;
+  category: string;
+  readTime: string;
+  image?: string;
+  slug: string;
+  createdAt?: string;
+  seoTitle?: string | null;
+  seoDescription?: string | null;
+}
+
+const DEFAULT_BASE_URL = 'https://www.inovamentelabs.com.br';
+
+async function fetchPost(id: string): Promise<BlogPost | null> {
+  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || DEFAULT_BASE_URL;
+  const response = await fetch(`${baseUrl}/api/blog/${encodeURIComponent(id)}`, {
+    cache: 'no-store'
+  });
+
+  if (!response.ok) {
+    return null;
+  }
+
+  const data = await response.json();
+  return data.post || data;
+}
+
+function buildBlocks(content: string) {
+  const blocks: JSX.Element[] = [];
+  const lines = content.split('\n');
+  let paragraph: string[] = [];
+  let list: string[] = [];
+  let keyIndex = 0;
+
+  const flushParagraph = () => {
+    if (paragraph.length === 0) return;
+    blocks.push(
+      <p
+        key={`p-${keyIndex++}`}
+        style={{
+          fontSize: '1.1rem',
+          color: '#475569',
+          marginBottom: '24px'
+        }}
+      >
+        {paragraph.join(' ')}
+      </p>
+    );
+    paragraph = [];
+  };
+
+  const flushList = () => {
+    if (list.length === 0) return;
+    blocks.push(
+      <ul
+        key={`ul-${keyIndex++}`}
+        style={{
+          paddingLeft: '20px',
+          marginBottom: '24px',
+          color: '#475569'
+        }}
+      >
+        {list.map((item, index) => (
+          <li key={`li-${keyIndex++}-${index}`} style={{ marginBottom: '10px' }}>
+            {item}
+          </li>
+        ))}
+      </ul>
+    );
+    list = [];
+  };
+
+  lines.forEach((line) => {
+    const trimmed = line.trim();
+    if (!trimmed) {
+      flushList();
+      flushParagraph();
+      return;
+    }
+
+    if (trimmed.startsWith('### ')) {
+      flushList();
+      flushParagraph();
+      blocks.push(
+        <h3
+          key={`h3-${keyIndex++}`}
+          style={{
+            fontSize: '1.5rem',
+            fontWeight: '600',
+            color: '#0f172a',
+            marginTop: '32px',
+            marginBottom: '16px'
+          }}
+        >
+          {trimmed.slice(4)}
+        </h3>
+      );
+      return;
+    }
+
+    if (trimmed.startsWith('## ')) {
+      flushList();
+      flushParagraph();
+      blocks.push(
+        <h2
+          key={`h2-${keyIndex++}`}
+          style={{
+            fontSize: '2rem',
+            fontWeight: '700',
+            color: '#0f172a',
+            marginTop: '40px',
+            marginBottom: '20px'
+          }}
+        >
+          {trimmed.slice(3)}
+        </h2>
+      );
+      return;
+    }
+
+    if (trimmed.startsWith('# ')) {
+      flushList();
+      flushParagraph();
+      blocks.push(
+        <h1
+          key={`h1-${keyIndex++}`}
+          style={{
+            fontSize: '2.4rem',
+            fontWeight: '800',
+            color: '#0f172a',
+            marginTop: '40px',
+            marginBottom: '20px'
+          }}
+        >
+          {trimmed.slice(2)}
+        </h1>
+      );
+      return;
+    }
+
+    if (trimmed.startsWith('- ')) {
+      flushParagraph();
+      list.push(trimmed.slice(2));
+      return;
+    }
+
+    paragraph.push(trimmed);
+  });
+
+  flushList();
+  flushParagraph();
+
+  return blocks;
+}
+
+export async function generateMetadata({ params }: BlogPostProps): Promise<Metadata> {
+  const { id } = await params;
+  const post = await fetchPost(id);
+  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || DEFAULT_BASE_URL;
+
+  if (!post) {
+    return {
+      title: 'Post nao encontrado - InovaMente Labs'
+    };
+  }
+
+  const title = post.seoTitle || post.title;
+  const description = post.seoDescription || post.excerpt;
+  const url = `${baseUrl}/blog/${post.slug || id}`;
+  const image = post.image && post.image.startsWith('http') ? post.image : `${baseUrl}/og-blog.png`;
+
+  return {
+    title,
+    description,
+    alternates: {
+      canonical: url
+    },
+    openGraph: {
+      title,
+      description,
+      url,
+      type: 'article',
+      images: [
+        {
+          url: image,
+          width: 1200,
+          height: 630,
+          alt: post.title
+        }
+      ]
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title,
+      description,
+      images: [image]
+    }
+  };
+}
+
 export default async function BlogPost({ params }: BlogPostProps) {
   const { id } = await params;
-  
-  // Simulação de dados do post (em produção viria do banco de dados)
-  const post = {
-    id: parseInt(id),
-    title: 'No-Code e Low-Code: A Revolução do Desenvolvimento sem Programação [2025]',
-    author: 'Equipe InovaMente',
-    date: '23/07/2025',
-    readTime: '8 min',
-    category: 'Tecnologia',
-    image: '💻'
-  };
+  const post = await fetchPost(id);
+
+  if (!post) {
+    notFound();
+  }
+
+  const date = post.createdAt
+    ? new Date(post.createdAt).toLocaleDateString('pt-BR')
+    : '';
+  const heroImage = post.image || 'IA';
+  const showImage = heroImage.startsWith('http');
 
   return (
     <div style={{
@@ -31,7 +237,7 @@ export default async function BlogPost({ params }: BlogPostProps) {
     }}>
       <Navbar />
       <WhatsAppButton />
-      
+
       {/* Article Hero */}
       <section style={{
         background: 'linear-gradient(135deg, #3b82f6, #8b5cf6)',
@@ -40,515 +246,175 @@ export default async function BlogPost({ params }: BlogPostProps) {
         textAlign: 'center'
       }}>
         <div style={{
-          maxWidth: '1000px',
+          maxWidth: '1200px',
           margin: '0 auto'
         }}>
           <div style={{
-            background: 'linear-gradient(45deg, #10b981, #059669)',
-            color: 'white',
-            padding: '6px 16px',
-            borderRadius: '20px',
-            fontSize: '0.875rem',
-            fontWeight: '600',
-            display: 'inline-block',
-            marginBottom: '24px'
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: '12px',
+            marginBottom: '20px'
           }}>
-            {post.category}
+            <Link
+              href="/blog"
+              style={{
+                color: 'rgba(255, 255, 255, 0.8)',
+                textDecoration: 'none',
+                fontSize: '14px',
+                fontWeight: '500'
+              }}
+            >
+              &lt;- Voltar ao Blog
+            </Link>
+            <span style={{
+              color: 'rgba(255, 255, 255, 0.5)'
+            }}>
+              •
+            </span>
+            <span style={{
+              background: 'rgba(255, 255, 255, 0.2)',
+              padding: '4px 12px',
+              borderRadius: '20px',
+              fontSize: '12px',
+              fontWeight: '600'
+            }}>
+              {post.category}
+            </span>
           </div>
-          
+
           <h1 style={{
             fontSize: '3rem',
             fontWeight: '800',
-            marginBottom: '24px',
-            lineHeight: '1.1'
+            marginBottom: '20px',
+            lineHeight: '1.2'
           }}>
             {post.title}
           </h1>
-          
-          <div style={{
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-            gap: '24px',
-            marginBottom: '32px',
-            fontSize: '1rem',
-            color: 'rgba(255, 255, 255, 0.9)'
-          }}>
-            <span>✍️ {post.author}</span>
-            <span>📅 {post.date}</span>
-            <span>⏱️ {post.readTime} de leitura</span>
-          </div>
 
           <div style={{
             display: 'flex',
-            justifyContent: 'center',
-            gap: '16px',
-            marginBottom: '40px'
-          }}>
-            <button style={{
-              background: 'rgba(255, 255, 255, 0.2)',
-              color: 'white',
-              border: 'none',
-              padding: '10px 20px',
-              borderRadius: '8px',
-              fontSize: '0.875rem',
-              fontWeight: '600',
-              cursor: 'pointer'
-            }}>
-              🔗 Compartilhar no Twitter
-            </button>
-            <button style={{
-              background: 'rgba(255, 255, 255, 0.2)',
-              color: 'white',
-              border: 'none',
-              padding: '10px 20px',
-              borderRadius: '8px',
-              fontSize: '0.875rem',
-              fontWeight: '600',
-              cursor: 'pointer'
-            }}>
-              � Compartilhar no LinkedIn
-            </button>
-            <button style={{
-              background: 'rgba(255, 255, 255, 0.2)',
-              color: 'white',
-              border: 'none',
-              padding: '10px 20px',
-              borderRadius: '8px',
-              fontSize: '0.875rem',
-              fontWeight: '600',
-              cursor: 'pointer'
-            }}>
-              🔗 Copiar link
-            </button>
-          </div>
-
-          <div style={{
-            background: 'linear-gradient(135deg, #f1f5f9, #e2e8f0)',
-            borderRadius: '20px',
-            padding: '60px',
-            display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            margin: '0 auto',
-            maxWidth: '400px'
+            gap: '20px',
+            fontSize: '14px',
+            opacity: '0.9'
           }}>
-            <span style={{
-              fontSize: '5rem',
-              background: 'linear-gradient(45deg, #3b82f6, #8b5cf6)',
-              WebkitBackgroundClip: 'text',
-              WebkitTextFillColor: 'transparent'
-            }}>
-              {post.image}
-            </span>
+            <span>Por {post.author}</span>
+            <span>•</span>
+            <span>{date}</span>
+            <span>•</span>
+            <span>{post.readTime} de leitura</span>
           </div>
         </div>
       </section>
 
-      {/* Conteúdo do Artigo */}
+      {/* Article Content */}
       <main style={{
-        maxWidth: '1000px',
+        maxWidth: '800px',
         margin: '0 auto',
-        padding: '80px 20px'
+        padding: '60px 20px'
       }}>
-        <div style={{
-          background: '#ffffff',
-          borderRadius: '20px',
+        <article style={{
+          background: 'white',
           padding: '60px',
-          boxShadow: '0 10px 30px rgba(0, 0, 0, 0.1)',
-          lineHeight: '1.8'
+          borderRadius: '24px',
+          boxShadow: '0 20px 60px rgba(0, 0, 0, 0.1)',
+          border: '1px solid #e2e8f0'
         }}>
-          
-          <p style={{
-            fontSize: '1.25rem',
-            color: '#64748b',
-            marginBottom: '40px',
-            fontStyle: 'italic',
-            padding: '20px',
-            background: 'linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(16, 185, 129, 0.1))',
-            borderRadius: '12px',
-            borderLeft: '4px solid #3b82f6'
-          }}>
-            No cenário atual de transformação digital acelerada, as plataformas No-Code e Low-Code emergiram como verdadeiras disruptoras do setor de desenvolvimento de software. Essas tecnologias democratizam a criação de aplicações, permitindo que profissionais sem formação técnica tradicional desenvolvam soluções robustas e escaláveis.
-          </p>
-
-          <h2 style={{
-            fontSize: '2rem',
-            fontWeight: '700',
-            color: '#1e293b',
-            marginTop: '60px',
-            marginBottom: '30px',
-            borderBottom: '3px solid #3b82f6',
-            paddingBottom: '10px'
-          }}>
-            O Que São Plataformas No-Code e Low-Code?
-          </h2>
-          
-          <p style={{
-            fontSize: '1.1rem',
-            color: '#475569',
-            marginBottom: '30px'
-          }}>
-            <strong style={{ color: '#1e293b' }}>No-Code</strong> são plataformas que permitem criar aplicações completas através de interfaces visuais intuitivas, sem escrever uma única linha de código. Utilizando drag-and-drop, configurações visuais e automações pré-construídas, usuários empresariais podem desenvolver desde simples formulários até sistemas complexos de gestão.
-          </p>
-
-          <p style={{
-            fontSize: '1.1rem',
-            color: '#475569',
-            marginBottom: '50px'
-          }}>
-            <strong style={{ color: '#1e293b' }}>Low-Code</strong> mantém a mesma filosofia de desenvolvimento visual, mas oferece flexibilidade adicional através da possibilidade de inserir código personalizado quando necessário. Essa abordagem híbrida é ideal para projetos que exigem customizações específicas ou integrações complexas.
-          </p>
-
-          <h2 style={{
-            fontSize: '2rem',
-            fontWeight: '700',
-            color: '#1e293b',
-            marginTop: '60px',
-            marginBottom: '30px',
-            borderBottom: '3px solid #10b981',
-            paddingBottom: '10px'
-          }}>
-            Casos de Sucesso na InovaMente Labs
-          </h2>
-
-          <h3 style={{
-            fontSize: '1.5rem',
-            fontWeight: '600',
-            color: '#0369a1',
-            marginTop: '40px',
-            marginBottom: '20px'
-          }}>
-            🏢 Mystica CRM - Gestão 360° de Relacionamento
-          </h3>
-          
-          <p style={{
-            fontSize: '1.1rem',
-            color: '#475569',
-            marginBottom: '20px'
-          }}>
-            Desenvolvido utilizando tecnologias low-code, o Mystica CRM demonstra como é possível criar soluções empresariais robustas em tempo recorde. Nossa plataforma integra:
-          </p>
-          
-          <ul style={{
-            fontSize: '1.1rem',
-            color: '#475569',
-            marginBottom: '40px',
-            paddingLeft: '20px'
-          }}>
-            <li style={{ marginBottom: '10px' }}>📊 Dashboard executivo com métricas em tempo real</li>
-            <li style={{ marginBottom: '10px' }}>🤖 Automação de processos de vendas e marketing</li>
-            <li style={{ marginBottom: '10px' }}>📱 Interface responsiva para equipes móveis</li>
-            <li style={{ marginBottom: '10px' }}>🔗 Integração nativa com WhatsApp Business e redes sociais</li>
-          </ul>
-
-          <h3 style={{
-            fontSize: '1.5rem',
-            fontWeight: '600',
-            color: '#0369a1',
-            marginTop: '40px',
-            marginBottom: '20px'
-          }}>
-            💳 Fidelizaa - Programa de Fidelidade Inteligente
-          </h3>
-          
-          <p style={{
-            fontSize: '1.1rem',
-            color: '#475569',
-            marginBottom: '20px'
-          }}>
-            Um exemplo perfeito de como No-Code pode acelerar a inovação. O Fidelizaa foi desenvolvido em apenas 30 dias, incluindo:
-          </p>
-          
-          <ul style={{
-            fontSize: '1.1rem',
-            color: '#475569',
-            marginBottom: '50px',
-            paddingLeft: '20px'
-          }}>
-            <li style={{ marginBottom: '10px' }}>🎯 Sistema de pontuação gamificado</li>
-            <li style={{ marginBottom: '10px' }}>📲 App mobile nativo</li>
-            <li style={{ marginBottom: '10px' }}>💳 Cartão de fidelidade digital</li>
-            <li style={{ marginBottom: '10px' }}>📈 Analytics avançado de comportamento do cliente</li>
-          </ul>
-
-          <h2 style={{
-            fontSize: '2rem',
-            fontWeight: '700',
-            color: '#1e293b',
-            marginTop: '60px',
-            marginBottom: '30px',
-            borderBottom: '3px solid #8b5cf6',
-            paddingBottom: '10px'
-          }}>
-            ROI Comprovado: Números que Impressionam
-          </h2>
-
-          <p style={{
-            fontSize: '1.1rem',
-            color: '#475569',
-            marginBottom: '40px'
-          }}>
-            Nossos clientes experimentam resultados extraordinários com a implementação de soluções No-Code/Low-Code:
-          </p>
-
-          <div style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
-            gap: '20px',
-            marginBottom: '50px'
-          }}>
-            <div style={{
-              background: 'linear-gradient(135deg, #3b82f6, #1d4ed8)',
-              color: 'white',
-              padding: '30px 20px',
-              borderRadius: '15px',
-              textAlign: 'center'
-            }}>
+          <div style={{ marginBottom: '40px' }}>
+            {showImage ? (
+              <img
+                src={heroImage}
+                alt={post.title}
+                style={{
+                  width: '100%',
+                  maxHeight: '420px',
+                  objectFit: 'cover',
+                  borderRadius: '16px',
+                  marginBottom: '30px'
+                }}
+              />
+            ) : (
               <div style={{
+                background: 'linear-gradient(135deg, #eef2ff, #e2e8f0)',
+                borderRadius: '16px',
+                padding: '40px',
+                textAlign: 'center',
                 fontSize: '3rem',
-                fontWeight: '800',
-                marginBottom: '10px'
-              }}>75%</div>
-              <div style={{
-                fontSize: '0.9rem',
-                opacity: '0.9'
-              }}>Redução no tempo de desenvolvimento</div>
-            </div>
-            
-            <div style={{
-              background: 'linear-gradient(135deg, #10b981, #059669)',
-              color: 'white',
-              padding: '30px 20px',
-              borderRadius: '15px',
-              textAlign: 'center'
-            }}>
-              <div style={{
-                fontSize: '3rem',
-                fontWeight: '800',
-                marginBottom: '10px'
-              }}>60%</div>
-              <div style={{
-                fontSize: '0.9rem',
-                opacity: '0.9'
-              }}>Economia de custos operacionais</div>
-            </div>
-            
-            <div style={{
-              background: 'linear-gradient(135deg, #8b5cf6, #7c3aed)',
-              color: 'white',
-              padding: '30px 20px',
-              borderRadius: '15px',
-              textAlign: 'center'
-            }}>
-              <div style={{
-                fontSize: '3rem',
-                fontWeight: '800',
-                marginBottom: '10px'
-              }}>300%</div>
-              <div style={{
-                fontSize: '0.9rem',
-                opacity: '0.9'
-              }}>Aumento na produtividade da equipe</div>
-            </div>
-            
-            <div style={{
-              background: 'linear-gradient(135deg, #f59e0b, #d97706)',
-              color: 'white',
-              padding: '30px 20px',
-              borderRadius: '15px',
-              textAlign: 'center'
-            }}>
-              <div style={{
-                fontSize: '3rem',
-                fontWeight: '800',
-                marginBottom: '10px'
-              }}>90%</div>
-              <div style={{
-                fontSize: '0.9rem',
-                opacity: '0.9'
-              }}>Satisfação dos usuários finais</div>
-            </div>
+                marginBottom: '30px'
+              }}>
+                {heroImage}
+              </div>
+            )}
           </div>
 
           <div style={{
-            background: 'linear-gradient(135deg, #3b82f6, #1d4ed8)',
+            fontSize: '1.1rem',
+            lineHeight: '1.8',
+            color: '#374151'
+          }}>
+            {buildBlocks(post.content)}
+          </div>
+
+          <div style={{
+            background: 'linear-gradient(135deg, #3b82f6, #8b5cf6)',
             color: 'white',
-            padding: '40px',
-            borderRadius: '20px',
-            textAlign: 'center',
-            marginTop: '60px'
-          }}>
-            <h3 style={{
-              fontSize: '1.5rem',
-              fontWeight: '700',
-              marginBottom: '20px'
-            }}>
-              🚀 Pronto para Revolucionar seu Negócio?
-            </h3>
-            <p style={{
-              fontSize: '1.1rem',
-              marginBottom: '30px',
-              opacity: '0.9'
-            }}>
-              Converse com nossos especialistas e descubra como as soluções No-Code/Low-Code podem acelerar seu crescimento.
-            </p>
-            <Link 
-              href="/#contato"
-              style={{
-                background: 'white',
-                color: '#3b82f6',
-                padding: '15px 30px',
-                borderRadius: '10px',
-                textDecoration: 'none',
-                fontWeight: '600',
-                fontSize: '1.1rem',
-                display: 'inline-block'
-              }}
-            >
-              Falar com Especialista
-            </Link>
-          </div>
-        </div>
-
-        {/* Posts Relacionados */}
-        <div style={{
-          marginTop: '80px',
-          background: '#ffffff',
-          borderRadius: '20px',
-          padding: '40px',
-          boxShadow: '0 10px 30px rgba(0, 0, 0, 0.1)'
-        }}>
-          <h3 style={{
-            fontSize: '1.5rem',
-            fontWeight: '700',
-            color: '#1e293b',
-            marginBottom: '30px',
+            padding: '30px',
+            borderRadius: '16px',
+            marginTop: '40px',
             textAlign: 'center'
           }}>
-            📖 Artigos Relacionados
-          </h3>
-          <div style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
-            gap: '20px'
-          }}>
-            <Link href="/blog/2" style={{
-              display: 'block',
-              padding: '20px',
-              background: 'linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(59, 130, 246, 0.1))',
-              borderRadius: '12px',
-              textDecoration: 'none',
-              color: 'inherit',
-              border: '1px solid rgba(16, 185, 129, 0.2)'
-            }}>
-              <h4 style={{
-                fontSize: '1.1rem',
-                fontWeight: '600',
-                color: '#1e293b',
-                marginBottom: '10px'
-              }}>
-                Desenvolvimento de Software Empresarial: Prateleira vs Sob Demanda
-              </h4>
-              <p style={{
-                fontSize: '0.9rem',
-                color: '#64748b'
-              }}>
-                Como escolher a melhor estratégia para seu negócio...
-              </p>
-            </Link>
-            
-            <Link href="/blog/3" style={{
-              display: 'block',
-              padding: '20px',
-              background: 'linear-gradient(135deg, rgba(139, 92, 246, 0.1), rgba(236, 72, 153, 0.1))',
-              borderRadius: '12px',
-              textDecoration: 'none',
-              color: 'inherit',
-              border: '1px solid rgba(139, 92, 246, 0.2)'
-            }}>
-              <h4 style={{
-                fontSize: '1.1rem',
-                fontWeight: '600',
-                color: '#1e293b',
-                marginBottom: '10px'
-              }}>
-                Blockchain para Empresas: Revolucionando Negócios Tradicionais
-              </h4>
-              <p style={{
-                fontSize: '0.9rem',
-                color: '#64748b'
-              }}>
-                Aplicações práticas e ROI comprovado...
-              </p>
-            </Link>
-          </div>
-        </div>
-      </main>
-
-      {/* Footer */}
-      <footer style={{
-        background: '#0f172a',
-        color: 'white',
-        padding: '60px 20px 40px',
-        marginTop: '80px'
-      }}>
-        <div style={{
-          maxWidth: '1200px',
-          margin: '0 auto',
-          textAlign: 'center'
-        }}>
-          <div style={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            marginBottom: '20px'
-          }}>
-            <span style={{
-              background: 'linear-gradient(45deg, #3b82f6, #8b5cf6)',
-              WebkitBackgroundClip: 'text',
-              WebkitTextFillColor: 'transparent',
-              fontSize: '1.5rem',
-              marginRight: '8px'
-            }}>⚡</span>
-            <h4 style={{
-              fontSize: '1.5rem',
+            <h3 style={{
+              fontSize: '1.3rem',
               fontWeight: '700',
-              margin: '0'
+              marginBottom: '15px'
             }}>
-              InovaMente Labs
-            </h4>
-          </div>
-          <p style={{
-            color: '#94a3b8',
-            marginBottom: '30px'
-          }}>
-            Transformando ideias em soluções digitais inovadoras.
-          </p>
-          <div style={{
-            display: 'flex',
-            justifyContent: 'center',
-            gap: '30px',
-            marginBottom: '30px'
-          }}>
-            <Link href="/" style={{ color: '#94a3b8', textDecoration: 'none' }}>Home</Link>
-            <Link href="/blog" style={{ color: '#94a3b8', textDecoration: 'none' }}>Blog</Link>
-            <Link href="/chamados" style={{ color: '#94a3b8', textDecoration: 'none' }}>Portal Cliente</Link>
-            <Link href="/#contato" style={{ color: '#94a3b8', textDecoration: 'none' }}>Contato</Link>
-          </div>
-          <div style={{
-            borderTop: '1px solid #1e293b',
-            paddingTop: '20px'
-          }}>
+              Pronto para acelerar sua transformacao digital?
+            </h3>
             <p style={{
-              color: '#64748b',
-              margin: '0'
+              marginBottom: '20px',
+              opacity: '0.9'
             }}>
-              © 2025 InovaMente Labs - Revolucionando o mercado digital
+              Fale com a InovaMente Labs e descubra como aplicar automacao e IA com foco em ROI.
             </p>
+            <div style={{
+              display: 'flex',
+              gap: '15px',
+              justifyContent: 'center',
+              flexWrap: 'wrap'
+            }}>
+              <Link
+                href="/contato"
+                style={{
+                  background: 'white',
+                  color: '#3b82f6',
+                  padding: '12px 24px',
+                  borderRadius: '8px',
+                  textDecoration: 'none',
+                  fontWeight: '600'
+                }}
+              >
+                Fale Conosco
+              </Link>
+              <Link
+                href="/solucoes"
+                style={{
+                  background: 'rgba(255, 255, 255, 0.2)',
+                  color: 'white',
+                  padding: '12px 24px',
+                  borderRadius: '8px',
+                  textDecoration: 'none',
+                  fontWeight: '600',
+                  border: '1px solid rgba(255, 255, 255, 0.4)'
+                }}
+              >
+                Ver Solucoes
+              </Link>
+            </div>
           </div>
-        </div>
-      </footer>
+        </article>
+      </main>
     </div>
   );
 }
