@@ -1,0 +1,50 @@
+==========================================================
+  📋 COPIAR E COLAR NO VERCEL - VARIÁVEIS DE AMBIENTE
+==========================================================
+
+Acesse: https://vercel.com/dashboard
+Selecione o projeto: inovamente-labs
+Vá em: Settings → Environment Variables
+
+IMPORTANTE: Copie os valores do seu arquivo .env local!
+
+----------------------------------------------------------
+Variável 1 de 4
+----------------------------------------------------------
+Name: BREVO_API_KEY
+Value: [COPIE DO ARQUIVO .ENV - BREVO_API_KEY]
+Environments: ✅ Production  ✅ Preview  ✅ Development
+
+----------------------------------------------------------
+Variável 2 de 4
+----------------------------------------------------------
+Name: FROM_EMAIL
+Value: inovamentelabs@outlook.com
+Environments: ✅ Production  ✅ Preview  ✅ Development
+
+----------------------------------------------------------
+Variável 3 de 4
+----------------------------------------------------------
+Name: FROM_NAME
+Value: Inovamente Labs
+Environments: ✅ Production  ✅ Preview  ✅ Development
+
+----------------------------------------------------------
+Variável 4 de 4
+----------------------------------------------------------
+Name: ADMIN_EMAIL
+Value: contato@inovamentelabs.com.br
+Environments: ✅ Production  ✅ Preview  ✅ Development
+
+==========================================================
+
+DEPOIS DE ADICIONAR TODAS AS VARIÁVEIS:
+
+1. Vá em "Deployments"
+2. Clique nos 3 pontos (...) do último deploy
+3. Selecione "Redeploy"
+4. Clique em "Redeploy" novamente
+
+AGUARDE 2-3 MINUTOS E TESTE!
+
+==========================================================

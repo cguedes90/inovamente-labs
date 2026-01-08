@@ -22,9 +22,15 @@ ADMIN_EMAIL="contato@inovamentelabs.com.br"
 
 > **Nota:** A API Key real está configurada no arquivo `.env` (não versionado no Git por segurança).
 
-### Dependências Instaladas
+### Dependências
 
-- `sib-api-v3-sdk@8.5.0` - SDK oficial do Brevo/Sendinblue
+**Nenhuma dependência externa necessária!**
+
+O sistema usa a **API HTTP nativa do Brevo**, fazendo requisições diretas via `fetch()`. Isso garante:
+- ✅ Compatibilidade total com Next.js 15
+- ✅ Sem dependências deprecated
+- ✅ Build mais rápido e leve
+- ✅ Menos vulnerabilidades de segurança
 
 ---
 

@@ -8,13 +8,8 @@
  * - ADMIN_EMAIL: Email do administrador para notificações
  */
 
-import * as SibApiV3Sdk from 'sib-api-v3-sdk';
-
-// Configuração da API do Brevo
-const apiKey = SibApiV3Sdk.ApiClient.instance.authentications['api-key'];
-apiKey.apiKey = process.env.BREVO_API_KEY || '';
-
-const apiInstance = new SibApiV3Sdk.TransactionalEmailsApi();
+// Brevo API endpoint
+const BREVO_API_URL = 'https://api.brevo.com/v3/smtp/email';
 
 // Tipos para melhor experiência de desenvolvimento
 export interface EmailRecipient {
@@ -76,53 +71,78 @@ export class EmailService {
       // Preparar destinatários
       const recipients = Array.isArray(options.to) ? options.to : [options.to];
 
-      // Criar objeto de envio do Brevo
-      const sendSmtpEmail = new SibApiV3Sdk.SendSmtpEmail();
-      sendSmtpEmail.sender = {
-        email: this.fromEmail,
-        name: this.fromName,
+      // Criar payload para a API do Brevo
+      const payload: any = {
+        sender: {
+          email: this.fromEmail,
+          name: this.fromName,
+        },
+        to: recipients.map(r => ({
+          email: r.email,
+          name: r.name || r.email,
+        })),
+        subject: options.subject,
       };
-      sendSmtpEmail.to = recipients.map(r => ({
-        email: r.email,
-        name: r.name || r.email,
-      }));
-      sendSmtpEmail.subject = options.subject;
-      sendSmtpEmail.htmlContent = options.htmlContent;
-      sendSmtpEmail.textContent = options.textContent;
 
+      // Adicionar conteúdo HTML ou texto
+      if (options.htmlContent) {
+        payload.htmlContent = options.htmlContent;
+      }
+      if (options.textContent) {
+        payload.textContent = options.textContent;
+      }
+
+      // Adicionar reply-to se fornecido
       if (options.replyTo) {
-        sendSmtpEmail.replyTo = {
+        payload.replyTo = {
           email: options.replyTo.email,
           name: options.replyTo.name || options.replyTo.email,
         };
       }
 
-      if (options.cc) {
-        sendSmtpEmail.cc = options.cc.map(r => ({
+      // Adicionar CC se fornecido
+      if (options.cc && options.cc.length > 0) {
+        payload.cc = options.cc.map(r => ({
           email: r.email,
           name: r.name || r.email,
         }));
       }
 
-      if (options.bcc) {
-        sendSmtpEmail.bcc = options.bcc.map(r => ({
+      // Adicionar BCC se fornecido
+      if (options.bcc && options.bcc.length > 0) {
+        payload.bcc = options.bcc.map(r => ({
           email: r.email,
           name: r.name || r.email,
         }));
       }
 
-      // Enviar email
-      const response = await apiInstance.sendTransacEmail(sendSmtpEmail);
+      // Enviar email via API HTTP do Brevo
+      const response = await fetch(BREVO_API_URL, {
+        method: 'POST',
+        headers: {
+          'accept': 'application/json',
+          'api-key': process.env.BREVO_API_KEY!,
+          'content-type': 'application/json',
+        },
+        body: JSON.stringify(payload),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(`Brevo API Error: ${response.status} - ${JSON.stringify(errorData)}`);
+      }
+
+      const data = await response.json();
 
       console.log('✅ Email enviado com sucesso:', {
-        messageId: response.messageId,
+        messageId: data.messageId,
         to: recipients.map(r => r.email).join(', '),
         subject: options.subject,
       });
 
       return {
         success: true,
-        messageId: response.messageId,
+        messageId: data.messageId,
       };
     } catch (error) {
       console.error('❌ Erro ao enviar email:', error);
