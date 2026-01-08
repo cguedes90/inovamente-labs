@@ -31,9 +31,8 @@ export async function POST(request: NextRequest) {
     const contact = result.rows[0]
 
     // Enviar emails de notificação (executa em paralelo, não bloqueia a resposta)
-    Promise.all([
-      // Email para o administrador principal
-      emailService.sendContactFormNotification({
+    const emailTasks = {
+      adminNotification: emailService.sendContactFormNotification({
         name,
         email,
         subject,
@@ -41,8 +40,7 @@ export async function POST(request: NextRequest) {
         phone,
         company,
       }),
-      // Email com cópia para cedriquepereira@gmail.com
-      emailService.send({
+      adminCopy: emailService.send({
         to: { email: 'cedriquepereira@gmail.com', name: 'Cedrique Pereira' },
         cc: [{ email: 'contato@inovamentelabs.com.br', name: 'InovaMente Labs' }],
         subject: `[CONTATO SITE] ${subject} - ${name}`,
@@ -58,20 +56,43 @@ export async function POST(request: NextRequest) {
         `,
         replyTo: { email, name },
       }),
-      // Email de confirmação para o cliente
-      emailService.sendContactConfirmation({
+      clientConfirmation: emailService.sendContactConfirmation({
         email,
         name,
       }),
-    ])
-      .then(([adminResult, clientResult]) => {
-        console.log('📧 Emails enviados:', {
-          admin: adminResult.success ? '✅' : '❌',
-          client: clientResult.success ? '✅' : '❌',
-        })
+    }
+
+    console.log('📧 Disparo de emails do contato iniciado:', {
+      contactId: contact.id,
+      subject,
+      email,
+    })
+
+    Promise.all(
+      Object.entries(emailTasks).map(([key, task]) =>
+        task
+          .then(result => ({ key, result }))
+          .catch(error => ({
+            key,
+            result: {
+              success: false,
+              error: error instanceof Error ? error.message : 'Erro desconhecido ao enviar email',
+            },
+          }))
+      )
+    ).then(results => {
+      const summary = results.reduce((acc: Record<string, string>, entry) => {
+        acc[entry.key] = entry.result.success ? '✅' : `❌ ${entry.result.error || 'Erro desconhecido'}`
+        return acc
+      }, {})
+
+      console.log('📧 Resultado dos envios de contato:', {
+        contactId: contact.id,
+        results: summary,
       })
+    })
       .catch(error => {
-        console.error('❌ Erro ao enviar emails (não bloqueante):', error)
+        console.error('❌ Erro inesperado ao enviar emails (não bloqueante):', error)
       })
 
     return NextResponse.json({

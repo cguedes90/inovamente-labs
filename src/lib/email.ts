@@ -116,6 +116,13 @@ export class EmailService {
         }));
       }
 
+      console.log('📧 Enviando email:', {
+        to: recipients.map(r => r.email).join(', '),
+        subject: options.subject,
+        hasHtml: Boolean(options.htmlContent),
+        hasText: Boolean(options.textContent),
+      });
+
       // Enviar email via API HTTP do Brevo
       const response = await fetch(BREVO_API_URL, {
         method: 'POST',
@@ -128,8 +135,8 @@ export class EmailService {
       });
 
       if (!response.ok) {
-        const errorData = await response.json().catch(() => ({}));
-        throw new Error(`Brevo API Error: ${response.status} - ${JSON.stringify(errorData)}`);
+        const errorText = await response.text().catch(() => '');
+        throw new Error(`Brevo API Error: ${response.status} - ${errorText || 'Sem resposta do servidor'}`);
       }
 
       const data = await response.json();
