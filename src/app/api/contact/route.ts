@@ -32,7 +32,7 @@ export async function POST(request: NextRequest) {
 
     // Enviar emails de notificação (executa em paralelo, não bloqueia a resposta)
     Promise.all([
-      // Email para o administrador
+      // Email para o administrador principal
       emailService.sendContactFormNotification({
         name,
         email,
@@ -40,6 +40,23 @@ export async function POST(request: NextRequest) {
         message: message || '',
         phone,
         company,
+      }),
+      // Email com cópia para cedriquepereira@gmail.com
+      emailService.send({
+        to: { email: 'cedriquepereira@gmail.com', name: 'Cedrique Pereira' },
+        cc: [{ email: 'contato@inovamentelabs.com.br', name: 'InovaMente Labs' }],
+        subject: `[CONTATO SITE] ${subject} - ${name}`,
+        htmlContent: `
+          <h2>Novo contato recebido pelo site</h2>
+          <p><strong>Nome:</strong> ${name}</p>
+          <p><strong>Email:</strong> ${email}</p>
+          ${phone ? `<p><strong>Telefone:</strong> ${phone}</p>` : ''}
+          ${company ? `<p><strong>Empresa:</strong> ${company}</p>` : ''}
+          <p><strong>Assunto:</strong> ${subject}</p>
+          <p><strong>Mensagem:</strong></p>
+          <p>${message || 'Nenhuma mensagem adicional.'}</p>
+        `,
+        replyTo: { email, name },
       }),
       // Email de confirmação para o cliente
       emailService.sendContactConfirmation({
