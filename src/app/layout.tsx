@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import './globals.css';
 import QueryProvider from '@/lib/queryClient';
+import GoogleAnalytics from '@/components/GoogleAnalytics';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -102,6 +103,7 @@ export default function RootLayout({
   return (
     <html lang="pt-BR">
       <head>
+        <GoogleAnalytics />
         {/* Favicons */}
         <link rel="icon" href="/favicon.ico" sizes="16x16 32x32" />
         <link rel="icon" href="/favicon.svg" type="image/svg+xml" />

@@ -4,6 +4,7 @@ import { useState } from 'react';
 import Navbar from '@/components/Navbar'
 import WhatsAppButton from '@/components/WhatsAppButton'
 import WhatsAppCtaButton from '@/components/WhatsAppCtaButton'
+import styles from './contact.module.css'
 
 export default function ContatoPage() {
   const [formData, setFormData] = useState({
@@ -65,144 +66,56 @@ export default function ContatoPage() {
     }
   };
   return (
-    <div style={{
-      minHeight: '100vh',
-      background: 'linear-gradient(135deg, #f8fafc 0%, #ffffff 50%, #f1f5f9 100%)',
-      color: '#1e293b',
-      fontFamily: 'system-ui, -apple-system, sans-serif'
-    }}>
+    <div className={styles.container}>
       <Navbar />
       <WhatsAppButton />
-      
-      <div style={{
-        maxWidth: '1200px',
-        margin: '0 auto',
-        padding: '40px 20px'
-      }}>
+
+      <div className={styles.content}>
         {/* Header */}
-        <div style={{
-          textAlign: 'center',
-          marginBottom: '60px'
-        }}>
-          <h1 style={{
-            fontSize: '3.5rem',
-            fontWeight: '800',
-            marginBottom: '20px',
-            background: 'linear-gradient(45deg, #3b82f6, #8b5cf6)',
-            WebkitBackgroundClip: 'text',
-            WebkitTextFillColor: 'transparent'
-          }}>
+        <div className={styles.header}>
+          <h1 className={styles.title}>
             📞 Entre em Contato
           </h1>
-          <p style={{
-            fontSize: '1.3rem',
-            color: '#64748b',
-            maxWidth: '600px',
-            margin: '0 auto'
-          }}>
-            Estamos prontos para transformar suas ideias em realidade digital. 
+          <p className={styles.subtitle}>
+            Estamos prontos para transformar suas ideias em realidade digital.
             Fale conosco e descubra como podemos ajudar seu negócio.
           </p>
         </div>
 
-        <div style={{
-          display: 'grid',
-          gridTemplateColumns: '1fr 1fr',
-          gap: '60px',
-          alignItems: 'start'
-        }}>
+        <div className={styles.grid}>
           {/* Formulário */}
-          <div style={{
-            background: 'white',
-            padding: '40px',
-            borderRadius: '20px',
-            boxShadow: '0 20px 60px rgba(0, 0, 0, 0.1)',
-            border: '1px solid #e2e8f0'
-          }}>
-            <div style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: '12px',
-              marginBottom: '30px'
-            }}>
-              <div style={{
-                width: '40px',
-                height: '40px',
-                borderRadius: '12px',
-                background: 'linear-gradient(45deg, #3b82f6, #8b5cf6)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                fontSize: '20px'
-              }}>
+          <div className={styles.formCard}>
+            <div className={styles.formHeader}>
+              <div className={styles.formIcon}>
                 ✉️
               </div>
-              <h2 style={{
-                fontSize: '1.8rem',
-                fontWeight: '700',
-                color: '#1e293b',
-                margin: '0'
-              }}>
+              <h2 className={styles.formTitle}>
                 Nos envie sua solicitação
               </h2>
             </div>
-            
-            <p style={{
-              color: '#64748b',
-              marginBottom: '30px',
-              fontSize: '16px'
-            }}>
+
+            <p className={styles.formDescription}>
               Preencha o formulário e nossa equipe entrará em contato em até 24 horas.
             </p>
 
             {/* Mensagem de Sucesso */}
             {showSuccess && (
-              <div style={{
-                background: '#dcfce7',
-                border: '1px solid #16a34a',
-                color: '#16a34a',
-                padding: '16px',
-                borderRadius: '12px',
-                marginBottom: '20px',
-                textAlign: 'center'
-              }}>
+              <div className={styles.successMessage}>
                 ✅ Mensagem enviada com sucesso! Entraremos em contato em breve.
               </div>
             )}
 
             {/* Mensagem de Erro */}
             {error && (
-              <div style={{
-                background: '#fee2e2',
-                border: '1px solid #dc2626',
-                color: '#dc2626',
-                padding: '16px',
-                borderRadius: '12px',
-                marginBottom: '20px',
-                textAlign: 'center'
-              }}>
+              <div className={styles.errorMessage}>
                 ❌ {error}
               </div>
             )}
 
-            <form onSubmit={handleSubmit} style={{
-              display: 'flex',
-              flexDirection: 'column',
-              gap: '20px'
-            }}>
-              <div style={{
-                display: 'grid',
-                gridTemplateColumns: '1fr 1fr',
-                gap: '16px'
-              }}>
-                <div>
-                  <label style={{
-                    display: 'block',
-                    marginBottom: '8px',
-                    fontWeight: '600',
-                    color: '#374151',
-                    fontSize: '14px'
-                  }}>
+            <form onSubmit={handleSubmit}>
+              <div className={styles.formGrid}>
+                <div className={styles.inputGroup}>
+                  <label className={styles.label}>
                     Nome Completo <span style={{ color: '#ef4444' }}>*</span>
                   </label>
                   <input
@@ -212,26 +125,11 @@ export default function ContatoPage() {
                     onChange={handleInputChange}
                     placeholder="Seu nome"
                     required
-                    style={{
-                      width: '100%',
-                      padding: '14px 16px',
-                      border: '2px solid #e5e7eb',
-                      borderRadius: '12px',
-                      fontSize: '16px',
-                      outline: 'none',
-                      transition: 'all 0.3s ease',
-                      fontFamily: 'inherit'
-                    }}
+                    className={styles.input}
                   />
                 </div>
-                <div>
-                  <label style={{
-                    display: 'block',
-                    marginBottom: '8px',
-                    fontWeight: '600',
-                    color: '#374151',
-                    fontSize: '14px'
-                  }}>
+                <div className={styles.inputGroup}>
+                  <label className={styles.label}>
                     Email <span style={{ color: '#ef4444' }}>*</span>
                   </label>
                   <input
@@ -241,33 +139,14 @@ export default function ContatoPage() {
                     onChange={handleInputChange}
                     placeholder="seu@email.com"
                     required
-                    style={{
-                      width: '100%',
-                      padding: '14px 16px',
-                      border: '2px solid #e5e7eb',
-                      borderRadius: '12px',
-                      fontSize: '16px',
-                      outline: 'none',
-                      transition: 'all 0.3s ease',
-                      fontFamily: 'inherit'
-                    }}
+                    className={styles.input}
                   />
                 </div>
               </div>
 
-              <div style={{
-                display: 'grid',
-                gridTemplateColumns: '1fr 1fr',
-                gap: '16px'
-              }}>
-                <div>
-                  <label style={{
-                    display: 'block',
-                    marginBottom: '8px',
-                    fontWeight: '600',
-                    color: '#374151',
-                    fontSize: '14px'
-                  }}>
+              <div className={styles.formGrid}>
+                <div className={styles.inputGroup}>
+                  <label className={styles.label}>
                     Telefone/WhatsApp
                   </label>
                   <input
@@ -276,26 +155,11 @@ export default function ContatoPage() {
                     value={formData.phone}
                     onChange={handleInputChange}
                     placeholder="(11) 99999-9999"
-                    style={{
-                      width: '100%',
-                      padding: '14px 16px',
-                      border: '2px solid #e5e7eb',
-                      borderRadius: '12px',
-                      fontSize: '16px',
-                      outline: 'none',
-                      transition: 'all 0.3s ease',
-                      fontFamily: 'inherit'
-                    }}
+                    className={styles.input}
                   />
                 </div>
-                <div>
-                  <label style={{
-                    display: 'block',
-                    marginBottom: '8px',
-                    fontWeight: '600',
-                    color: '#374151',
-                    fontSize: '14px'
-                  }}>
+                <div className={styles.inputGroup}>
+                  <label className={styles.label}>
                     Empresa
                   </label>
                   <input
@@ -304,28 +168,13 @@ export default function ContatoPage() {
                     value={formData.company}
                     onChange={handleInputChange}
                     placeholder="Nome da empresa"
-                    style={{
-                      width: '100%',
-                      padding: '14px 16px',
-                      border: '2px solid #e5e7eb',
-                      borderRadius: '12px',
-                      fontSize: '16px',
-                      outline: 'none',
-                      transition: 'all 0.3s ease',
-                      fontFamily: 'inherit'
-                    }}
+                    className={styles.input}
                   />
                 </div>
               </div>
 
-              <div>
-                <label style={{
-                  display: 'block',
-                  marginBottom: '8px',
-                  fontWeight: '600',
-                  color: '#374151',
-                  fontSize: '14px'
-                }}>
+              <div className={styles.inputGroup}>
+                <label className={styles.label}>
                   Assunto <span style={{ color: '#ef4444' }}>*</span>
                 </label>
                 <select
@@ -333,17 +182,8 @@ export default function ContatoPage() {
                   value={formData.subject}
                   onChange={handleInputChange}
                   required
-                  style={{
-                  width: '100%',
-                  padding: '14px 16px',
-                  border: '2px solid #e5e7eb',
-                  borderRadius: '12px',
-                  fontSize: '16px',
-                  outline: 'none',
-                  transition: 'all 0.3s ease',
-                  fontFamily: 'inherit',
-                  background: 'white'
-                }}>
+                  className={styles.select}
+                >
                   <option value="">Selecione o assunto da sua solicitação</option>
                   <option value="parcerias">Parcerias</option>
                   <option value="suporte">Suporte</option>
@@ -352,14 +192,8 @@ export default function ContatoPage() {
                 </select>
               </div>
 
-              <div>
-                <label style={{
-                  display: 'block',
-                  marginBottom: '8px',
-                  fontWeight: '600',
-                  color: '#374151',
-                  fontSize: '14px'
-                }}>
+              <div className={styles.inputGroup}>
+                <label className={styles.label}>
                   Mensagem
                 </label>
                 <textarea
@@ -368,39 +202,14 @@ export default function ContatoPage() {
                   onChange={handleInputChange}
                   placeholder="Conte-nos sobre seu projeto ou necessidade..."
                   rows={5}
-                  style={{
-                    width: '100%',
-                    padding: '14px 16px',
-                    border: '2px solid #e5e7eb',
-                    borderRadius: '12px',
-                    fontSize: '16px',
-                    outline: 'none',
-                    transition: 'all 0.3s ease',
-                    fontFamily: 'inherit',
-                    resize: 'vertical'
-                  }}
+                  className={styles.textarea}
                 />
               </div>
 
               <button
                 type="submit"
                 disabled={isSubmitting}
-                style={{
-                  background: 'linear-gradient(45deg, #3b82f6, #8b5cf6)',
-                  color: 'white',
-                  padding: '16px 32px',
-                  borderRadius: '12px',
-                  border: 'none',
-                  fontSize: '16px',
-                  fontWeight: '600',
-                  cursor: 'pointer',
-                  transition: 'all 0.3s ease',
-                  boxShadow: '0 8px 32px rgba(59, 130, 246, 0.3)',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  gap: '8px'
-                }}
+                className={styles.submitButton}
               >
                 {isSubmitting ? '⏳ Enviando...' : '✉️ Enviar Solicitação'}
               </button>
@@ -408,238 +217,83 @@ export default function ContatoPage() {
           </div>
 
           {/* Informações de contato */}
-          <div style={{
-            display: 'flex',
-            flexDirection: 'column',
-            gap: '30px'
-          }}>
-            <h3 style={{
-              fontSize: '1.8rem',
-              fontWeight: '700',
-              color: '#1e293b',
-              marginBottom: '10px'
-            }}>
+          <div className={styles.infoSection}>
+            <h3 className={styles.formTitle}>
               Informações de Contato
             </h3>
 
             {/* Telefone */}
-            <div style={{
-              background: 'white',
-              padding: '25px',
-              borderRadius: '16px',
-              boxShadow: '0 10px 40px rgba(0, 0, 0, 0.08)',
-              border: '1px solid #e2e8f0',
-              display: 'flex',
-              alignItems: 'flex-start',
-              gap: '16px'
-            }}>
-              <div style={{
-                width: '48px',
-                height: '48px',
-                borderRadius: '12px',
-                background: 'linear-gradient(45deg, #3b82f6, #1d4ed8)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                fontSize: '20px',
-                flexShrink: '0'
-              }}>
-                📞
-              </div>
-              <div>
-                <h4 style={{
-                  fontSize: '1.2rem',
-                  fontWeight: '600',
-                  color: '#1e293b',
-                  margin: '0 0 8px 0'
-                }}>
+            <div className={styles.infoCard}>
+              <div className={styles.infoHeader}>
+                <div className={styles.infoIcon} style={{ background: 'linear-gradient(45deg, #3b82f6, #1d4ed8)' }}>
+                  📞
+                </div>
+                <h4 className={styles.infoTitle}>
                   Telefone
                 </h4>
-                <p style={{
-                  fontSize: '1.1rem',
-                  fontWeight: '600',
-                  color: '#3b82f6',
-                  margin: '0 0 4px 0'
-                }}>
-                  (11) 9 7450-8168
-                </p>
-                <p style={{
-                  fontSize: '14px',
-                  color: '#64748b',
-                  margin: '0'
-                }}>
-                  Segunda a Sexta, 9h às 18h
-                </p>
               </div>
+              <p className={styles.infoContent}>
+                <a href="tel:+5511974508168" className={styles.infoLink}>(11) 9 7450-8168</a>
+                <br />
+                Segunda a Sexta, 9h às 18h
+              </p>
             </div>
 
             {/* Email */}
-            <div style={{
-              background: 'white',
-              padding: '25px',
-              borderRadius: '16px',
-              boxShadow: '0 10px 40px rgba(0, 0, 0, 0.08)',
-              border: '1px solid #e2e8f0',
-              display: 'flex',
-              alignItems: 'flex-start',
-              gap: '16px'
-            }}>
-              <div style={{
-                width: '48px',
-                height: '48px',
-                borderRadius: '12px',
-                background: 'linear-gradient(45deg, #22c55e, #16a34a)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                fontSize: '20px',
-                flexShrink: '0'
-              }}>
-                ✉️
-              </div>
-              <div>
-                <h4 style={{
-                  fontSize: '1.2rem',
-                  fontWeight: '600',
-                  color: '#1e293b',
-                  margin: '0 0 8px 0'
-                }}>
+            <div className={styles.infoCard}>
+              <div className={styles.infoHeader}>
+                <div className={styles.infoIcon} style={{ background: 'linear-gradient(45deg, #22c55e, #16a34a)' }}>
+                  ✉️
+                </div>
+                <h4 className={styles.infoTitle}>
                   Email
                 </h4>
-                <p style={{
-                  fontSize: '1.1rem',
-                  fontWeight: '600',
-                  color: '#22c55e',
-                  margin: '0 0 4px 0'
-                }}>
-                  contato@inovamentelabs.com.br
-                </p>
-                <p style={{
-                  fontSize: '14px',
-                  color: '#64748b',
-                  margin: '0'
-                }}>
-                  Respondemos em até 24 horas
-                </p>
               </div>
+              <p className={styles.infoContent}>
+                <a href="mailto:contato@inovamentelabs.com.br" className={styles.infoLink}>contato@inovamentelabs.com.br</a>
+                <br />
+                Respondemos em até 24 horas
+              </p>
             </div>
 
             {/* Localização */}
-            <div style={{
-              background: 'white',
-              padding: '25px',
-              borderRadius: '16px',
-              boxShadow: '0 10px 40px rgba(0, 0, 0, 0.08)',
-              border: '1px solid #e2e8f0',
-              display: 'flex',
-              alignItems: 'flex-start',
-              gap: '16px'
-            }}>
-              <div style={{
-                width: '48px',
-                height: '48px',
-                borderRadius: '12px',
-                background: 'linear-gradient(45deg, #8b5cf6, #7c3aed)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                fontSize: '20px',
-                flexShrink: '0'
-              }}>
-                📍
-              </div>
-              <div>
-                <h4 style={{
-                  fontSize: '1.2rem',
-                  fontWeight: '600',
-                  color: '#1e293b',
-                  margin: '0 0 8px 0'
-                }}>
+            <div className={styles.infoCard}>
+              <div className={styles.infoHeader}>
+                <div className={styles.infoIcon} style={{ background: 'linear-gradient(45deg, #8b5cf6, #7c3aed)' }}>
+                  📍
+                </div>
+                <h4 className={styles.infoTitle}>
                   Localização
                 </h4>
-                <p style={{
-                  fontSize: '1.1rem',
-                  fontWeight: '600',
-                  color: '#8b5cf6',
-                  margin: '0 0 4px 0'
-                }}>
-                  São José dos Campos, SP
-                </p>
-                <p style={{
-                  fontSize: '14px',
-                  color: '#64748b',
-                  margin: '0'
-                }}>
-                  Atendemos todo o Brasil
-                </p>
               </div>
+              <p className={styles.infoContent}>
+                São José dos Campos, SP
+                <br />
+                Atendemos todo o Brasil
+              </p>
             </div>
 
             {/* Horário */}
-            <div style={{
-              background: 'white',
-              padding: '25px',
-              borderRadius: '16px',
-              boxShadow: '0 10px 40px rgba(0, 0, 0, 0.08)',
-              border: '1px solid #e2e8f0',
-              display: 'flex',
-              alignItems: 'flex-start',
-              gap: '16px'
-            }}>
-              <div style={{
-                width: '48px',
-                height: '48px',
-                borderRadius: '12px',
-                background: 'linear-gradient(45deg, #f59e0b, #d97706)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                fontSize: '20px',
-                flexShrink: '0'
-              }}>
-                🕒
-              </div>
-              <div>
-                <h4 style={{
-                  fontSize: '1.2rem',
-                  fontWeight: '600',
-                  color: '#1e293b',
-                  margin: '0 0 8px 0'
-                }}>
+            <div className={styles.infoCard}>
+              <div className={styles.infoHeader}>
+                <div className={styles.infoIcon} style={{ background: 'linear-gradient(45deg, #f59e0b, #d97706)' }}>
+                  🕒
+                </div>
+                <h4 className={styles.infoTitle}>
                   Horário de Funcionamento
                 </h4>
-                <p style={{
-                  fontSize: '1rem',
-                  color: '#374151',
-                  margin: '0 0 4px 0'
-                }}>
-                  Segunda a Sexta: 9h às 18h
-                </p>
-                <p style={{
-                  fontSize: '1rem',
-                  color: '#374151',
-                  margin: '0 0 4px 0'
-                }}>
-                  Sábado: 9h às 12h
-                </p>
-                <p style={{
-                  fontSize: '14px',
-                  color: '#64748b',
-                  margin: '0'
-                }}>
-                  Fuso horário: GMT-3 (Brasília)
-                </p>
               </div>
+              <p className={styles.infoContent}>
+                Segunda a Sexta: 9h às 18h
+                <br />
+                Sábado: 9h às 12h
+                <br />
+                <span style={{ fontSize: '14px' }}>Fuso horário: GMT-3 (Brasília)</span>
+              </p>
             </div>
 
             {/* WhatsApp */}
-            <div style={{
-              background: 'linear-gradient(45deg, #25d366, #20ba5a)',
-              padding: '25px',
-              borderRadius: '16px',
-              boxShadow: '0 10px 40px rgba(37, 211, 102, 0.3)',
-              color: 'white'
-            }}>
+            <div className={styles.whatsappCta}>
               <h4 style={{
                 fontSize: '1.3rem',
                 fontWeight: '700',
@@ -654,7 +308,7 @@ export default function ContatoPage() {
               }}>
                 Para um atendimento mais rápido, entre em contato pelo WhatsApp:
               </p>
-              <WhatsAppCtaButton 
+              <WhatsAppCtaButton
                 message="Olá! Gostaria de mais informações sobre os serviços da InovaMente Labs."
                 text="Falar no WhatsApp"
                 style={{
