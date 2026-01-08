@@ -177,13 +177,13 @@ function addSecurityHeaders(response: NextResponse): void {
   // CSP (Content Security Policy) - ajustar conforme necessário
   const csp = [
     "default-src 'self'",
-    "script-src 'self' 'unsafe-inline' 'unsafe-eval'", // unsafe-inline para styled-components
+    "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.googletagmanager.com", // unsafe-inline para styled-components e Google Analytics
     "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
     "font-src 'self' https://fonts.gstatic.com",
     "img-src 'self' data: https:",
-    "connect-src 'self'"
+    "connect-src 'self' https://www.google-analytics.com https://analytics.google.com"
   ].join('; ');
-  
+
   response.headers.set('Content-Security-Policy', csp);
 }
 
