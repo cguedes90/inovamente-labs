@@ -10,7 +10,16 @@
       "Bash(curl:*)",
       "Bash(mv:*)",
       "Bash(start http://localhost:3004/contato)",
-      "Bash(node:*)"
+      "Bash(node:*)",
+      "Bash(start http://localhost:3004/admin)",
+      "Bash(npm run clean:*)",
+      "Bash(npm install)",
+      "Bash(npx rimraf:*)",
+      "Bash(git commit:*)",
+      "Bash(grep:*)",
+      "Bash(cat:*)",
+      "Bash(find:*)",
+      "Bash(npm install:*)"
     ],
     "deny": [],
     "ask": []

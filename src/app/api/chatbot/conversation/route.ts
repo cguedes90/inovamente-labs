@@ -1,70 +1,38 @@
 import { NextRequest, NextResponse } from 'next/server'
 import prisma from '@/lib/prisma'
+import { emailService } from '@/lib/email'
+import { chatbotLeadTemplate } from '@/lib/email-templates'
 
 // Função para enviar email de notificação
 async function sendEmailNotification(leadData: any, messages: any[]) {
   try {
-    // Preparar conteúdo do email
-    const emailContent = `
-Nova conversa via Chatbot InovaMente Labs
-=========================================
-
-DADOS DO LEAD:
-Nome: ${leadData.name}
-Email: ${leadData.email}
-Telefone: ${leadData.phone}
-Empresa: ${leadData.company}
-
-HISTÓRICO DA CONVERSA:
-${messages.map(msg => `${msg.isBot ? '🤖 Bot' : '👤 Cliente'}: ${msg.content}`).join('\n')}
-
----
-Data: ${new Date().toLocaleString('pt-BR')}
-Sessão: ${leadData.sessionId || 'N/A'}
-    `.trim();
-
-    // Criar objeto de contato para API de contato
-    const contactData = {
+    // Enviar email ao administrador com template HTML profissional
+    const htmlContent = chatbotLeadTemplate({
       name: leadData.name,
       email: leadData.email,
-      phone: leadData.phone || '',
-      company: leadData.company || '',
-      subject: '🤖 Nova conversa via Chatbot - Lead qualificado',
-      message: emailContent,
-      source: 'chatbot'
-    };
+      phone: leadData.phone,
+      company: leadData.company,
+      messages: messages,
+    })
 
-    // Salvar via API de contato (que será exibido no admin)
-    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
-    
-    const response = await fetch(`${baseUrl}/api/contact`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(contactData)
-    });
+    const result = await emailService.send({
+      to: { email: process.env.ADMIN_EMAIL || 'contato@inovamentelabs.com.br', name: 'Administrador' },
+      subject: `[LEAD CHATBOT] ${leadData.name} - ${leadData.company || 'Sem empresa'}`,
+      htmlContent,
+      replyTo: { email: leadData.email, name: leadData.name },
+    })
 
-    if (response.ok) {
-      // Log detalhado para administradores
-      console.log('📧 NOVO LEAD VIA CHATBOT - AÇÃO NECESSÁRIA');
-      console.log('===========================================');
+    if (result.success) {
+      console.log('📧 NOVO LEAD VIA CHATBOT - EMAIL ENVIADO COM SUCESSO');
+      console.log('====================================================');
       console.log(`📝 Nome: ${leadData.name}`);
       console.log(`📧 Email: ${leadData.email}`);
       console.log(`📱 Telefone: ${leadData.phone}`);
       console.log(`🏢 Empresa: ${leadData.company}`);
-      console.log('🗣️ Conversa:', messages.map(msg => `${msg.isBot ? '🤖' : '👤'} ${msg.content}`));
-      console.log('');
-      console.log('⚠️  IMPORTANTE: Notificar contato@inovamentelabs.com.br');
-      console.log('📋 Lead salvo no sistema admin para acompanhamento');
-      console.log('===========================================');
-      
-      // TODO: Implementar envio real de email quando servidor SMTP estiver configurado
-      // nodemailer.sendMail({
-      //   to: 'contato@inovamentelabs.com.br',
-      //   subject: contactData.subject,
-      //   text: emailContent
-      // });
+      console.log(`✉️  Message ID: ${result.messageId}`);
+      console.log('====================================================');
+    } else {
+      console.error('❌ Erro ao enviar email de notificação:', result.error);
     }
   } catch (error) {
     console.error('Erro ao processar notificação de lead:', error);

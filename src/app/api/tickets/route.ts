@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server'
 import jwt from 'jsonwebtoken'
 import prisma from '@/lib/prisma'
+import { emailService } from '@/lib/email'
+import { newTicketTemplate, ticketConfirmationTemplate } from '@/lib/email-templates'
 
 interface JWTPayload {
   id: string
@@ -143,9 +145,47 @@ export async function POST(request: NextRequest) {
       }
     })
 
-    return NextResponse.json({ 
+    // Enviar emails de notificação (não bloqueia a resposta)
+    Promise.all([
+      // Email para o administrador
+      emailService.send({
+        to: { email: process.env.ADMIN_EMAIL || 'contato@inovamentelabs.com.br', name: 'Administrador' },
+        subject: `[NOVO TICKET] #${ticket.id.substring(0, 8)} - ${ticket.title}`,
+        htmlContent: newTicketTemplate({
+          ticketId: ticket.id,
+          clientName: ticket.client.name,
+          clientEmail: ticket.client.email,
+          subject: ticket.title,
+          description: ticket.description,
+          priority: ticket.priority,
+        }),
+        replyTo: { email: ticket.client.email, name: ticket.client.name },
+      }),
+      // Email de confirmação para o cliente
+      emailService.send({
+        to: { email: ticket.client.email, name: ticket.client.name },
+        subject: `Ticket #${ticket.id.substring(0, 8)} criado com sucesso - InovaMente Labs`,
+        htmlContent: ticketConfirmationTemplate({
+          ticketId: ticket.id,
+          clientName: ticket.client.name,
+          subject: ticket.title,
+        }),
+      }),
+    ])
+      .then(([adminResult, clientResult]) => {
+        console.log('📧 Emails de novo ticket enviados:', {
+          admin: adminResult.success ? '✅' : '❌',
+          client: clientResult.success ? '✅' : '❌',
+          ticketId: ticket.id,
+        })
+      })
+      .catch(error => {
+        console.error('❌ Erro ao enviar emails de ticket (não bloqueante):', error)
+      })
+
+    return NextResponse.json({
       message: 'Ticket criado com sucesso',
-      ticket 
+      ticket
     })
 
   } catch (error) {

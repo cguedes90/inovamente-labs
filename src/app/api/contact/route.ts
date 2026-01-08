@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import pool from '@/lib/db'
 import { randomBytes } from 'crypto'
+import { emailService } from '@/lib/email'
 
 function generateId(): string {
   return 'cm' + randomBytes(10).toString('base64url')
@@ -29,7 +30,34 @@ export async function POST(request: NextRequest) {
 
     const contact = result.rows[0]
 
-    return NextResponse.json({ 
+    // Enviar emails de notificação (executa em paralelo, não bloqueia a resposta)
+    Promise.all([
+      // Email para o administrador
+      emailService.sendContactFormNotification({
+        name,
+        email,
+        subject,
+        message: message || '',
+        phone,
+        company,
+      }),
+      // Email de confirmação para o cliente
+      emailService.sendContactConfirmation({
+        email,
+        name,
+      }),
+    ])
+      .then(([adminResult, clientResult]) => {
+        console.log('📧 Emails enviados:', {
+          admin: adminResult.success ? '✅' : '❌',
+          client: clientResult.success ? '✅' : '❌',
+        })
+      })
+      .catch(error => {
+        console.error('❌ Erro ao enviar emails (não bloqueante):', error)
+      })
+
+    return NextResponse.json({
       success: true,
       message: 'Contato enviado com sucesso!',
       contactId: contact.id
