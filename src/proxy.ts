@@ -195,7 +195,7 @@ function logRequest(request: NextRequest, startTime: number): void {
   }
 }
 
-export async function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
   const startTime = Date.now();
   
   try {
