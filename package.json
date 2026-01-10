@@ -54,7 +54,7 @@
     "url": "git+https://github.com/inovamente-labs/client-portal.git"
   },
   "engines": {
-    "node": "18.x",
+    "node": "24.x",
     "npm": ">=8.0.0"
   },
   "dependencies": {
