@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import type { ReactElement } from 'react';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import Navbar from '@/components/Navbar';
@@ -42,7 +43,7 @@ async function fetchPost(id: string): Promise<BlogPost | null> {
 }
 
 function buildBlocks(content: string) {
-  const blocks: JSX.Element[] = [];
+  const blocks: ReactElement[] = [];
   const lines = content.split('\n');
   let paragraph: string[] = [];
   let list: string[] = [];
