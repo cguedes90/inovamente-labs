@@ -57,27 +57,30 @@ export default function HomePage() {
           marginBottom: '80px'
         }}>
           <h1 style={{
-            fontSize: '4rem',
+            fontSize: 'clamp(2rem, 8vw, 4rem)',
             fontWeight: '900',
             marginBottom: '20px',
             background: 'linear-gradient(45deg, #3b82f6, #8b5cf6)',
             WebkitBackgroundClip: 'text',
-            WebkitTextFillColor: 'transparent'
+            WebkitTextFillColor: 'transparent',
+            padding: '0 20px'
           }}>
             ⚡ InovaMente Labs
           </h1>
           <p style={{
-            fontSize: '1.5rem',
+            fontSize: 'clamp(1rem, 3vw, 1.5rem)',
             color: '#64748b',
-            marginBottom: '40px'
+            marginBottom: '40px',
+            padding: '0 20px'
           }}>
             Transformamos ideias em soluções digitais inovadoras
           </p>
           <p style={{
-            fontSize: '1.2rem',
+            fontSize: 'clamp(0.9rem, 2.5vw, 1.2rem)',
             color: '#64748b',
             maxWidth: '700px',
-            margin: '0 auto'
+            margin: '0 auto',
+            padding: '0 20px'
           }}>
             Somos uma fábrica de software especializada em desenvolvimento de aplicações web, mobile e soluções de automação para empresas que querem se destacar no mercado digital.
           </p>
@@ -86,7 +89,7 @@ export default function HomePage() {
         {/* Nosso Processo de Criação */}
         <div style={{
           background: 'white',
-          padding: '60px 40px',
+          padding: 'clamp(30px, 5vw, 60px) clamp(20px, 4vw, 40px)',
           borderRadius: '24px',
           boxShadow: '0 20px 60px rgba(0, 0, 0, 0.1)',
           border: '1px solid #e2e8f0',
@@ -97,7 +100,7 @@ export default function HomePage() {
             marginBottom: '50px'
           }}>
             <h2 style={{
-              fontSize: '2.5rem',
+              fontSize: 'clamp(1.8rem, 5vw, 2.5rem)',
               fontWeight: '800',
               marginBottom: '20px',
               color: '#1e293b'
@@ -105,20 +108,21 @@ export default function HomePage() {
               Nosso Processo de Criação
             </h2>
             <p style={{
-              fontSize: '1.2rem',
+              fontSize: 'clamp(0.9rem, 2.5vw, 1.2rem)',
               color: '#64748b',
               maxWidth: '600px',
-              margin: '0 auto'
+              margin: '0 auto',
+              padding: '0 20px'
             }}>
-              Ao contrário do desenvolvimento tradicional, com a InovaMente você pode 
+              Ao contrário do desenvolvimento tradicional, com a InovaMente você pode
               rapidamente projetar, desenvolver, lançar e escalar a sua ideia.
             </p>
           </div>
 
           <div style={{
             display: 'grid',
-            gridTemplateColumns: 'repeat(5, 1fr)',
-            gap: '30px',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))',
+            gap: 'clamp(20px, 3vw, 30px)',
             alignItems: 'start'
           }}>
             {[
@@ -160,21 +164,21 @@ export default function HomePage() {
                 }}
               >
                 <div style={{
-                  width: '80px',
-                  height: '80px',
+                  width: 'clamp(60px, 15vw, 80px)',
+                  height: 'clamp(60px, 15vw, 80px)',
                   borderRadius: '50%',
                   background: etapa.color,
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  fontSize: '2rem',
+                  fontSize: 'clamp(1.5rem, 4vw, 2rem)',
                   margin: '0 auto 20px auto',
                   boxShadow: `0 10px 30px ${etapa.color}30`
                 }}>
                   {etapa.icon}
                 </div>
                 <h3 style={{
-                  fontSize: '1.3rem',
+                  fontSize: 'clamp(1rem, 2.5vw, 1.3rem)',
                   fontWeight: '700',
                   color: '#1e293b',
                   marginBottom: '12px'
@@ -183,7 +187,7 @@ export default function HomePage() {
                 </h3>
                 <p style={{
                   color: '#64748b',
-                  fontSize: '14px',
+                  fontSize: 'clamp(0.75rem, 2vw, 0.875rem)',
                   lineHeight: '1.5'
                 }}>
                   {etapa.description}
@@ -198,19 +202,20 @@ export default function HomePage() {
           marginBottom: '80px'
         }}>
           <h2 style={{
-            fontSize: '2.5rem',
+            fontSize: 'clamp(1.8rem, 5vw, 2.5rem)',
             fontWeight: '800',
             textAlign: 'center',
             marginBottom: '50px',
-            color: '#1e293b'
+            color: '#1e293b',
+            padding: '0 20px'
           }}>
             🚀 Nossos Serviços
           </h2>
-          
+
           <div style={{
             display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
-            gap: '30px'
+            gridTemplateColumns: 'repeat(auto-fit, minmax(min(280px, 100%), 1fr))',
+            gap: 'clamp(20px, 3vw, 30px)'
           }}>
             {[
               {
@@ -238,7 +243,7 @@ export default function HomePage() {
                 key={index}
                 style={{
                   background: 'white',
-                  padding: '30px',
+                  padding: 'clamp(20px, 4vw, 30px)',
                   borderRadius: '20px',
                   boxShadow: '0 20px 60px rgba(0, 0, 0, 0.1)',
                   border: '1px solid #e2e8f0',
@@ -248,13 +253,13 @@ export default function HomePage() {
                 }}
               >
                 <div style={{
-                  fontSize: '3rem',
+                  fontSize: 'clamp(2rem, 6vw, 3rem)',
                   marginBottom: '20px'
                 }}>
                   {servico.icon}
                 </div>
                 <h3 style={{
-                  fontSize: '1.3rem',
+                  fontSize: 'clamp(1rem, 2.5vw, 1.3rem)',
                   fontWeight: '700',
                   color: '#1e293b',
                   marginBottom: '15px'
@@ -263,7 +268,8 @@ export default function HomePage() {
                 </h3>
                 <p style={{
                   color: '#64748b',
-                  lineHeight: '1.6'
+                  lineHeight: '1.6',
+                  fontSize: 'clamp(0.875rem, 2vw, 1rem)'
                 }}>
                   {servico.description}
                 </p>
@@ -276,30 +282,32 @@ export default function HomePage() {
         <div style={{
           textAlign: 'center',
           background: 'linear-gradient(45deg, #3b82f6, #8b5cf6)',
-          padding: '60px 40px',
+          padding: 'clamp(40px, 6vw, 60px) clamp(20px, 4vw, 40px)',
           borderRadius: '24px',
           color: 'white'
         }}>
           <h2 style={{
-            fontSize: '2.5rem',
+            fontSize: 'clamp(1.8rem, 5vw, 2.5rem)',
             fontWeight: '800',
             marginBottom: '20px'
           }}>
             Pronto para inovar?
           </h2>
           <p style={{
-            fontSize: '1.2rem',
+            fontSize: 'clamp(1rem, 2.5vw, 1.2rem)',
             marginBottom: '40px',
-            opacity: '0.9'
+            opacity: '0.9',
+            padding: '0 20px'
           }}>
             Vamos transformar sua ideia em uma solução digital de sucesso
           </p>
-          
+
           <div style={{
             display: 'flex',
-            gap: '20px',
+            gap: 'clamp(12px, 2vw, 20px)',
             justifyContent: 'center',
-            flexWrap: 'wrap'
+            flexWrap: 'wrap',
+            padding: '0 20px'
           }}>
             <Link
               href="/contato"
@@ -307,10 +315,10 @@ export default function HomePage() {
                 background: 'rgba(255, 255, 255, 0.2)',
                 border: '2px solid rgba(255, 255, 255, 0.3)',
                 color: 'white',
-                padding: '16px 32px',
+                padding: 'clamp(12px, 2vw, 16px) clamp(20px, 3vw, 32px)',
                 borderRadius: '12px',
                 textDecoration: 'none',
-                fontSize: '16px',
+                fontSize: 'clamp(0.875rem, 2vw, 1rem)',
                 fontWeight: '600',
                 display: 'flex',
                 alignItems: 'center',
@@ -325,10 +333,10 @@ export default function HomePage() {
               style={{
                 background: '#22c55e',
                 color: 'white',
-                padding: '16px 32px',
+                padding: 'clamp(12px, 2vw, 16px) clamp(20px, 3vw, 32px)',
                 borderRadius: '12px',
                 textDecoration: 'none',
-                fontSize: '16px',
+                fontSize: 'clamp(0.875rem, 2vw, 1rem)',
                 fontWeight: '600',
                 display: 'flex',
                 alignItems: 'center',
@@ -344,10 +352,10 @@ export default function HomePage() {
               style={{
                 background: '#1d4ed8',
                 color: 'white',
-                padding: '16px 32px',
+                padding: 'clamp(12px, 2vw, 16px) clamp(20px, 3vw, 32px)',
                 borderRadius: '12px',
                 textDecoration: 'none',
-                fontSize: '16px',
+                fontSize: 'clamp(0.875rem, 2vw, 1rem)',
                 fontWeight: '600',
                 display: 'flex',
                 alignItems: 'center',

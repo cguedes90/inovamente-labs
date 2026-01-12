@@ -248,3 +248,77 @@ html {
   background-color: #f3f4f6;
   color: #374151;
 }
+
+/* Responsive utilities */
+@media (max-width: 1024px) {
+  body {
+    font-size: 14px;
+  }
+
+  .glassmorphism-card {
+    padding: 1.5rem;
+  }
+}
+
+@media (max-width: 768px) {
+  body {
+    font-size: 13px;
+  }
+
+  .btn-primary,
+  .btn-secondary,
+  .btn-success {
+    padding: 0.875rem 1.5rem;
+    font-size: 0.875rem;
+  }
+
+  .glassmorphism-card {
+    padding: 1.25rem;
+    border-radius: 1rem;
+  }
+
+  .input-modern {
+    padding: 0.875rem 1.25rem;
+  }
+}
+
+@media (max-width: 640px) {
+  .btn-primary,
+  .btn-secondary,
+  .btn-success {
+    padding: 0.75rem 1.25rem;
+    font-size: 0.8125rem;
+  }
+
+  .glassmorphism-card {
+    padding: 1rem;
+  }
+
+  .status-aberto,
+  .status-em-andamento,
+  .status-fechado {
+    padding: 0.375rem 0.75rem;
+    font-size: 0.75rem;
+  }
+}
+
+/* Responsive container */
+.responsive-container {
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 clamp(1rem, 3vw, 2rem);
+}
+
+/* Responsive text utilities */
+.responsive-title {
+  font-size: clamp(1.5rem, 5vw, 3rem);
+}
+
+.responsive-subtitle {
+  font-size: clamp(1rem, 3vw, 1.5rem);
+}
+
+.responsive-body {
+  font-size: clamp(0.875rem, 2vw, 1rem);
+}
