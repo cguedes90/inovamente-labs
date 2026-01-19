@@ -122,6 +122,17 @@ function Navbar() {
             alignItems: 'center'
           }}
         >
+          <div style={{
+            color: '#64748b',
+            fontWeight: '600',
+            fontSize: '14px',
+            marginRight: '8px',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '6px'
+          }}>
+            <span>📱</span> (12) 99999-9999
+          </div>
           <Link
             href="/chamados"
             style={{
