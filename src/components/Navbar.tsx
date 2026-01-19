@@ -131,7 +131,7 @@ function Navbar() {
             alignItems: 'center',
             gap: '6px'
           }}>
-            <span>📱</span> (12) 99999-9999
+            <span>📱</span> (11) 97450-8168
           </div>
           <Link
             href="/chamados"

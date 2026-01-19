@@ -12,7 +12,7 @@ const FloatingWhatsApp = () => {
 
     return (
         <a
-            href="https://wa.me/5512999999999" // Exemplo, user pode pedir pra mudar depois
+            href="https://wa.me/5511974508168" // Exemplo, user pode pedir pra mudar depois
             target="_blank"
             rel="noopener noreferrer"
             style={{

@@ -45,7 +45,6 @@ export default function HomePage() {
         fontFamily: 'system-ui, -apple-system, sans-serif'
       }}>
         <Navbar />
-        <Chatbot />
         <FloatingWhatsApp />
 
         <div style={{
