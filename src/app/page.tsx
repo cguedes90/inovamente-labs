@@ -113,8 +113,39 @@ export default function HomePage() {
                 boxShadow: '0 10px 30px rgba(0,0,0,0.05)',
                 border: '1px solid #e2e8f0'
               }}>
-                <h3 style={{ fontSize: '1.3rem', fontWeight: '700', marginBottom: '10px', color: '#334155' }}>🍺 Chopp Villa Alemã</h3>
-                <p style={{ color: '#64748b', marginBottom: '15px', fontSize: '0.95rem' }}>Software para controle de Chopperia, gestão de mesas e estoque em tempo real.</p>
+                <h3 style={{ fontSize: '1.3rem', fontWeight: '700', marginBottom: '10px', color: '#334155' }}>🍺 Chopp Villa Alemã - Taubaté/SP</h3>
+                <p style={{ color: '#64748b', marginBottom: '15px', fontSize: '0.95rem' }}><strong>Sistema completo de gestão para bar/restaurante</strong></p>
+
+                <div style={{ marginBottom: '15px', color: '#475569', fontSize: '0.9rem' }}>
+                  <p style={{ marginBottom: '8px' }}>❌ <strong>Desafio:</strong> Controlar comandas manualmente causava erros e perda de vendas</p>
+                  <p style={{ marginBottom: '8px' }}>✅ <strong>Solução:</strong> Sistema integrado com cardápio digital via QR Code, controle de mesas e estoque em tempo real</p>
+                  <p>📈 <strong>Resultado:</strong> Redução de 90% em erros de pedidos, aumento de 30% na agilidade do atendimento</p>
+                </div>
+
+                <div style={{
+                  background: '#f8fafc',
+                  padding: '12px',
+                  borderRadius: '12px',
+                  marginBottom: '15px',
+                  fontSize: '0.9rem',
+                  color: '#334155',
+                  border: '1px solid #e2e8f0'
+                }}>
+                  📅 Entregue em 4 meses | 💰 Investimento: R$ 8.000
+                </div>
+
+                <div style={{
+                  fontStyle: 'italic',
+                  color: '#475569',
+                  fontSize: '0.9rem',
+                  borderLeft: '4px solid #22c55e',
+                  paddingLeft: '12px',
+                  marginBottom: '15px'
+                }}>
+                  "Sistema funcionando perfeitamente, recomendamos!"<br />
+                  <span style={{ fontSize: '0.8rem', fontWeight: '600' }}>- Thais Lamosa, Proprietária</span>
+                </div>
+
                 <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
                   <span style={{ background: '#f1f5f9', padding: '4px 10px', borderRadius: '12px', fontSize: '0.75rem', color: '#475569', fontWeight: '600' }}>React Mobile</span>
                   <span style={{ background: '#f1f5f9', padding: '4px 10px', borderRadius: '12px', fontSize: '0.75rem', color: '#475569', fontWeight: '600' }}>Real-time DB</span>
