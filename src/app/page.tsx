@@ -248,9 +248,44 @@ export default function HomePage() {
                 boxShadow: '0 10px 30px rgba(0,0,0,0.05)',
                 border: '1px solid #e2e8f0'
               }}>
-                <h3 style={{ fontSize: '1.3rem', fontWeight: '700', marginBottom: '10px', color: '#334155' }}>🤝 SORRI</h3>
-                <p style={{ color: '#64748b', marginBottom: '15px' }}>São José dos Campos</p>
-                <p style={{ fontStyle: 'italic', color: '#475569', fontSize: '0.9rem' }}>"A inovação tecnológica trouxe agilidade e precisão para nossos atendimentos."</p>
+                <h3 style={{ fontSize: '1.3rem', fontWeight: '700', marginBottom: '10px', color: '#334155' }}>🏢 Empresa de Serviços - São José dos Campos/SP</h3>
+                <p style={{ color: '#64748b', marginBottom: '15px', fontSize: '0.95rem' }}><strong>Sistema de gestão de contratos e faturamento</strong></p>
+
+                <div style={{ marginBottom: '15px', color: '#475569', fontSize: '0.9rem' }}>
+                  <p style={{ marginBottom: '8px' }}>❌ <strong>Desafio:</strong> Processos manuais de notas fiscais e cobranças geravam atrasos</p>
+                  <p style={{ marginBottom: '8px' }}>✅ <strong>Solução:</strong> Plataforma customizada para contratos, faturas automáticas e dashboard financeiro</p>
+                  <p>📈 <strong>Resultado:</strong> Automação de 80% dos processos, redução de 50% no tempo de fechamento</p>
+                </div>
+
+                <div style={{
+                  background: '#f8fafc',
+                  padding: '12px',
+                  borderRadius: '12px',
+                  marginBottom: '15px',
+                  fontSize: '0.9rem',
+                  color: '#334155',
+                  border: '1px solid #e2e8f0'
+                }}>
+                  📅 Entregue em 5 meses | 💰 Investimento: R$ 12.000
+                </div>
+
+                <div style={{
+                  fontStyle: 'italic',
+                  color: '#475569',
+                  fontSize: '0.9rem',
+                  borderLeft: '4px solid #22c55e',
+                  paddingLeft: '12px',
+                  marginBottom: '15px'
+                }}>
+                  "Transformou nossa operação administrativa!"<br />
+                  <span style={{ fontSize: '0.8rem', fontWeight: '600' }}>- Cliente verificado</span>
+                </div>
+
+                <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+                  <span style={{ background: '#f1f5f9', padding: '4px 10px', borderRadius: '12px', fontSize: '0.75rem', color: '#475569', fontWeight: '600' }}>Python</span>
+                  <span style={{ background: '#f1f5f9', padding: '4px 10px', borderRadius: '12px', fontSize: '0.75rem', color: '#475569', fontWeight: '600' }}>React</span>
+                  <span style={{ background: '#f1f5f9', padding: '4px 10px', borderRadius: '12px', fontSize: '0.75rem', color: '#475569', fontWeight: '600' }}>APIs RESTful</span>
+                </div>
               </div>
             </div>
           </div>
