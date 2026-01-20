@@ -146,6 +146,27 @@ export default function HomePage() {
                   <span style={{ fontSize: '0.8rem', fontWeight: '600' }}>- Thais Lamosa, Proprietária</span>
                 </div>
 
+                <div style={{ marginBottom: '20px' }}>
+                  <a
+                    href="/Atestado_Capacidade_Tecnica_Chopp_Villa_Alema.pdf"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    style={{
+                      color: '#2563eb',
+                      fontWeight: '600',
+                      textDecoration: 'none',
+                      fontSize: '0.9rem',
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: '4px'
+                    }}
+                    onMouseOver={(e) => e.currentTarget.style.textDecoration = 'underline'}
+                    onMouseOut={(e) => e.currentTarget.style.textDecoration = 'none'}
+                  >
+                    📄 Ver atestado técnico completo →
+                  </a>
+                </div>
+
                 <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
                   <span style={{ background: '#f1f5f9', padding: '4px 10px', borderRadius: '12px', fontSize: '0.75rem', color: '#475569', fontWeight: '600' }}>React Mobile</span>
                   <span style={{ background: '#f1f5f9', padding: '4px 10px', borderRadius: '12px', fontSize: '0.75rem', color: '#475569', fontWeight: '600' }}>Real-time DB</span>
