@@ -180,11 +180,64 @@ export default function HomePage() {
                 boxShadow: '0 10px 30px rgba(0,0,0,0.05)',
                 border: '1px solid #e2e8f0'
               }}>
-                <h3 style={{ fontSize: '1.3rem', fontWeight: '700', marginBottom: '10px', color: '#334155' }}>👗 Zest Moda</h3>
-                <p style={{ color: '#64748b', marginBottom: '15px', fontSize: '0.95rem' }}>Sistema PDV com programa de fidelidade integrado e gestão de clientes.</p>
+                <h3 style={{ fontSize: '1.3rem', fontWeight: '700', marginBottom: '10px', color: '#334155' }}>👗 Zest Moda - Tremembé/SP</h3>
+                <p style={{ color: '#64748b', marginBottom: '15px', fontSize: '0.95rem' }}><strong>Sistema completo de gestão comercial para loja de confecções</strong></p>
+
+                <div style={{ marginBottom: '15px', color: '#475569', fontSize: '0.9rem' }}>
+                  <p style={{ marginBottom: '8px' }}>❌ <strong>Desafio:</strong> Controle manual de estoque por grade causava perdas e rupturas</p>
+                  <p style={{ marginBottom: '8px' }}>✅ <strong>Solução:</strong> Controle de estoque por especificações, PDV integrado e programa de fidelidade</p>
+                  <p>📈 <strong>Resultado:</strong> Gestão de 2.000+ produtos, redução de erros e relatórios automáticos</p>
+                </div>
+
+                <div style={{
+                  background: '#f8fafc',
+                  padding: '12px',
+                  borderRadius: '12px',
+                  marginBottom: '15px',
+                  fontSize: '0.9rem',
+                  color: '#334155',
+                  border: '1px solid #e2e8f0'
+                }}>
+                  📅 Entregue em 6 meses | 💰 Investimento: R$ 2.500
+                </div>
+
+                <div style={{
+                  fontStyle: 'italic',
+                  color: '#475569',
+                  fontSize: '0.9rem',
+                  borderLeft: '4px solid #22c55e',
+                  paddingLeft: '12px',
+                  marginBottom: '15px'
+                }}>
+                  "Atendeu plenamente às necessidades operacionais do nosso comércio varejista!"<br />
+                  <span style={{ fontSize: '0.8rem', fontWeight: '600' }}>- Aryelle Faria, Proprietária</span>
+                </div>
+
+                <div style={{ marginBottom: '20px' }}>
+                  <a
+                    href="/Atestado_Capacidade_Tecnica_Zest_Moda.docx"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    style={{
+                      color: '#2563eb',
+                      fontWeight: '600',
+                      textDecoration: 'none',
+                      fontSize: '0.9rem',
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: '4px'
+                    }}
+                    onMouseOver={(e) => e.currentTarget.style.textDecoration = 'underline'}
+                    onMouseOut={(e) => e.currentTarget.style.textDecoration = 'none'}
+                  >
+                    📄 Ver atestado técnico completo →
+                  </a>
+                </div>
+
                 <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
-                  <span style={{ background: '#f1f5f9', padding: '4px 10px', borderRadius: '12px', fontSize: '0.75rem', color: '#475569', fontWeight: '600' }}>Web App</span>
-                  <span style={{ background: '#f1f5f9', padding: '4px 10px', borderRadius: '12px', fontSize: '0.75rem', color: '#475569', fontWeight: '600' }}>Cloud</span>
+                  <span style={{ background: '#f1f5f9', padding: '4px 10px', borderRadius: '12px', fontSize: '0.75rem', color: '#475569', fontWeight: '600' }}>Python (FastAPI)</span>
+                  <span style={{ background: '#f1f5f9', padding: '4px 10px', borderRadius: '12px', fontSize: '0.75rem', color: '#475569', fontWeight: '600' }}>React</span>
+                  <span style={{ background: '#f1f5f9', padding: '4px 10px', borderRadius: '12px', fontSize: '0.75rem', color: '#475569', fontWeight: '600' }}>PostgreSQL</span>
                 </div>
               </div>
 
