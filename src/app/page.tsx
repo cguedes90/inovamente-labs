@@ -3,6 +3,7 @@ import Link from 'next/link'
 import Navbar from '@/components/Navbar'
 import Chatbot from '@/components/Chatbot'
 import FloatingWhatsApp from '@/components/FloatingWhatsApp'
+import CertificateLink from '@/components/CertificateLink'
 import { VoiceSearchOptimizer } from '@/components/SEO/VoiceSearchOptimizer'
 
 export const metadata: Metadata = {
@@ -147,24 +148,7 @@ export default function HomePage() {
                 </div>
 
                 <div style={{ marginBottom: '20px' }}>
-                  <a
-                    href="/Atestado_Capacidade_Tecnica_Chopp_Villa_Alema.pdf"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    style={{
-                      color: '#2563eb',
-                      fontWeight: '600',
-                      textDecoration: 'none',
-                      fontSize: '0.9rem',
-                      display: 'inline-flex',
-                      alignItems: 'center',
-                      gap: '4px'
-                    }}
-                    onMouseOver={(e) => e.currentTarget.style.textDecoration = 'underline'}
-                    onMouseOut={(e) => e.currentTarget.style.textDecoration = 'none'}
-                  >
-                    📄 Ver atestado técnico completo →
-                  </a>
+                  <CertificateLink href="/Atestado_Capacidade_Tecnica_Chopp_Villa_Alema.pdf" />
                 </div>
 
                 <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
@@ -214,24 +198,7 @@ export default function HomePage() {
                 </div>
 
                 <div style={{ marginBottom: '20px' }}>
-                  <a
-                    href="/Atestado_Capacidade_Tecnica_Zest_Moda.docx"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    style={{
-                      color: '#2563eb',
-                      fontWeight: '600',
-                      textDecoration: 'none',
-                      fontSize: '0.9rem',
-                      display: 'inline-flex',
-                      alignItems: 'center',
-                      gap: '4px'
-                    }}
-                    onMouseOver={(e) => e.currentTarget.style.textDecoration = 'underline'}
-                    onMouseOut={(e) => e.currentTarget.style.textDecoration = 'none'}
-                  >
-                    📄 Ver atestado técnico completo →
-                  </a>
+                  <CertificateLink href="/Atestado_Capacidade_Tecnica_Zest_Moda.docx" />
                 </div>
 
                 <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
