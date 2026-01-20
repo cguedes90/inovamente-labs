@@ -493,7 +493,7 @@ export default function HomePage() {
               border: '1px solid #86efac',
               boxShadow: '0 4px 12px rgba(34, 197, 94, 0.2)'
             }}>
-              💰 Projetos a partir de R$ 5.000 ou <span style={{ textDecoration: 'underline' }}>Consulta Gratuita</span>
+              💰 Projetos a partir de R$ 1.000 ou <span style={{ textDecoration: 'underline' }}>Consulta Gratuita</span>
             </div>
           </div>
 
