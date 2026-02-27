@@ -1,381 +1,255 @@
-import Navbar from '@/components/Navbar'
-import WhatsAppButton from '@/components/WhatsAppButton'
-import WhatsAppCtaButton from '@/components/WhatsAppCtaButton'
-import ProjectCard from '@/components/ProjectCard'
+'use client';
+
+import Link from 'next/link';
+import Navbar from '@/components/Navbar';
+import Footer from '@/components/Footer';
+import FloatingWhatsApp from '@/components/FloatingWhatsApp';
+import { motion } from 'framer-motion';
+import { Code2, Palette, Smartphone, Cloud, RefreshCw, Rocket, Lightbulb, CheckCircle2, ChevronRight, Briefcase, MessageCircle } from 'lucide-react';
+
+const categories = [
+  {
+    category: 'Frontend',
+    icon: Palette,
+    techs: ['React', 'Next.js', 'TypeScript', 'Tailwind CSS', 'Vue.js'],
+  },
+  {
+    category: 'Backend',
+    icon: Code2,
+    techs: ['Node.js', 'Python', 'PostgreSQL', 'MongoDB', 'Redis'],
+  },
+  {
+    category: 'Mobile',
+    icon: Smartphone,
+    techs: ['React Native', 'Flutter', 'Swift', 'Kotlin', 'PWA'],
+  },
+  {
+    category: 'Cloud',
+    icon: Cloud,
+    techs: ['AWS', 'Azure', 'Docker', 'Kubernetes', 'Terraform'],
+  },
+];
+
+const metodologias = [
+  {
+    title: 'Scrum',
+    icon: RefreshCw,
+    description: 'Desenvolvimento iterativo com sprints de 2-4 semanas, garantindo entregas constantes e feedback continuo.',
+    benefits: ['Transparencia total', 'Entregas rapidas', 'Adaptacao a mudancas', 'ROI acelerado'],
+  },
+  {
+    title: 'DevOps',
+    icon: Rocket,
+    description: 'Integracao continua e deploy automatizado para releases mais frequentes e confiaveis.',
+    benefits: ['Deploy automatizado', 'Monitoramento 24/7', 'Rollback rapido', 'Escalabilidade'],
+  },
+  {
+    title: 'Design Thinking',
+    icon: Lightbulb,
+    description: 'Abordagem centrada no usuario para criar solucoes inovadoras e experiencias excepcionais.',
+    benefits: ['Foco no usuario', 'Inovacao constante', 'Prototipagem rapida', 'Validacao continua'],
+  },
+];
+
+const projetos = [
+  {
+    title: 'E-commerce Multivendor',
+    category: 'Marketplace',
+    description: 'Plataforma completa de marketplace com gestao de vendedores, produtos e pedidos.',
+    tech: ['Next.js', 'Node.js', 'PostgreSQL', 'Stripe'],
+    metrics: ['500+ vendedores', 'R$ 2M+ em vendas', '99.9% uptime'],
+  },
+  {
+    title: 'App de Delivery',
+    category: 'Mobile',
+    description: 'Aplicativo de delivery com tracking em tempo real e multiplas formas de pagamento.',
+    tech: ['React Native', 'Express', 'MongoDB', 'Socket.io'],
+    metrics: ['50K+ downloads', '4.8 rating', '< 3s loading'],
+  },
+  {
+    title: 'Sistema de CRM',
+    category: 'Enterprise',
+    description: 'CRM corporativo com automacao de vendas e analytics avancados.',
+    tech: ['React', 'Python', 'PostgreSQL', 'Redis'],
+    metrics: ['1000+ usuarios', '40% mais vendas', 'ROI 300%'],
+  },
+];
 
 export default function DesenvolvimentoPage() {
   return (
-    <div style={{
-      minHeight: '100vh',
-      background: 'linear-gradient(135deg, #f8fafc 0%, #ffffff 50%, #f1f5f9 100%)',
-      color: '#1e293b',
-      fontFamily: 'system-ui, -apple-system, sans-serif'
-    }}>
+    <div className="min-h-screen bg-background">
       <Navbar />
-      <WhatsAppButton />
-      
-      <div style={{
-        maxWidth: '1200px',
-        margin: '0 auto',
-        padding: '40px 20px'
-      }}>
-        {/* Header */}
-        <div style={{
-          textAlign: 'center',
-          marginBottom: '60px'
-        }}>
-          <h1 style={{
-            fontSize: '3.5rem',
-            fontWeight: '800',
-            marginBottom: '20px',
-            background: 'linear-gradient(45deg, #3b82f6, #8b5cf6)',
-            WebkitBackgroundClip: 'text',
-            WebkitTextFillColor: 'transparent'
-          }}>
-            ⚙️ Desenvolvimento
-          </h1>
-          <p style={{
-            fontSize: '1.3rem',
-            color: '#64748b',
-            maxWidth: '700px',
-            margin: '0 auto'
-          }}>
-            Desenvolvimento de software sob medida com tecnologias de ponta e metodologias ágeis.
-          </p>
-        </div>
+      <main className="pt-20">
+        {/* Hero */}
+        <section className="py-16 lg:py-24">
+          <div className="container mx-auto px-4">
+            <div className="flex items-center gap-2 text-sm text-muted-foreground mb-6">
+              <Link href="/" className="hover:text-primary transition-colors">Home</Link>
+              <ChevronRight className="w-3 h-3" />
+              <span className="text-foreground">Desenvolvimento</span>
+            </div>
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="max-w-3xl"
+            >
+              <h1 className="font-display text-4xl lg:text-5xl font-bold text-foreground mb-4">
+                <span className="gradient-text">Desenvolvimento</span>
+              </h1>
+              <p className="text-lg text-muted-foreground">
+                Desenvolvimento de software sob medida com tecnologias de ponta e metodologias ageis.
+              </p>
+            </motion.div>
+          </div>
+        </section>
 
         {/* Tecnologias */}
-        <div style={{
-          background: 'white',
-          padding: '40px',
-          borderRadius: '24px',
-          boxShadow: '0 20px 60px rgba(0, 0, 0, 0.1)',
-          border: '1px solid #e2e8f0',
-          marginBottom: '60px'
-        }}>
-          <h2 style={{
-            fontSize: '2rem',
-            fontWeight: '700',
-            color: '#1e293b',
-            marginBottom: '30px',
-            textAlign: 'center'
-          }}>
-            🛠️ Tecnologias que Dominamos
-          </h2>
-
-          <div style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
-            gap: '30px'
-          }}>
-            {[
-              {
-                category: 'Frontend',
-                icon: '🎨',
-                techs: ['React', 'Next.js', 'TypeScript', 'Tailwind CSS', 'Vue.js']
-              },
-              {
-                category: 'Backend',
-                icon: '⚙️',
-                techs: ['Node.js', 'Python', 'PostgreSQL', 'MongoDB', 'Redis']
-              },
-              {
-                category: 'Mobile',
-                icon: '📱',
-                techs: ['React Native', 'Flutter', 'Swift', 'Kotlin', 'PWA']
-              },
-              {
-                category: 'Cloud',
-                icon: '☁️',
-                techs: ['AWS', 'Azure', 'Docker', 'Kubernetes', 'Terraform']
-              }
-            ].map((categoria, index) => (
-              <div
-                key={index}
-                style={{
-                  padding: '25px',
-                  borderRadius: '16px',
-                  border: '1px solid #e2e8f0',
-                  background: 'linear-gradient(135deg, #f8fafc, #ffffff)'
-                }}
-              >
-                <div style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '12px',
-                  marginBottom: '20px'
-                }}>
-                  <span style={{ fontSize: '1.5rem' }}>{categoria.icon}</span>
-                  <h3 style={{
-                    fontSize: '1.3rem',
-                    fontWeight: '700',
-                    color: '#1e293b',
-                    margin: '0'
-                  }}>
-                    {categoria.category}
-                  </h3>
-                </div>
-                <div style={{
-                  display: 'flex',
-                  flexWrap: 'wrap',
-                  gap: '8px'
-                }}>
-                  {categoria.techs.map((tech, idx) => (
-                    <span
-                      key={idx}
-                      style={{
-                        background: 'linear-gradient(45deg, #3b82f6, #8b5cf6)',
-                        color: 'white',
-                        padding: '6px 12px',
-                        borderRadius: '20px',
-                        fontSize: '12px',
-                        fontWeight: '600'
-                      }}
-                    >
-                      {tech}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            ))}
+        <section className="pb-20">
+          <div className="container mx-auto px-4">
+            <h2 className="font-display text-3xl font-bold text-foreground text-center mb-12">
+              Tecnologias que <span className="gradient-text">Dominamos</span>
+            </h2>
+            <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+              {categories.map((cat, i) => (
+                <motion.div
+                  key={cat.category}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: i * 0.1 }}
+                  className="glass-card rounded-2xl p-6 hover-lift"
+                >
+                  <div className="flex items-center gap-3 mb-5">
+                    <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center">
+                      <cat.icon className="w-6 h-6 text-primary" />
+                    </div>
+                    <h3 className="font-display text-xl font-semibold text-foreground">{cat.category}</h3>
+                  </div>
+                  <div className="flex flex-wrap gap-2">
+                    {cat.techs.map((tech) => (
+                      <span
+                        key={tech}
+                        className="px-3 py-1 text-xs font-medium rounded-full bg-primary text-primary-foreground"
+                      >
+                        {tech}
+                      </span>
+                    ))}
+                  </div>
+                </motion.div>
+              ))}
+            </div>
           </div>
-        </div>
+        </section>
 
         {/* Metodologias */}
-        <div style={{
-          background: 'white',
-          padding: '40px',
-          borderRadius: '24px',
-          boxShadow: '0 20px 60px rgba(0, 0, 0, 0.1)',
-          border: '1px solid #e2e8f0',
-          marginBottom: '60px'
-        }}>
-          <h2 style={{
-            fontSize: '2rem',
-            fontWeight: '700',
-            color: '#1e293b',
-            marginBottom: '30px',
-            textAlign: 'center'
-          }}>
-            📋 Metodologias Ágeis
-          </h2>
-
-          <div style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
-            gap: '30px'
-          }}>
-            {[
-              {
-                title: 'Scrum',
-                icon: '🔄',
-                description: 'Desenvolvimento iterativo com sprints de 2-4 semanas, garantindo entregas constantes e feedback contínuo.',
-                benefits: ['Transparência total', 'Entregas rápidas', 'Adaptação a mudanças', 'ROI acelerado']
-              },
-              {
-                title: 'DevOps',
-                icon: '🚀',
-                description: 'Integração contínua e deploy automatizado para releases mais frequentes e confiáveis.',
-                benefits: ['Deploy automatizado', 'Monitoramento 24/7', 'Rollback rápido', 'Escalabilidade']
-              },
-              {
-                title: 'Design Thinking',
-                icon: '💭',
-                description: 'Abordagem centrada no usuário para criar soluções inovadoras e experiências excepcionais.',
-                benefits: ['Foco no usuário', 'Inovação constante', 'Prototipagem rápida', 'Validação contínua']
-              }
-            ].map((metodologia, index) => (
-              <div
-                key={index}
-                style={{
-                  padding: '30px',
-                  borderRadius: '16px',
-                  border: '1px solid #e2e8f0',
-                  background: 'linear-gradient(135deg, #f8fafc, #ffffff)'
-                }}
-              >
-                <div style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '12px',
-                  marginBottom: '20px'
-                }}>
-                  <div style={{
-                    width: '48px',
-                    height: '48px',
-                    borderRadius: '12px',
-                    background: 'linear-gradient(45deg, #3b82f6, #8b5cf6)',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    fontSize: '20px'
-                  }}>
-                    {metodologia.icon}
-                  </div>
-                  <h3 style={{
-                    fontSize: '1.4rem',
-                    fontWeight: '700',
-                    color: '#1e293b',
-                    margin: '0'
-                  }}>
-                    {metodologia.title}
-                  </h3>
-                </div>
-                <p style={{
-                  color: '#64748b',
-                  marginBottom: '20px',
-                  lineHeight: '1.6'
-                }}>
-                  {metodologia.description}
-                </p>
-                <div style={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                  gap: '8px'
-                }}>
-                  {metodologia.benefits.map((benefit, idx) => (
-                    <div
-                      key={idx}
-                      style={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: '8px'
-                      }}
-                    >
-                      <div style={{
-                        width: '6px',
-                        height: '6px',
-                        borderRadius: '50%',
-                        background: 'linear-gradient(45deg, #22c55e, #16a34a)'
-                      }} />
-                      <span style={{
-                        fontSize: '14px',
-                        color: '#374151',
-                        fontWeight: '500'
-                      }}>
-                        {benefit}
-                      </span>
+        <section className="py-20 border-t border-border">
+          <div className="container mx-auto px-4">
+            <h2 className="font-display text-3xl font-bold text-foreground text-center mb-12">
+              Metodologias <span className="gradient-text">Ageis</span>
+            </h2>
+            <div className="grid md:grid-cols-3 gap-6 lg:gap-8">
+              {metodologias.map((met, i) => (
+                <motion.div
+                  key={met.title}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: i * 0.1 }}
+                  className="glass-card rounded-2xl p-8 hover-lift"
+                >
+                  <div className="flex items-center gap-3 mb-5">
+                    <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center">
+                      <met.icon className="w-6 h-6 text-primary" />
                     </div>
-                  ))}
-                </div>
-              </div>
-            ))}
+                    <h3 className="font-display text-xl font-semibold text-foreground">{met.title}</h3>
+                  </div>
+                  <p className="text-muted-foreground mb-5 leading-relaxed">{met.description}</p>
+                  <div className="flex flex-col gap-2">
+                    {met.benefits.map((benefit) => (
+                      <div key={benefit} className="flex items-center gap-2">
+                        <CheckCircle2 className="w-4 h-4 text-primary flex-shrink-0" />
+                        <span className="text-sm text-foreground font-medium">{benefit}</span>
+                      </div>
+                    ))}
+                  </div>
+                </motion.div>
+              ))}
+            </div>
           </div>
-        </div>
+        </section>
 
-        {/* Portfólio */}
-        <div style={{
-          background: 'white',
-          padding: '40px',
-          borderRadius: '24px',
-          boxShadow: '0 20px 60px rgba(0, 0, 0, 0.1)',
-          border: '1px solid #e2e8f0',
-          marginBottom: '60px'
-        }}>
-          <h2 style={{
-            fontSize: '2rem',
-            fontWeight: '700',
-            color: '#1e293b',
-            marginBottom: '30px',
-            textAlign: 'center'
-          }}>
-            🎯 Projetos de Destaque
-          </h2>
+        {/* Projetos */}
+        <section className="py-20 border-t border-border">
+          <div className="container mx-auto px-4">
+            <h2 className="font-display text-3xl font-bold text-foreground text-center mb-12">
+              Projetos de <span className="gradient-text">Destaque</span>
+            </h2>
+            <div className="grid md:grid-cols-3 gap-6 lg:gap-8">
+              {projetos.map((proj, i) => (
+                <motion.div
+                  key={proj.title}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: i * 0.1 }}
+                  className="glass-card rounded-2xl p-8 hover-lift"
+                >
+                  <span className="inline-block px-3 py-1 text-xs font-medium rounded-full bg-primary/10 text-primary mb-4">
+                    {proj.category}
+                  </span>
+                  <h3 className="font-display text-xl font-semibold text-foreground mb-3">{proj.title}</h3>
+                  <p className="text-muted-foreground text-sm mb-5 leading-relaxed">{proj.description}</p>
 
-          <div style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(350px, 1fr))',
-            gap: '30px'
-          }}>
-            {[
-              {
-                title: 'E-commerce Multivendor',
-                category: 'Marketplace',
-                description: 'Plataforma completa de marketplace com gestão de vendedores, produtos e pedidos.',
-                tech: ['Next.js', 'Node.js', 'PostgreSQL', 'Stripe'],
-                metrics: ['500+ vendedores', 'R$ 2M+ em vendas', '99.9% uptime']
-              },
-              {
-                title: 'App de Delivery',
-                category: 'Mobile',
-                description: 'Aplicativo de delivery com tracking em tempo real e múltiplas formas de pagamento.',
-                tech: ['React Native', 'Express', 'MongoDB', 'Socket.io'],
-                metrics: ['50K+ downloads', '4.8⭐ rating', '< 3s loading']
-              },
-              {
-                title: 'Sistema de CRM',
-                category: 'Enterprise',
-                description: 'CRM corporativo com automação de vendas e analytics avançados.',
-                tech: ['React', 'Python', 'PostgreSQL', 'Redis'],
-                metrics: ['1000+ usuários', '40% ↑ vendas', 'ROI 300%']
-              }
-            ].map((projeto, index) => (
-              <ProjectCard
-                key={index}
-                title={projeto.title}
-                category={projeto.category}
-                description={projeto.description}
-                tech={projeto.tech}
-                metrics={projeto.metrics}
-              />
-            ))}
+                  <div className="flex flex-wrap gap-2 mb-5">
+                    {proj.tech.map((t) => (
+                      <span key={t} className="px-3 py-1 text-xs font-medium rounded-lg bg-secondary text-secondary-foreground">{t}</span>
+                    ))}
+                  </div>
+
+                  <div className="border-t border-border pt-4">
+                    {proj.metrics.map((m) => (
+                      <div key={m} className="flex items-center gap-2 mb-1">
+                        <CheckCircle2 className="w-3.5 h-3.5 text-primary" />
+                        <span className="text-sm text-muted-foreground">{m}</span>
+                      </div>
+                    ))}
+                  </div>
+                </motion.div>
+              ))}
+            </div>
           </div>
-        </div>
+        </section>
 
         {/* CTA */}
-        <div style={{
-          textAlign: 'center',
-          background: 'linear-gradient(45deg, #3b82f6, #8b5cf6)',
-          padding: '50px 40px',
-          borderRadius: '24px',
-          color: 'white'
-        }}>
-          <h2 style={{
-            fontSize: '2.2rem',
-            fontWeight: '800',
-            marginBottom: '20px'
-          }}>
-            Vamos desenvolver seu próximo projeto juntos?
-          </h2>
-          <p style={{
-            fontSize: '1.1rem',
-            marginBottom: '30px',
-            opacity: '0.9'
-          }}>
-            Nossa equipe está pronta para transformar sua visão em um produto digital de alta qualidade.
-          </p>
-          <div style={{
-            display: 'flex',
-            gap: '16px',
-            justifyContent: 'center',
-            flexWrap: 'wrap'
-          }}>
-            <a
-              href="/contato"
-              style={{
-                background: 'rgba(255, 255, 255, 0.2)',
-                border: '2px solid rgba(255, 255, 255, 0.3)',
-                color: 'white',
-                padding: '16px 32px',
-                borderRadius: '12px',
-                textDecoration: 'none',
-                fontSize: '16px',
-                fontWeight: '600',
-                transition: 'all 0.3s ease',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '8px'
-              }}
-            >
-              💼 Solicitar Orçamento
-            </a>
-            <WhatsAppCtaButton 
-              message="Olá! Gostaria de discutir um projeto de desenvolvimento com a InovaMente Labs."
-              text="Falar no WhatsApp"
-            />
+        <section className="py-16">
+          <div className="container mx-auto px-4 text-center">
+            <div className="glass-card rounded-2xl p-10 max-w-2xl mx-auto">
+              <h2 className="font-display text-2xl font-bold text-foreground mb-4">
+                Vamos desenvolver seu proximo projeto juntos?
+              </h2>
+              <p className="text-muted-foreground mb-6">
+                Nossa equipe esta pronta para transformar sua visao em um produto digital de alta qualidade.
+              </p>
+              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                <Link
+                  href="/contato"
+                  className="inline-flex items-center justify-center gap-2 px-8 py-4 rounded-xl bg-primary text-primary-foreground font-semibold hover:opacity-90 transition-opacity"
+                >
+                  <Briefcase className="w-4 h-4" />
+                  Solicitar Orcamento
+                </Link>
+                <Link
+                  href="https://wa.me/5547992474747?text=Ola! Gostaria de discutir um projeto de desenvolvimento com a InovaMente Labs."
+                  target="_blank"
+                  className="inline-flex items-center justify-center gap-2 px-8 py-4 rounded-xl border border-border text-foreground font-semibold hover:bg-secondary transition-colors"
+                >
+                  <MessageCircle className="w-4 h-4" />
+                  Falar no WhatsApp
+                </Link>
+              </div>
+            </div>
           </div>
-        </div>
-      </div>
+        </section>
+      </main>
+      <Footer />
+      <FloatingWhatsApp />
     </div>
   );
 }

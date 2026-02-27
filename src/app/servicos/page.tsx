@@ -1,318 +1,152 @@
-import type { Metadata } from 'next';
-import Link from 'next/link';
-import { Navbar } from '@/components/Navbar';
+'use client';
 
-export const metadata: Metadata = {
-  title: 'Serviços de Desenvolvimento de Software | InovaMente Labs',
-  description: 'Oferecemos desenvolvimento web, mobile, automação de processos e DevOps. Transforme sua empresa com soluções tecnológicas inovadoras no Brasil.',
-  keywords: [
-    'desenvolvimento de software Brasil',
-    'fábrica de software',
-    'desenvolvimento web',
-    'desenvolvimento mobile',
-    'automação de processos',
-    'DevOps infraestrutura'
-  ],
-  openGraph: {
-    title: 'Serviços de Desenvolvimento de Software | InovaMente Labs',
-    description: 'Soluções completas em tecnologia para sua empresa: desenvolvimento web, mobile, automação e infraestrutura.',
-    url: 'https://www.inovamentelabs.com.br/servicos',
-    type: 'website',
-    images: [
-      {
-        url: '/og-servicos.png',
-        width: 1200,
-        height: 630,
-        alt: 'Serviços InovaMente Labs'
-      }
-    ]
-  },
-  alternates: {
-    canonical: 'https://www.inovamentelabs.com.br/servicos'
-  }
-};
+import Link from 'next/link';
+import Navbar from '@/components/Navbar';
+import Footer from '@/components/Footer';
+import FloatingWhatsApp from '@/components/FloatingWhatsApp';
+import { motion } from 'framer-motion';
+import { Globe, Smartphone, Cog, Cloud, ChevronRight, Search, Lightbulb, Code2, Rocket } from 'lucide-react';
 
 const services = [
   {
-    id: 'desenvolvimento-web',
+    icon: Globe,
     title: 'Desenvolvimento Web',
-    description: 'Sites e sistemas web responsivos com React, Next.js e tecnologias modernas',
-    icon: '🌐',
-    href: '/servicos/desenvolvimento-web',
-    features: [
-      'Sites institucionais responsivos',
-      'E-commerce completo',
-      'Sistemas corporativos',
-      'PWA - Progressive Web Apps',
-      'Integração com APIs',
-      'SEO otimizado'
-    ],
-    technologies: ['React', 'Next.js', 'TypeScript', 'Tailwind CSS'],
-    startingPrice: 'A partir de R$ 2.500'
+    description: 'Criamos aplicações web de alta performance com as tecnologias mais modernas do mercado. SPAs, PWAs e plataformas completas.',
+    techs: ['React', 'Next.js', 'Node.js', 'TypeScript', 'PostgreSQL'],
   },
   {
-    id: 'desenvolvimento-mobile',
+    icon: Smartphone,
     title: 'Desenvolvimento Mobile',
-    description: 'Aplicativos nativos e híbridos para iOS e Android com performance superior',
-    icon: '📱',
-    href: '/servicos/desenvolvimento-mobile',
-    features: [
-      'Apps nativos iOS/Android',
-      'Aplicativos híbridos',
-      'Integração com dispositivos',
-      'Push notifications',
-      'Publicação nas stores',
-      'Manutenção e atualizações'
-    ],
-    technologies: ['React Native', 'Flutter', 'Swift', 'Kotlin'],
-    startingPrice: 'A partir de R$ 8.000'
+    description: 'Apps nativos e multiplataforma com experiências fluidas. Do design ao deploy nas lojas Apple e Google.',
+    techs: ['React Native', 'Flutter', 'iOS', 'Android', 'Firebase'],
   },
   {
-    id: 'automacao-processos',
+    icon: Cog,
     title: 'Automação de Processos',
-    description: 'Automatize tarefas repetitivas e otimize a eficiência da sua empresa',
-    icon: '🤖',
-    href: '/servicos/automacao-processos',
-    features: [
-      'Automação de workflows',
-      'Integração entre sistemas',
-      'Relatórios automáticos',
-      'Chatbots inteligentes',
-      'RPA - Robotic Process Automation',
-      'API REST personalizadas'
-    ],
-    technologies: ['Python', 'Node.js', 'Zapier', 'Power Automate'],
-    startingPrice: 'A partir de R$ 3.000'
+    description: 'Eliminamos gargalos operacionais com automações inteligentes, integrações e workflows que reduzem custos.',
+    techs: ['RPA', 'APIs REST', 'Workflows', 'Python', 'IA'],
   },
   {
-    id: 'devops-infraestrutura',
+    icon: Cloud,
     title: 'DevOps & Infraestrutura',
-    description: 'Infraestrutura escalável, segura e otimizada para alta performance',
-    icon: '⚡',
-    href: '/servicos/devops-infraestrutura',
-    features: [
-      'Deploy automatizado',
-      'Monitoramento 24/7',
-      'Backup e disaster recovery',
-      'Segurança avançada',
-      'Escalabilidade automática',
-      'Otimização de custos'
-    ],
-    technologies: ['AWS', 'Docker', 'Kubernetes', 'Terraform'],
-    startingPrice: 'A partir de R$ 1.500/mês'
-  }
+    description: 'Infraestrutura segura e escalável com CI/CD, containers, monitoramento e alta disponibilidade.',
+    techs: ['AWS', 'Azure', 'Docker', 'Kubernetes', 'Terraform'],
+  },
 ];
 
-export default function ServicesPage() {
+const methodology = [
+  { icon: Search, title: 'Descoberta', description: 'Entendemos seu negócio, objetivos e desafios técnicos.' },
+  { icon: Lightbulb, title: 'Planejamento', description: 'Arquitetura, roadmap e definição de escopo detalhado.' },
+  { icon: Code2, title: 'Desenvolvimento', description: 'Sprints ágeis com entregas incrementais e feedback contínuo.' },
+  { icon: Rocket, title: 'Entrega', description: 'Deploy, monitoramento, treinamento e suporte pós-lançamento.' },
+];
+
+export default function ServicosPage() {
   return (
-    <>
+    <div className="min-h-screen bg-background">
       <Navbar />
-      
-      {/* Hero Section */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-blue-900 via-blue-800 to-cyan-600 text-white">
-        <div className="absolute inset-0 bg-black/20"></div>
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24">
-          <div className="text-center">
-            <h1 className="text-4xl md:text-6xl font-bold mb-6 gradient-text-primary">
-              Nossos Serviços
-            </h1>
-            <p className="text-xl md:text-2xl mb-8 max-w-3xl mx-auto opacity-90">
-              Soluções completas em tecnologia para transformar sua empresa e acelerar seu crescimento digital
-            </p>
-            <div className="flex flex-wrap justify-center gap-4 text-sm">
-              <span className="px-4 py-2 bg-white/20 rounded-full backdrop-blur-sm">
-                🏆 +100 Projetos Entregues
-              </span>
-              <span className="px-4 py-2 bg-white/20 rounded-full backdrop-blur-sm">
-                ⚡ Entrega em 30 dias
-              </span>
-              <span className="px-4 py-2 bg-white/20 rounded-full backdrop-blur-sm">
-                🛡️ Suporte Garantido
-              </span>
+      <main className="pt-20">
+        {/* Hero */}
+        <section className="py-16 lg:py-24">
+          <div className="container mx-auto px-4">
+            <div className="flex items-center gap-2 text-sm text-muted-foreground mb-6">
+              <Link href="/" className="hover:text-primary transition-colors">Home</Link>
+              <ChevronRight className="w-3 h-3" />
+              <span className="text-foreground">Serviços</span>
+            </div>
+            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="max-w-3xl">
+              <h1 className="font-display text-4xl lg:text-5xl font-bold text-foreground mb-4">
+                Nossos <span className="gradient-text">Serviços</span>
+              </h1>
+              <p className="text-lg text-muted-foreground">
+                Soluções tecnológicas completas para cada fase da transformação digital do seu negócio.
+              </p>
+            </motion.div>
+          </div>
+        </section>
+
+        {/* Services Grid */}
+        <section className="pb-20">
+          <div className="container mx-auto px-4">
+            <div className="grid md:grid-cols-2 gap-6 lg:gap-8">
+              {services.map((s, i) => (
+                <motion.div
+                  key={s.title}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: i * 0.1 }}
+                  className="glass-card rounded-2xl p-8 hover-lift"
+                >
+                  <div className="w-14 h-14 rounded-xl bg-primary/10 flex items-center justify-center mb-6">
+                    <s.icon className="w-7 h-7 text-primary" />
+                  </div>
+                  <h3 className="font-display text-2xl font-semibold text-foreground mb-3">{s.title}</h3>
+                  <p className="text-muted-foreground mb-6 leading-relaxed">{s.description}</p>
+                  <div className="flex flex-wrap gap-2 mb-6">
+                    {s.techs.map((t) => (
+                      <span key={t} className="px-3 py-1 text-xs font-medium rounded-lg bg-secondary text-secondary-foreground">{t}</span>
+                    ))}
+                  </div>
+                  <Link href="/contato" className="inline-flex items-center gap-1 text-sm font-medium text-primary hover:underline">
+                    Saiba Mais <ChevronRight className="w-4 h-4" />
+                  </Link>
+                </motion.div>
+              ))}
             </div>
           </div>
-        </div>
-      </section>
+        </section>
 
-      {/* Services Grid */}
-      <section className="py-20 bg-gray-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-              Escolha o Serviço Ideal para Sua Empresa
+        {/* Methodology */}
+        <section className="py-20 border-t border-border">
+          <div className="container mx-auto px-4">
+            <h2 className="font-display text-3xl font-bold text-foreground text-center mb-12">
+              Nossa <span className="gradient-text-accent">Metodologia</span>
             </h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              Oferecemos soluções personalizadas com as melhores tecnologias do mercado
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            {services.map((service) => (
-              <div key={service.id} className="glassmorphism-card group hover-lift">
-                <div className="flex items-start space-x-4 mb-6">
-                  <div className="text-4xl">{service.icon}</div>
-                  <div className="flex-1">
-                    <h3 className="text-2xl font-bold text-gray-900 mb-2">
-                      {service.title}
-                    </h3>
-                    <p className="text-gray-600 mb-4">{service.description}</p>
-                    <div className="text-lg font-semibold text-blue-600 mb-4">
-                      {service.startingPrice}
-                    </div>
+            <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+              {methodology.map((step, i) => (
+                <motion.div
+                  key={step.title}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: i * 0.15 }}
+                  className="text-center"
+                >
+                  <div className="w-16 h-16 rounded-2xl bg-primary/10 flex items-center justify-center mx-auto mb-4 relative">
+                    <step.icon className="w-7 h-7 text-primary" />
+                    <span className="absolute -top-2 -right-2 w-6 h-6 rounded-full bg-accent text-accent-foreground text-xs font-bold flex items-center justify-center">
+                      {i + 1}
+                    </span>
                   </div>
-                </div>
-
-                {/* Features */}
-                <div className="mb-6">
-                  <h4 className="font-semibold text-gray-900 mb-3">Principais recursos:</h4>
-                  <ul className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                    {service.features.map((feature, index) => (
-                      <li key={index} className="flex items-center text-sm text-gray-600">
-                        <span className="text-green-500 mr-2">✓</span>
-                        {feature}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-
-                {/* Technologies */}
-                <div className="mb-6">
-                  <h4 className="font-semibold text-gray-900 mb-3">Tecnologias:</h4>
-                  <div className="flex flex-wrap gap-2">
-                    {service.technologies.map((tech, index) => (
-                      <span
-                        key={index}
-                        className="px-3 py-1 bg-blue-100 text-blue-700 text-xs rounded-full font-medium"
-                      >
-                        {tech}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-
-                {/* CTA */}
-                <div className="flex space-x-3">
-                  <Link
-                    href={service.href}
-                    className="flex-1 btn-primary text-center group-hover:scale-105 transition-transform"
-                  >
-                    Saiba Mais
-                  </Link>
-                  <Link
-                    href={`/contato?service=${service.id}`}
-                    className="flex-1 btn-secondary text-center group-hover:scale-105 transition-transform"
-                  >
-                    Solicitar Orçamento
-                  </Link>
-                </div>
-              </div>
-            ))}
+                  <h3 className="font-display text-lg font-semibold text-foreground mb-2">{step.title}</h3>
+                  <p className="text-sm text-muted-foreground">{step.description}</p>
+                </motion.div>
+              ))}
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
 
-      {/* Process Section */}
-      <section className="py-20 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-              Nossa Metodologia
-            </h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              Processo ágil e transparente para garantir o sucesso do seu projeto
-            </p>
+        {/* CTA */}
+        <section className="py-16">
+          <div className="container mx-auto px-4 text-center">
+            <div className="glass-card rounded-2xl p-10 max-w-2xl mx-auto">
+              <h2 className="font-display text-2xl font-bold text-foreground mb-4">
+                Tem um projeto em mente?
+              </h2>
+              <p className="text-muted-foreground mb-6">
+                Conte-nos sobre sua ideia e receba uma proposta personalizada.
+              </p>
+              <Link
+                href="/contato"
+                className="inline-flex items-center gap-2 px-8 py-4 rounded-xl bg-primary text-primary-foreground font-semibold hover:opacity-90 transition-opacity"
+              >
+                Solicitar Orçamento
+              </Link>
+            </div>
           </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-            {[
-              {
-                step: '01',
-                title: 'Análise',
-                description: 'Entendemos suas necessidades e objetivos de negócio'
-              },
-              {
-                step: '02',
-                title: 'Planejamento',
-                description: 'Criamos um roadmap detalhado com prazos e entregas'
-              },
-              {
-                step: '03',
-                title: 'Desenvolvimento',
-                description: 'Desenvolvimento ágil com entregas incrementais'
-              },
-              {
-                step: '04',
-                title: 'Entrega',
-                description: 'Deploy, treinamento e suporte pós-lançamento'
-              }
-            ].map((item, index) => (
-              <div key={index} className="text-center">
-                <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-cyan-400 rounded-full flex items-center justify-center text-white font-bold text-xl mx-auto mb-4">
-                  {item.step}
-                </div>
-                <h3 className="text-xl font-bold text-gray-900 mb-2">{item.title}</h3>
-                <p className="text-gray-600">{item.description}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* CTA Section */}
-      <section className="py-20 bg-gradient-to-r from-blue-600 to-cyan-500 text-white">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-3xl md:text-4xl font-bold mb-6">
-            Pronto para Transformar sua Empresa?
-          </h2>
-          <p className="text-xl mb-8 opacity-90">
-            Converse com nossos especialistas e descubra como podemos acelerar seu crescimento digital
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link
-              href="/contato"
-              className="btn-secondary bg-white text-blue-600 hover:bg-gray-100 px-8 py-4 text-lg font-semibold"
-            >
-              Solicitar Consultoria Gratuita
-            </Link>
-            <Link
-              href="/chamados"
-              className="btn-primary border-2 border-white bg-transparent hover:bg-white hover:text-blue-600 px-8 py-4 text-lg font-semibold"
-            >
-              Ver Nossos Cases
-            </Link>
-          </div>
-        </div>
-      </section>
-
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify({
-            "@context": "https://schema.org",
-            "@type": "Service",
-            "name": "Serviços de Desenvolvimento de Software",
-            "description": "Desenvolvimento web, mobile, automação de processos e DevOps",
-            "provider": {
-              "@type": "Organization",
-              "name": "InovaMente Labs",
-              "url": "https://www.inovamentelabs.com.br"
-            },
-            "areaServed": "Brasil",
-            "hasOfferCatalog": {
-              "@type": "OfferCatalog",
-              "name": "Serviços de Tecnologia",
-              "itemListElement": services.map(service => ({
-                "@type": "Offer",
-                "itemOffered": {
-                  "@type": "Service",
-                  "name": service.title,
-                  "description": service.description
-                }
-              }))
-            }
-          })
-        }}
-      />
-    </>
+        </section>
+      </main>
+      <Footer />
+      <FloatingWhatsApp />
+    </div>
   );
 }

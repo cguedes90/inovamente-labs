@@ -1,10 +1,19 @@
 'use client';
 
 import { useState } from 'react';
-import Navbar from '@/components/Navbar'
-import WhatsAppButton from '@/components/WhatsAppButton'
-import WhatsAppCtaButton from '@/components/WhatsAppCtaButton'
-import styles from './contact.module.css'
+import Link from 'next/link';
+import { motion } from 'framer-motion';
+import { ChevronRight, Send, Phone, Mail, MapPin, MessageCircle, Clock, Loader2, CheckCircle, XCircle } from 'lucide-react';
+import Navbar from '@/components/Navbar';
+import Footer from '@/components/Footer';
+import FloatingWhatsApp from '@/components/FloatingWhatsApp';
+
+const contactInfo = [
+  { icon: Phone, label: 'Telefone', value: '(11) 97450-8168', href: 'tel:+5511974508168' },
+  { icon: Mail, label: 'E-mail', value: 'contato@inovamentelabs.com.br', href: 'mailto:contato@inovamentelabs.com.br' },
+  { icon: MapPin, label: 'Localização', value: 'São José dos Campos, SP' },
+  { icon: MessageCircle, label: 'WhatsApp', value: '(11) 97450-8168', href: 'https://wa.me/5511974508168' },
+];
 
 export default function ContatoPage() {
   const [formData, setFormData] = useState({
@@ -13,16 +22,11 @@ export default function ContatoPage() {
     phone: '',
     company: '',
     subject: '',
-    message: ''
+    message: '',
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
   const [error, setError] = useState('');
-
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
-  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -42,287 +46,229 @@ export default function ContatoPage() {
         throw new Error('Erro ao enviar mensagem');
       }
 
-      // Limpar formulário
-      setFormData({
-        name: '',
-        email: '',
-        phone: '',
-        company: '',
-        subject: '',
-        message: ''
-      });
-
-      // Mostrar mensagem de sucesso
+      setFormData({ name: '', email: '', phone: '', company: '', subject: '', message: '' });
       setShowSuccess(true);
-      
-      // Ocultar mensagem após 5 segundos
       setTimeout(() => setShowSuccess(false), 5000);
-
-    } catch (error: any) {
-      console.error('Erro ao enviar:', error);
+    } catch (err: unknown) {
+      console.error('Erro ao enviar:', err);
       setError('Erro ao enviar mensagem. Tente novamente.');
     } finally {
       setIsSubmitting(false);
     }
   };
+
   return (
-    <div className={styles.container}>
+    <div className="min-h-screen bg-background">
       <Navbar />
-      <WhatsAppButton />
-
-      <div className={styles.content}>
-        {/* Header */}
-        <div className={styles.header}>
-          <h1 className={styles.title}>
-            📞 Entre em Contato
-          </h1>
-          <p className={styles.subtitle}>
-            Estamos prontos para transformar suas ideias em realidade digital.
-            Fale conosco e descubra como podemos ajudar seu negócio.
-          </p>
-        </div>
-
-        <div className={styles.grid}>
-          {/* Formulário */}
-          <div className={styles.formCard}>
-            <div className={styles.formHeader}>
-              <div className={styles.formIcon}>
-                ✉️
-              </div>
-              <h2 className={styles.formTitle}>
-                Nos envie sua solicitação
-              </h2>
+      <main className="pt-20">
+        <section className="py-16 lg:py-24">
+          <div className="container mx-auto px-4">
+            {/* Breadcrumb */}
+            <div className="flex items-center gap-2 text-sm text-muted-foreground mb-6">
+              <Link href="/" className="hover:text-primary transition-colors">Home</Link>
+              <ChevronRight className="w-3 h-3" />
+              <span className="text-foreground">Contato</span>
             </div>
 
-            <p className={styles.formDescription}>
-              Preencha o formulário e nossa equipe entrará em contato em até 24 horas.
-            </p>
+            {/* Header */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="max-w-3xl mb-16"
+            >
+              <h1 className="font-display text-4xl lg:text-5xl font-bold text-foreground mb-4">
+                Fale <span className="gradient-text">Conosco</span>
+              </h1>
+              <p className="text-lg text-muted-foreground">
+                Estamos prontos para ajudar. Preencha o formulário ou entre em contato diretamente.
+              </p>
+            </motion.div>
 
-            {/* Mensagem de Sucesso */}
-            {showSuccess && (
-              <div className={styles.successMessage}>
-                ✅ Mensagem enviada com sucesso! Entraremos em contato em breve.
-              </div>
-            )}
-
-            {/* Mensagem de Erro */}
-            {error && (
-              <div className={styles.errorMessage}>
-                ❌ {error}
-              </div>
-            )}
-
-            <form onSubmit={handleSubmit}>
-              <div className={styles.formGrid}>
-                <div className={styles.inputGroup}>
-                  <label className={styles.label}>
-                    Nome Completo <span style={{ color: '#ef4444' }}>*</span>
-                  </label>
-                  <input
-                    type="text"
-                    name="name"
-                    value={formData.name}
-                    onChange={handleInputChange}
-                    placeholder="Seu nome"
-                    required
-                    className={styles.input}
-                  />
-                </div>
-                <div className={styles.inputGroup}>
-                  <label className={styles.label}>
-                    Email <span style={{ color: '#ef4444' }}>*</span>
-                  </label>
-                  <input
-                    type="email"
-                    name="email"
-                    value={formData.email}
-                    onChange={handleInputChange}
-                    placeholder="seu@email.com"
-                    required
-                    className={styles.input}
-                  />
-                </div>
-              </div>
-
-              <div className={styles.formGrid}>
-                <div className={styles.inputGroup}>
-                  <label className={styles.label}>
-                    Telefone/WhatsApp
-                  </label>
-                  <input
-                    type="tel"
-                    name="phone"
-                    value={formData.phone}
-                    onChange={handleInputChange}
-                    placeholder="(11) 99999-9999"
-                    className={styles.input}
-                  />
-                </div>
-                <div className={styles.inputGroup}>
-                  <label className={styles.label}>
-                    Empresa
-                  </label>
-                  <input
-                    type="text"
-                    name="company"
-                    value={formData.company}
-                    onChange={handleInputChange}
-                    placeholder="Nome da empresa"
-                    className={styles.input}
-                  />
-                </div>
-              </div>
-
-              <div className={styles.inputGroup}>
-                <label className={styles.label}>
-                  Assunto <span style={{ color: '#ef4444' }}>*</span>
-                </label>
-                <select
-                  name="subject"
-                  value={formData.subject}
-                  onChange={handleInputChange}
-                  required
-                  className={styles.select}
-                >
-                  <option value="">Selecione o assunto da sua solicitação</option>
-                  <option value="parcerias">Parcerias</option>
-                  <option value="suporte">Suporte</option>
-                  <option value="orcamento">Orçamento</option>
-                  <option value="outros">Outros Temas</option>
-                </select>
-              </div>
-
-              <div className={styles.inputGroup}>
-                <label className={styles.label}>
-                  Mensagem
-                </label>
-                <textarea
-                  name="message"
-                  value={formData.message}
-                  onChange={handleInputChange}
-                  placeholder="Conte-nos sobre seu projeto ou necessidade..."
-                  rows={5}
-                  className={styles.textarea}
-                />
-              </div>
-
-              <button
-                type="submit"
-                disabled={isSubmitting}
-                className={styles.submitButton}
+            <div className="grid lg:grid-cols-5 gap-8 lg:gap-12">
+              {/* Form - 3/5 columns */}
+              <motion.div
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: 0.2 }}
+                className="lg:col-span-3"
               >
-                {isSubmitting ? '⏳ Enviando...' : '✉️ Enviar Solicitação'}
-              </button>
-            </form>
+                <form onSubmit={handleSubmit} className="glass-card rounded-2xl p-6 lg:p-8 space-y-5">
+                  {/* Success Message */}
+                  {showSuccess && (
+                    <div className="flex items-center gap-3 p-4 rounded-xl bg-green-500/10 border border-green-500/20 text-green-400">
+                      <CheckCircle className="w-5 h-5 shrink-0" />
+                      <span className="text-sm font-medium">Mensagem enviada com sucesso! Entraremos em contato em breve.</span>
+                    </div>
+                  )}
+
+                  {/* Error Message */}
+                  {error && (
+                    <div className="flex items-center gap-3 p-4 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400">
+                      <XCircle className="w-5 h-5 shrink-0" />
+                      <span className="text-sm font-medium">{error}</span>
+                    </div>
+                  )}
+
+                  <div className="grid sm:grid-cols-2 gap-5">
+                    <div>
+                      <label className="block text-sm font-medium text-foreground mb-2">Nome Completo *</label>
+                      <input
+                        type="text"
+                        required
+                        value={formData.name}
+                        onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                        className="w-full px-4 py-3 rounded-xl bg-secondary border border-border text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-primary transition-colors"
+                        placeholder="Seu nome completo"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-foreground mb-2">E-mail *</label>
+                      <input
+                        type="email"
+                        required
+                        value={formData.email}
+                        onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                        className="w-full px-4 py-3 rounded-xl bg-secondary border border-border text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-primary transition-colors"
+                        placeholder="seu@email.com"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="grid sm:grid-cols-2 gap-5">
+                    <div>
+                      <label className="block text-sm font-medium text-foreground mb-2">Telefone/WhatsApp</label>
+                      <input
+                        type="tel"
+                        value={formData.phone}
+                        onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                        className="w-full px-4 py-3 rounded-xl bg-secondary border border-border text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-primary transition-colors"
+                        placeholder="(11) 99999-9999"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-foreground mb-2">Empresa</label>
+                      <input
+                        type="text"
+                        value={formData.company}
+                        onChange={(e) => setFormData({ ...formData, company: e.target.value })}
+                        className="w-full px-4 py-3 rounded-xl bg-secondary border border-border text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-primary transition-colors"
+                        placeholder="Nome da empresa"
+                      />
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-foreground mb-2">Assunto *</label>
+                    <select
+                      required
+                      value={formData.subject}
+                      onChange={(e) => setFormData({ ...formData, subject: e.target.value })}
+                      className="w-full px-4 py-3 rounded-xl bg-secondary border border-border text-foreground focus:outline-none focus:border-primary transition-colors"
+                    >
+                      <option value="">Selecione o assunto</option>
+                      <option value="orcamento">Orçamento</option>
+                      <option value="parcerias">Parcerias</option>
+                      <option value="suporte">Suporte</option>
+                      <option value="outros">Outros Temas</option>
+                    </select>
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-foreground mb-2">Mensagem</label>
+                    <textarea
+                      rows={4}
+                      value={formData.message}
+                      onChange={(e) => setFormData({ ...formData, message: e.target.value })}
+                      className="w-full px-4 py-3 rounded-xl bg-secondary border border-border text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-primary transition-colors resize-none"
+                      placeholder="Descreva seu projeto ou necessidade..."
+                    />
+                  </div>
+
+                  <button
+                    type="submit"
+                    disabled={isSubmitting}
+                    className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-4 rounded-xl bg-primary text-primary-foreground font-semibold hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    {isSubmitting ? (
+                      <>
+                        <Loader2 className="w-4 h-4 animate-spin" />
+                        Enviando...
+                      </>
+                    ) : (
+                      <>
+                        <Send className="w-4 h-4" />
+                        Enviar Mensagem
+                      </>
+                    )}
+                  </button>
+                </form>
+              </motion.div>
+
+              {/* Contact Info - 2/5 columns */}
+              <motion.div
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: 0.3 }}
+                className="lg:col-span-2 space-y-4"
+              >
+                {contactInfo.map((info) => (
+                  <div key={info.label} className="glass-card rounded-xl p-5 flex items-start gap-4">
+                    <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
+                      <info.icon className="w-5 h-5 text-primary" />
+                    </div>
+                    <div>
+                      <h4 className="font-medium text-foreground text-sm">{info.label}</h4>
+                      {info.href ? (
+                        <a
+                          href={info.href}
+                          target={info.href.startsWith('http') ? '_blank' : undefined}
+                          rel={info.href.startsWith('http') ? 'noopener noreferrer' : undefined}
+                          className="text-muted-foreground text-sm hover:text-primary transition-colors"
+                        >
+                          {info.value}
+                        </a>
+                      ) : (
+                        <p className="text-muted-foreground text-sm">{info.value}</p>
+                      )}
+                    </div>
+                  </div>
+                ))}
+
+                {/* Business Hours */}
+                <div className="glass-card rounded-xl p-5 flex items-start gap-4">
+                  <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
+                    <Clock className="w-5 h-5 text-primary" />
+                  </div>
+                  <div>
+                    <h4 className="font-medium text-foreground text-sm mb-1">Horário de Atendimento</h4>
+                    <p className="text-muted-foreground text-sm">Seg - Sex: 9h às 18h</p>
+                    <p className="text-muted-foreground text-sm">Sáb: 9h às 12h</p>
+                  </div>
+                </div>
+
+                {/* WhatsApp CTA */}
+                <div className="rounded-xl p-6 bg-gradient-to-br from-green-500 to-green-700 text-white">
+                  <h4 className="text-lg font-bold mb-2">WhatsApp</h4>
+                  <p className="text-sm opacity-90 mb-4">
+                    Para um atendimento mais rápido, entre em contato pelo WhatsApp:
+                  </p>
+                  <a
+                    href="https://wa.me/5511974508168?text=Ol%C3%A1!%20Gostaria%20de%20mais%20informa%C3%A7%C3%B5es%20sobre%20os%20servi%C3%A7os%20da%20InovaMente%20Labs."
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center justify-center gap-2 w-full px-6 py-3 rounded-xl bg-white/20 border-2 border-white/30 text-white font-semibold hover:bg-white/30 transition-colors"
+                  >
+                    <MessageCircle className="w-5 h-5" />
+                    Falar no WhatsApp
+                  </a>
+                </div>
+              </motion.div>
+            </div>
           </div>
-
-          {/* Informações de contato */}
-          <div className={styles.infoSection}>
-            <h3 className={styles.formTitle}>
-              Informações de Contato
-            </h3>
-
-            {/* Telefone */}
-            <div className={styles.infoCard}>
-              <div className={styles.infoHeader}>
-                <div className={styles.infoIcon} style={{ background: 'linear-gradient(45deg, #3b82f6, #1d4ed8)' }}>
-                  📞
-                </div>
-                <h4 className={styles.infoTitle}>
-                  Telefone
-                </h4>
-              </div>
-              <p className={styles.infoContent}>
-                <a href="tel:+5511974508168" className={styles.infoLink}>(11) 9 7450-8168</a>
-                <br />
-                Segunda a Sexta, 9h às 18h
-              </p>
-            </div>
-
-            {/* Email */}
-            <div className={styles.infoCard}>
-              <div className={styles.infoHeader}>
-                <div className={styles.infoIcon} style={{ background: 'linear-gradient(45deg, #22c55e, #16a34a)' }}>
-                  ✉️
-                </div>
-                <h4 className={styles.infoTitle}>
-                  Email
-                </h4>
-              </div>
-              <p className={styles.infoContent}>
-                <a href="mailto:contato@inovamentelabs.com.br" className={styles.infoLink}>contato@inovamentelabs.com.br</a>
-                <br />
-                Respondemos em até 24 horas
-              </p>
-            </div>
-
-            {/* Localização */}
-            <div className={styles.infoCard}>
-              <div className={styles.infoHeader}>
-                <div className={styles.infoIcon} style={{ background: 'linear-gradient(45deg, #8b5cf6, #7c3aed)' }}>
-                  📍
-                </div>
-                <h4 className={styles.infoTitle}>
-                  Localização
-                </h4>
-              </div>
-              <p className={styles.infoContent}>
-                São José dos Campos, SP
-                <br />
-                Atendemos todo o Brasil
-              </p>
-            </div>
-
-            {/* Horário */}
-            <div className={styles.infoCard}>
-              <div className={styles.infoHeader}>
-                <div className={styles.infoIcon} style={{ background: 'linear-gradient(45deg, #f59e0b, #d97706)' }}>
-                  🕒
-                </div>
-                <h4 className={styles.infoTitle}>
-                  Horário de Funcionamento
-                </h4>
-              </div>
-              <p className={styles.infoContent}>
-                Segunda a Sexta: 9h às 18h
-                <br />
-                Sábado: 9h às 12h
-                <br />
-                <span style={{ fontSize: '14px' }}>Fuso horário: GMT-3 (Brasília)</span>
-              </p>
-            </div>
-
-            {/* WhatsApp */}
-            <div className={styles.whatsappCta}>
-              <h4 style={{
-                fontSize: '1.3rem',
-                fontWeight: '700',
-                margin: '0 0 12px 0'
-              }}>
-                WhatsApp
-              </h4>
-              <p style={{
-                fontSize: '16px',
-                margin: '0 0 20px 0',
-                opacity: '0.9'
-              }}>
-                Para um atendimento mais rápido, entre em contato pelo WhatsApp:
-              </p>
-              <WhatsAppCtaButton
-                message="Olá! Gostaria de mais informações sobre os serviços da InovaMente Labs."
-                text="Falar no WhatsApp"
-                style={{
-                  background: 'rgba(255, 255, 255, 0.2)',
-                  border: '2px solid rgba(255, 255, 255, 0.3)',
-                  width: '100%',
-                  justifyContent: 'center',
-                  boxShadow: 'none'
-                }}
-              />
-            </div>
-          </div>
-        </div>
-      </div>
+        </section>
+      </main>
+      <Footer />
+      <FloatingWhatsApp />
     </div>
   );
 }

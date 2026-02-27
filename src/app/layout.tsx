@@ -1,10 +1,11 @@
 import type { Metadata } from 'next';
-import { Inter } from 'next/font/google';
+import { Inter, Space_Grotesk } from 'next/font/google';
 import './globals.css';
 import QueryProvider from '@/lib/queryClient';
 import GoogleAnalytics from '@/components/GoogleAnalytics';
 
-const inter = Inter({ subsets: ['latin'] });
+const inter = Inter({ subsets: ['latin'], variable: '--font-sans' });
+const spaceGrotesk = Space_Grotesk({ subsets: ['latin'], variable: '--font-display' });
 
 export const metadata: Metadata = {
   title: 'InovaMente Labs - Soluções Tecnológicas',
@@ -90,7 +91,7 @@ export const metadata: Metadata = {
     ]
   },
   manifest: '/manifest.json',
-  themeColor: '#3B82F6',
+  themeColor: '#0aa89c',
   colorScheme: 'light',
   viewport: 'width=device-width, initial-scale=1',
 };
@@ -101,7 +102,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="pt-BR">
+    <html lang="pt-BR" className={`${inter.variable} ${spaceGrotesk.variable}`}>
       <head>
         <GoogleAnalytics />
         {/* Favicons */}
@@ -109,7 +110,7 @@ export default function RootLayout({
         <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
         <link rel="apple-touch-icon" href="/icon-192.svg" />
         <link rel="manifest" href="/manifest.json" />
-        <meta name="theme-color" content="#3B82F6" />
+        <meta name="theme-color" content="#0aa89c" />
         
         {/* Open Graph adicional */}
         <meta property="og:image" content="/og-image.svg" />
@@ -143,7 +144,7 @@ export default function RootLayout({
           }}
         />
       </head>
-      <body className={inter.className}>
+      <body className={`${inter.className} font-sans`}>
         <QueryProvider>
           {children}
         </QueryProvider>

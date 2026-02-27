@@ -4,6 +4,24 @@ import { useState } from 'react';
 import CreatePostForm from '@/components/CreatePostForm';
 import LeadsModal from '@/components/LeadsModal';
 import TicketsModal from '@/components/TicketsModal';
+import Navbar from '@/components/Navbar';
+import Footer from '@/components/Footer';
+import FloatingWhatsApp from '@/components/FloatingWhatsApp';
+import Link from 'next/link';
+import {
+  Shield,
+  LogIn,
+  LogOut,
+  LayoutDashboard,
+  FileEdit,
+  Ticket,
+  Users,
+  Globe,
+  Lock,
+  Loader2,
+  CheckCircle,
+  PenLine,
+} from 'lucide-react';
 
 export default function AdminPage() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -46,80 +64,54 @@ export default function AdminPage() {
   const handleCreatePostSuccess = (response: any) => {
     setShowCreatePost(false);
     setSuccessMessage(`✅ Post criado com sucesso! <a href="${response.url}" target="_blank" style="color: #3b82f6; text-decoration: underline;">Clique aqui para ver</a>`);
-    
+
     // Remover mensagem após 8 segundos
     setTimeout(() => setSuccessMessage(''), 8000);
   };
 
   if (!isLoggedIn) {
     return (
-      <div style={{
-        minHeight: '100vh',
-        background: 'linear-gradient(135deg, #1e293b 0%, #334155 100%)',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        padding: '20px'
-      }}>
-        <div style={{
-          background: 'rgba(255, 255, 255, 0.05)',
-          backdropFilter: 'blur(10px)',
-          padding: '40px',
-          borderRadius: '20px',
-          border: '1px solid rgba(255, 255, 255, 0.1)',
-          width: '100%',
-          maxWidth: '400px'
-        }}>
-          <h1 style={{
-            color: 'white',
-            textAlign: 'center',
-            marginBottom: '30px',
-            fontSize: '2rem',
-            fontWeight: 'bold'
-          }}>
-            👑 Admin Login
+      <div className="min-h-screen bg-background flex items-center justify-center p-5">
+        {/* Subtle gradient overlay */}
+        <div className="fixed inset-0 bg-gradient-to-br from-foreground/[0.02] via-transparent to-primary/5 pointer-events-none" />
+
+        <div className="glass-card rounded-2xl p-10 sm:p-14 max-w-md w-full text-center relative z-10">
+          <div className="w-14 h-14 bg-primary/10 rounded-2xl flex items-center justify-center mx-auto mb-6">
+            <Shield className="w-7 h-7 text-primary" />
+          </div>
+
+          <h1 className="font-display text-3xl font-bold text-foreground mb-2">
+            Admin <span className="gradient-text">Login</span>
           </h1>
 
-          <form onSubmit={handleLogin}>
-            <div style={{ marginBottom: '20px' }}>
-              <label style={{ color: 'white', display: 'block', marginBottom: '8px' }}>
-                Email/Usuário:
+          <p className="text-muted-foreground mb-8 text-sm">
+            Painel de administração InovaMente Labs
+          </p>
+
+          <form onSubmit={handleLogin} className="text-left space-y-5">
+            <div>
+              <label className="block mb-2 text-foreground font-semibold text-sm">
+                Email/Usuário
               </label>
               <input
                 type="text"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                style={{
-                  width: '100%',
-                  padding: '12px',
-                  borderRadius: '8px',
-                  border: '1px solid rgba(255, 255, 255, 0.2)',
-                  background: 'rgba(255, 255, 255, 0.1)',
-                  color: 'white',
-                  fontSize: '16px'
-                }}
+                className="w-full px-4 py-3 border-2 border-border rounded-xl bg-card text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all"
                 placeholder="admin ou admin@inovamentelabs.com"
                 required
               />
             </div>
 
-            <div style={{ marginBottom: '30px' }}>
-              <label style={{ color: 'white', display: 'block', marginBottom: '8px' }}>
-                Senha:
+            <div>
+              <label className="block mb-2 text-foreground font-semibold text-sm">
+                Senha
               </label>
               <input
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                style={{
-                  width: '100%',
-                  padding: '12px',
-                  borderRadius: '8px',
-                  border: '1px solid rgba(255, 255, 255, 0.2)',
-                  background: 'rgba(255, 255, 255, 0.1)',
-                  color: 'white',
-                  fontSize: '16px'
-                }}
+                className="w-full px-4 py-3 border-2 border-border rounded-xl bg-card text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all"
                 placeholder="Digite sua senha"
                 required
               />
@@ -128,63 +120,34 @@ export default function AdminPage() {
             <button
               type="submit"
               disabled={isLoading}
-              style={{
-                width: '100%',
-                padding: '12px',
-                background: isLoading ? '#64748b' : 'linear-gradient(45deg, #3b82f6, #1d4ed8)',
-                color: 'white',
-                border: 'none',
-                borderRadius: '8px',
-                fontSize: '16px',
-                fontWeight: 'bold',
-                cursor: isLoading ? 'not-allowed' : 'pointer',
-                transition: 'all 0.3s ease'
-              }}
+              className="w-full bg-primary hover:bg-primary/90 text-white py-3.5 rounded-xl font-bold text-base transition-all disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center gap-2 mt-2"
             >
-              {isLoading ? 'Entrando...' : 'Entrar'}
+              {isLoading ? (
+                <>
+                  <Loader2 className="w-5 h-5 animate-spin" />
+                  Entrando...
+                </>
+              ) : (
+                <>
+                  <LogIn className="w-5 h-5" />
+                  Entrar
+                </>
+              )}
             </button>
           </form>
 
-          <div style={{
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            marginTop: '20px'
-          }}>
-            <p style={{
-              color: 'rgba(255, 255, 255, 0.7)',
-              fontSize: '14px',
-              margin: 0
-            }}>
-              🔐 Entre com suas credenciais de administrador
+          <div className="flex items-center justify-between mt-8 pt-6 border-t border-border">
+            <p className="text-muted-foreground text-xs flex items-center gap-1.5">
+              <Lock className="w-3.5 h-3.5" />
+              Entre com suas credenciais de administrador
             </p>
-            <a
-              href="https://www.inovamentelabs.com.br"
-              target="_blank"
-              rel="noopener noreferrer"
-              style={{
-                color: 'rgba(255, 255, 255, 0.8)',
-                textDecoration: 'none',
-                fontSize: '14px',
-                padding: '6px 12px',
-                borderRadius: '20px',
-                border: '1px solid rgba(255, 255, 255, 0.2)',
-                transition: 'all 0.3s ease',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '6px'
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.background = 'rgba(255, 255, 255, 0.1)';
-                e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.4)';
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.background = 'transparent';
-                e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.2)';
-              }}
+            <Link
+              href="/"
+              className="inline-flex items-center gap-1.5 text-xs text-muted-foreground hover:text-primary px-3 py-1.5 rounded-full border border-border hover:border-primary/30 transition-all"
             >
-              🌐 Voltar ao Site
-            </a>
+              <Globe className="w-3.5 h-3.5" />
+              Voltar ao Site
+            </Link>
           </div>
         </div>
       </div>
@@ -192,233 +155,122 @@ export default function AdminPage() {
   }
 
   return (
-    <div style={{
-      minHeight: '100vh',
-      background: 'linear-gradient(135deg, #1e293b 0%, #334155 100%)',
-      padding: '20px'
-    }}>
-      <div style={{
-        maxWidth: '1200px',
-        margin: '0 auto',
-        color: 'white'
-      }}>
-        <div style={{
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          marginBottom: '40px',
-          padding: '20px',
-          background: 'rgba(255, 255, 255, 0.05)',
-          borderRadius: '10px'
-        }}>
-          <h1 style={{ fontSize: '2rem', fontWeight: 'bold' }}>
-            👑 Painel Administrativo
-          </h1>
-          <div style={{ display: 'flex', gap: '15px', alignItems: 'center' }}>
-            <a
-              href="https://www.inovamentelabs.com.br"
-              target="_blank"
-              rel="noopener noreferrer"
-              style={{
-                padding: '10px 20px',
-                background: 'linear-gradient(45deg, #3b82f6, #1d4ed8)',
-                color: 'white',
-                border: 'none',
-                borderRadius: '8px',
-                cursor: 'pointer',
-                textDecoration: 'none',
-                fontSize: '14px',
-                fontWeight: '600',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '8px',
-                transition: 'all 0.3s ease'
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.transform = 'translateY(-2px)';
-                e.currentTarget.style.boxShadow = '0 10px 30px rgba(59, 130, 246, 0.4)';
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.transform = 'translateY(0)';
-                e.currentTarget.style.boxShadow = 'none';
-              }}
-            >
-              🌐 Voltar para o Site
-            </a>
-            <button
-              onClick={() => {
-                localStorage.removeItem('adminToken');
-                setIsLoggedIn(false);
-              }}
-              style={{
-                padding: '10px 20px',
-                background: 'rgba(239, 68, 68, 0.8)',
-                color: 'white',
-                border: 'none',
-                borderRadius: '8px',
-                cursor: 'pointer',
-                fontSize: '14px',
-                fontWeight: '600',
-                transition: 'all 0.3s ease'
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.background = 'rgba(239, 68, 68, 1)';
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.background = 'rgba(239, 68, 68, 0.8)';
-              }}
-            >
-              🚪 Sair
-            </button>
+    <div className="min-h-screen bg-background flex flex-col">
+      <Navbar />
+
+      <main className="flex-1 pt-24 pb-16">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          {/* Header */}
+          <div className="glass-card rounded-2xl p-6 mb-8 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+            <div className="flex items-center gap-3">
+              <div className="p-2.5 bg-primary/10 rounded-xl">
+                <Shield className="w-6 h-6 text-primary" />
+              </div>
+              <h1 className="font-display text-2xl font-bold text-foreground">
+                Painel <span className="gradient-text">Administrativo</span>
+              </h1>
+            </div>
+            <div className="flex gap-3 items-center">
+              <Link
+                href="/"
+                className="inline-flex items-center gap-2 px-4 py-2.5 bg-primary hover:bg-primary/90 text-white rounded-xl text-sm font-semibold transition-all hover-lift"
+              >
+                <Globe className="w-4 h-4" />
+                Voltar para o Site
+              </Link>
+              <button
+                onClick={() => {
+                  localStorage.removeItem('adminToken');
+                  setIsLoggedIn(false);
+                }}
+                className="inline-flex items-center gap-2 px-4 py-2.5 bg-red-500 hover:bg-red-600 text-white rounded-xl text-sm font-semibold transition-all"
+              >
+                <LogOut className="w-4 h-4" />
+                Sair
+              </button>
+            </div>
+          </div>
+
+          {/* Mensagem de Sucesso */}
+          {successMessage && (
+            <div className="glass-card rounded-xl p-5 mb-8 border-green-200 bg-green-50">
+              <div className="flex items-center gap-3">
+                <CheckCircle className="w-5 h-5 text-green-600 shrink-0" />
+                <div className="text-green-700 text-sm" dangerouslySetInnerHTML={{ __html: successMessage }} />
+              </div>
+            </div>
+          )}
+
+          {/* Cards Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {/* Dashboard Card */}
+            <div className="glass-card rounded-2xl p-6 hover-lift">
+              <div className="p-3 bg-primary/10 rounded-xl w-fit mb-5">
+                <LayoutDashboard className="w-6 h-6 text-primary" />
+              </div>
+              <h2 className="font-display text-lg font-bold text-foreground mb-2">Dashboard</h2>
+              <p className="text-muted-foreground text-sm">
+                Bem-vindo ao painel administrativo da InovaMente Labs!
+              </p>
+            </div>
+
+            {/* Blog Card */}
+            <div className="glass-card rounded-2xl p-6 hover-lift">
+              <div className="p-3 bg-accent/10 rounded-xl w-fit mb-5">
+                <FileEdit className="w-6 h-6 text-accent" />
+              </div>
+              <h2 className="font-display text-lg font-bold text-foreground mb-2">Blog</h2>
+              <p className="text-muted-foreground text-sm mb-5">Gerencie os posts do seu blog.</p>
+              <button
+                onClick={() => setShowCreatePost(true)}
+                className="inline-flex items-center gap-2 px-5 py-2.5 bg-primary hover:bg-primary/90 text-white rounded-xl text-sm font-semibold transition-all"
+              >
+                <PenLine className="w-4 h-4" />
+                Criar Novo Post
+              </button>
+            </div>
+
+            {/* Tickets Card */}
+            <div className="glass-card rounded-2xl p-6 hover-lift">
+              <div className="p-3 bg-purple-100 rounded-xl w-fit mb-5">
+                <Ticket className="w-6 h-6 text-purple-600" />
+              </div>
+              <h2 className="font-display text-lg font-bold text-foreground mb-2">Tickets</h2>
+              <p className="text-muted-foreground text-sm mb-5">Gerencie todos os tickets de suporte criados pelos clientes.</p>
+              <button
+                onClick={() => setShowTickets(true)}
+                className="inline-flex items-center gap-2 px-5 py-2.5 bg-primary hover:bg-primary/90 text-white rounded-xl text-sm font-semibold transition-all"
+              >
+                <Ticket className="w-4 h-4" />
+                Ver Tickets de Suporte
+              </button>
+            </div>
+
+            {/* Clientes Card */}
+            <div className="glass-card rounded-2xl p-6 hover-lift">
+              <div className="p-3 bg-green-100 rounded-xl w-fit mb-5">
+                <Users className="w-6 h-6 text-green-600" />
+              </div>
+              <h2 className="font-display text-lg font-bold text-foreground mb-2">Clientes</h2>
+              <p className="text-muted-foreground text-sm mb-5">Visualize todos os leads capturados pelo formulário de contato e chatbot.</p>
+              <button
+                onClick={() => setShowLeads(true)}
+                className="inline-flex items-center gap-2 px-5 py-2.5 bg-primary hover:bg-primary/90 text-white rounded-xl text-sm font-semibold transition-all"
+              >
+                <Users className="w-4 h-4" />
+                Ver Leads e Clientes
+              </button>
+            </div>
           </div>
         </div>
+      </main>
 
-        {/* Mensagem de Sucesso */}
-        {successMessage && (
-          <div style={{
-            background: 'rgba(34, 197, 94, 0.1)',
-            border: '1px solid rgba(34, 197, 94, 0.3)',
-            borderRadius: '10px',
-            padding: '20px',
-            marginBottom: '30px',
-            color: '#22c55e'
-          }}>
-            <div dangerouslySetInnerHTML={{ __html: successMessage }} />
-          </div>
-        )}
-
-        <div style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
-          gap: '20px'
-        }}>
-          <div style={{
-            background: 'rgba(255, 255, 255, 0.05)',
-            padding: '30px',
-            borderRadius: '15px',
-            border: '1px solid rgba(255, 255, 255, 0.1)'
-          }}>
-            <h2 style={{ fontSize: '1.5rem', marginBottom: '20px' }}>📋 Dashboard</h2>
-            <p>Bem-vindo ao painel administrativo da InovaMente Labs!</p>
-          </div>
-
-          <div style={{
-            background: 'rgba(255, 255, 255, 0.05)',
-            padding: '30px',
-            borderRadius: '15px',
-            border: '1px solid rgba(255, 255, 255, 0.1)'
-          }}>
-            <h2 style={{ fontSize: '1.5rem', marginBottom: '20px' }}>📝 Blog</h2>
-            <p style={{ marginBottom: '20px' }}>Gerencie os posts do seu blog.</p>
-            <button
-              onClick={() => setShowCreatePost(true)}
-              style={{
-                padding: '12px 24px',
-                background: 'linear-gradient(45deg, #3b82f6, #1d4ed8)',
-                color: 'white',
-                border: 'none',
-                borderRadius: '10px',
-                fontSize: '16px',
-                fontWeight: '600',
-                cursor: 'pointer',
-                transition: 'all 0.3s ease',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '8px'
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.transform = 'translateY(-2px)';
-                e.currentTarget.style.boxShadow = '0 10px 30px rgba(59, 130, 246, 0.4)';
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.transform = 'translateY(0)';
-                e.currentTarget.style.boxShadow = 'none';
-              }}
-            >
-              ✍️ Criar Novo Post
-            </button>
-          </div>
-
-          <div style={{
-            background: 'rgba(255, 255, 255, 0.05)',
-            padding: '30px',
-            borderRadius: '15px',
-            border: '1px solid rgba(255, 255, 255, 0.1)'
-          }}>
-            <h2 style={{ fontSize: '1.5rem', marginBottom: '20px' }}>🎫 Tickets</h2>
-            <p style={{ marginBottom: '20px' }}>Gerencie todos os tickets de suporte criados pelos clientes.</p>
-            <button
-              onClick={() => setShowTickets(true)}
-              style={{
-                padding: '12px 24px',
-                background: 'linear-gradient(45deg, #8b5cf6, #7c3aed)',
-                color: 'white',
-                border: 'none',
-                borderRadius: '10px',
-                fontSize: '16px',
-                fontWeight: '600',
-                cursor: 'pointer',
-                transition: 'all 0.3s ease',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '8px'
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.transform = 'translateY(-2px)';
-                e.currentTarget.style.boxShadow = '0 10px 30px rgba(139, 92, 246, 0.4)';
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.transform = 'translateY(0)';
-                e.currentTarget.style.boxShadow = 'none';
-              }}
-            >
-              🎫 Ver Tickets de Suporte
-            </button>
-          </div>
-
-          <div style={{
-            background: 'rgba(255, 255, 255, 0.05)',
-            padding: '30px',
-            borderRadius: '15px',
-            border: '1px solid rgba(255, 255, 255, 0.1)'
-          }}>
-            <h2 style={{ fontSize: '1.5rem', marginBottom: '20px' }}>👥 Clientes</h2>
-            <p style={{ marginBottom: '20px' }}>Visualize todos os leads capturados pelo formulário de contato e chatbot.</p>
-            <button
-              onClick={() => setShowLeads(true)}
-              style={{
-                padding: '12px 24px',
-                background: 'linear-gradient(45deg, #10b981, #059669)',
-                color: 'white',
-                border: 'none',
-                borderRadius: '10px',
-                fontSize: '16px',
-                fontWeight: '600',
-                cursor: 'pointer',
-                transition: 'all 0.3s ease',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '8px'
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.transform = 'translateY(-2px)';
-                e.currentTarget.style.boxShadow = '0 10px 30px rgba(16, 185, 129, 0.4)';
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.transform = 'translateY(0)';
-                e.currentTarget.style.boxShadow = 'none';
-              }}
-            >
-              👀 Ver Leads e Clientes
-            </button>
-          </div>
-        </div>
-
-      </div>
+      <Footer />
+      <FloatingWhatsApp />
 
       {/* Modal de Criar Post */}
       {showCreatePost && (
-        <CreatePostForm 
+        <CreatePostForm
           onClose={() => setShowCreatePost(false)}
           onSuccess={handleCreatePostSuccess}
         />
@@ -426,14 +278,14 @@ export default function AdminPage() {
 
       {/* Modal de Leads */}
       {showLeads && (
-        <LeadsModal 
+        <LeadsModal
           onClose={() => setShowLeads(false)}
         />
       )}
 
       {/* Modal de Tickets */}
       {showTickets && (
-        <TicketsModal 
+        <TicketsModal
           onClose={() => setShowTickets(false)}
         />
       )}

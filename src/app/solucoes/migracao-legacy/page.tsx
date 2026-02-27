@@ -1,202 +1,53 @@
-import type { Metadata } from 'next';
+'use client';
+
 import Link from 'next/link';
-import { Navbar } from '@/components/Navbar';
-import { Breadcrumbs } from '@/components/Breadcrumbs';
-import { VoiceSearchOptimizer, VoiceSearchQuestions } from '@/components/SEO/VoiceSearchOptimizer';
-import { AnimatedStats, ProcessSteps, ProgressBar, InteractiveTimeline } from '@/components/Visual/Infographics';
+import Navbar from '@/components/Navbar';
+import Footer from '@/components/Footer';
+import FloatingWhatsApp from '@/components/FloatingWhatsApp';
+import { motion } from 'framer-motion';
+import {
+  ChevronRight, AlertTriangle, DollarSign, Link2, Shield,
+  CheckCircle2, Clock, Star, Search, Pencil, Settings, Rocket,
+  RefreshCw, ArrowRight, MessageCircle, HelpCircle, Zap
+} from 'lucide-react';
 
-export const metadata: Metadata = {
-  title: 'Migração de Sistema Legacy | Modernização Segura e Sem Interrupções | InovaMente Labs',
-  description: 'Migração de sistemas legados para tecnologias modernas. Processo seguro, dados preservados, zero downtime e aumento de performance. Especialistas em modernização.',
-  keywords: [
-    'migração sistema legacy Brasil',
-    'modernização sistema antigo',
-    'migração dados sem perda',
-    'atualização sistema empresarial',
-    'migração zero downtime',
-    'modernização tecnológica empresa'
-  ],
-  openGraph: {
-    title: 'Migração de Sistema Legacy | InovaMente Labs',
-    description: 'Migração segura de sistemas antigos para tecnologias modernas. Zero downtime, dados preservados e performance 10x superior.',
-    url: 'https://www.inovamentelabs.com.br/solucoes/migracao-legacy',
-    type: 'website',
-    images: [
-      {
-        url: '/og-migracao-legacy.png',
-        width: 1200,
-        height: 630,
-        alt: 'Migração Sistema Legacy InovaMente Labs'
-      }
-    ]
-  }
-};
-
-const migrationChallenges = [
-  {
-    challenge: 'Sistema Lento e Instável',
-    impact: 'Produtividade reduzida, clientes insatisfeitos',
-    solution: 'Migração para arquitetura moderna e escalável',
-    icon: '🐌',
-    urgency: 'Alta'
-  },
-  {
-    challenge: 'Manutenção Custosa',
-    impact: 'Recursos técnicos escassos, custos elevados',
-    solution: 'Tecnologias atuais com suporte amplo',
-    icon: '💸',
-    urgency: 'Alta'
-  },
-  {
-    challenge: 'Falta de Integração',
-    impact: 'Dados isolados, processos manuais',
-    solution: 'APIs modernas e integrações nativas',
-    icon: '🔗',
-    urgency: 'Média'
-  },
-  {
-    challenge: 'Segurança Vulnerável',
-    impact: 'Risco de ataques, compliance comprometido',
-    solution: 'Segurança por design com padrões atuais',
-    icon: '🛡️',
-    urgency: 'Crítica'
-  }
+const heroStats = [
+  { label: 'Performance', value: '850%' },
+  { label: 'Perda Dados', value: '0%' },
+  { label: 'Uptime', value: '99.9%' },
 ];
 
-const migrationStats = [
-  { label: 'Performance Improvement', value: 850, suffix: '%', icon: '⚡', color: '#10B981' },
-  { label: 'Redução Custos Manutenção', value: 75, suffix: '%', icon: '💰', color: '#3B82F6' },
-  { label: 'Aumento Segurança', value: 95, suffix: '%', icon: '🛡️', color: '#8B5CF6' },
-  { label: 'ROI em 12 meses', value: 340, suffix: '%', icon: '📈', color: '#F59E0B' }
+const migrationChallenges = [
+  { challenge: 'Sistema Lento e Instavel', impact: 'Produtividade reduzida, clientes insatisfeitos', solution: 'Migracao para arquitetura moderna e escalavel', icon: Zap, urgency: 'Alta' },
+  { challenge: 'Manutencao Custosa', impact: 'Recursos tecnicos escassos, custos elevados', solution: 'Tecnologias atuais com suporte amplo', icon: DollarSign, urgency: 'Alta' },
+  { challenge: 'Falta de Integracao', impact: 'Dados isolados, processos manuais', solution: 'APIs modernas e integracoes nativas', icon: Link2, urgency: 'Media' },
+  { challenge: 'Seguranca Vulneravel', impact: 'Risco de ataques, compliance comprometido', solution: 'Seguranca por design com padroes atuais', icon: Shield, urgency: 'Critica' },
 ];
 
 const migrationApproaches = [
   {
     approach: 'Replatforming',
-    description: 'Migração com mudanças mínimas na arquitetura',
-    timeline: '3-6 meses',
-    risk: 'Baixo',
-    cost: 'Baixo',
-    benefits: ['Rápida implementação', 'Risco mínimo', 'Melhoria imediata'],
-    suitable: 'Sistemas funcionais que precisam de modernização básica',
-    icon: '🔄'
+    description: 'Migracao com mudancas minimas na arquitetura',
+    timeline: '3-6 meses', risk: 'Baixo', cost: 'Baixo',
+    benefits: ['Rapida implementacao', 'Risco minimo', 'Melhoria imediata'],
+    suitable: 'Sistemas funcionais que precisam de modernizacao basica',
+    icon: RefreshCw,
   },
   {
     approach: 'Refactoring',
-    description: 'Reestruturação completa mantendo funcionalidades',
-    timeline: '6-12 meses',
-    risk: 'Médio',
-    cost: 'Médio',
+    description: 'Reestruturacao completa mantendo funcionalidades',
+    timeline: '6-12 meses', risk: 'Medio', cost: 'Medio',
     benefits: ['Arquitetura otimizada', 'Performance superior', 'Manutenibilidade'],
-    suitable: 'Sistemas com lógica complexa que precisa ser preservada',
-    icon: '🏗️'
+    suitable: 'Sistemas com logica complexa que precisa ser preservada',
+    icon: Settings,
   },
   {
     approach: 'Rebuild',
-    description: 'Reconstrução completa com tecnologias modernas',
-    timeline: '9-18 meses',
-    risk: 'Alto',
-    cost: 'Alto',
-    benefits: ['Solução sob medida', 'Tecnologia de ponta', 'Escalabilidade máxima'],
-    suitable: 'Sistemas críticos que precisam de transformação total',
-    icon: '🚀'
-  }
-];
-
-const migrationTimeline = [
-  {
-    date: 'Fase 1',
-    title: 'Auditoria e Análise',
-    description: 'Mapeamento completo do sistema atual',
-    icon: '🔍',
-    color: '#3B82F6'
-  },
-  {
-    date: 'Fase 2',
-    title: 'Planejamento Estratégico',
-    description: 'Definição da estratégia de migração',
-    icon: '📋',
-    color: '#10B981'
-  },
-  {
-    date: 'Fase 3',
-    title: 'Desenvolvimento',
-    description: 'Construção da nova solução',
-    icon: '⚙️',
-    color: '#8B5CF6'
-  },
-  {
-    date: 'Fase 4',
-    title: 'Migração Gradual',
-    description: 'Transição segura dos dados e processos',
-    icon: '🔄',
-    color: '#F59E0B'
-  },
-  {
-    date: 'Fase 5',
-    title: 'Go-Live',
-    description: 'Ativação completa do novo sistema',
-    icon: '🚀',
-    color: '#EF4444'
-  }
-];
-
-const migrationProcess = [
-  {
-    title: 'Discovery & Assessment',
-    description: 'Análise profunda do sistema atual e requisitos',
-    icon: '🔎',
-    duration: '2-4 semanas',
-    details: [
-      'Auditoria técnica completa',
-      'Mapeamento de dependências',
-      'Análise de riscos',
-      'Levantamento de requisitos',
-      'Definição de escopo',
-      'Plano de migração'
-    ]
-  },
-  {
-    title: 'Architecture Design',
-    description: 'Design da nova arquitetura e estratégia',
-    icon: '📐',
-    duration: '2-3 semanas',
-    details: [
-      'Arquitetura de solução',
-      'Stack tecnológico',
-      'Plano de dados',
-      'Estratégia de segurança',
-      'Plano de testes',
-      'Cronograma detalhado'
-    ]
-  },
-  {
-    title: 'Development & Testing',
-    description: 'Desenvolvimento da nova solução',
-    icon: '⚙️',
-    duration: '8-20 semanas',
-    details: [
-      'Desenvolvimento iterativo',
-      'Testes automatizados',
-      'Migração de dados',
-      'Testes de performance',
-      'Validação usuários',
-      'Homologação cliente'
-    ]
-  },
-  {
-    title: 'Deployment & Support',
-    description: 'Go-live e suporte pós-migração',
-    icon: '🚀',
-    duration: '2-4 semanas',
-    details: [
-      'Deploy produção',
-      'Monitoramento 24/7',
-      'Suporte usuários',
-      'Otimização performance',
-      'Treinamento equipes',
-      'Documentação completa'
-    ]
+    description: 'Reconstrucao completa com tecnologias modernas',
+    timeline: '9-18 meses', risk: 'Alto', cost: 'Alto',
+    benefits: ['Solucao sob medida', 'Tecnologia de ponta', 'Escalabilidade maxima'],
+    suitable: 'Sistemas criticos que precisam de transformacao total',
+    icon: Rocket,
   }
 ];
 
@@ -209,60 +60,26 @@ const technologyStack = [
 ];
 
 const riskMitigation = [
-  {
-    risk: 'Perda de Dados',
-    mitigation: 'Backup múltiplo + Migração incremental + Validação automática',
-    probability: 'Muito Baixa',
-    impact: 'Crítico',
-    prevention: '99.9%'
-  },
-  {
-    risk: 'Downtime Prolongado',
-    mitigation: 'Migração Blue/Green + Rollback automático + Testes de stress',
-    probability: 'Baixa',
-    impact: 'Alto',
-    prevention: '95%'
-  },
-  {
-    risk: 'Incompatibilidade',
-    mitigation: 'Testes extensivos + Ambiente staging + Validação incremental',
-    probability: 'Média',
-    impact: 'Médio',
-    prevention: '90%'
-  },
-  {
-    risk: 'Resistência Usuários',
-    mitigation: 'Treinamento + UX intuitivo + Suporte dedicado + Change management',
-    probability: 'Baixa',
-    impact: 'Médio',
-    prevention: '85%'
-  }
+  { risk: 'Perda de Dados', mitigation: 'Backup multiplo + Migracao incremental + Validacao automatica', prevention: '99.9%' },
+  { risk: 'Downtime Prolongado', mitigation: 'Migracao Blue/Green + Rollback automatico + Testes de stress', prevention: '95%' },
+  { risk: 'Incompatibilidade', mitigation: 'Testes extensivos + Ambiente staging + Validacao incremental', prevention: '90%' },
+  { risk: 'Resistencia Usuarios', mitigation: 'Treinamento + UX intuitivo + Suporte dedicado + Change management', prevention: '85%' },
 ];
 
 const successStories = [
   {
-    title: 'Banco Regional - Modernização Core Banking',
-    challenge: 'Sistema COBOL de 30 anos limitava crescimento e inovação',
-    solution: 'Migração gradual para arquitetura de microserviços Java/Spring',
-    results: [
-      '10x melhoria em performance',
-      'Zero perda de dados',
-      '6 meses de ROI',
-      '99.9% uptime durante migração'
-    ],
+    title: 'Banco Regional - Modernizacao Core Banking',
+    challenge: 'Sistema COBOL de 30 anos limitava crescimento e inovacao',
+    solution: 'Migracao gradual para arquitetura de microservicos Java/Spring',
+    results: ['10x melhoria em performance', 'Zero perda de dados', '6 meses de ROI', '99.9% uptime durante migracao'],
     metrics: { performance: '10x', data_loss: '0%', roi: '6 meses' },
     duration: '14 meses'
   },
   {
-    title: 'Indústria Química - ERP Legacy para Cloud',
+    title: 'Industria Quimica - ERP Legacy para Cloud',
     challenge: 'ERP em VB6 sem suporte, maintenance custosa',
     solution: 'Rebuild completo com .NET Core + Azure + Power BI',
-    results: [
-      'R$ 500k economia anual',
-      '80% redução bugs',
-      'Dashboards em tempo real',
-      'Mobile-first design'
-    ],
+    results: ['R$ 500k economia anual', '80% reducao bugs', 'Dashboards em tempo real', 'Mobile-first design'],
     metrics: { savings: 'R$ 500k', bugs: '-80%', uptime: '99.8%' },
     duration: '10 meses'
   }
@@ -272,593 +89,346 @@ const pricingTiers = [
   {
     name: 'Replatforming',
     price: 'R$ 50.000 - R$ 150.000',
-    description: 'Migração com mudanças mínimas',
+    description: 'Migracao com mudancas minimas',
     timeline: '3-6 meses',
-    features: [
-      'Análise sistema atual',
-      'Migração de dados',
-      'Modernização interface',
-      'Testes funcionais',
-      'Treinamento usuários',
-      '90 dias suporte'
-    ],
+    features: ['Analise sistema atual', 'Migracao de dados', 'Modernizacao interface', 'Testes funcionais', 'Treinamento usuarios', '90 dias suporte'],
     suitable: 'Sistemas funcionais, melhorias pontuais',
     cta: 'Modernizar Sistema'
   },
   {
     name: 'Refactoring',
     price: 'R$ 150.000 - R$ 400.000',
-    description: 'Reestruturação completa da arquitetura',
+    description: 'Reestruturacao completa da arquitetura',
     timeline: '6-12 meses',
-    features: [
-      'Auditoria técnica completa',
-      'Nova arquitetura',
-      'Otimização performance',
-      'Segurança moderna',
-      'APIs e integrações',
-      '180 dias suporte'
-    ],
-    suitable: 'Sistemas complexos, performance crítica',
+    features: ['Auditoria tecnica completa', 'Nova arquitetura', 'Otimizacao performance', 'Seguranca moderna', 'APIs e integracoes', '180 dias suporte'],
+    suitable: 'Sistemas complexos, performance critica',
     popular: true,
     cta: 'Reestruturar Sistema'
   },
   {
     name: 'Rebuild',
     price: 'R$ 400.000+',
-    description: 'Reconstrução completa from scratch',
+    description: 'Reconstrucao completa from scratch',
     timeline: '9-18 meses',
-    features: [
-      'Solução customizada',
-      'Tecnologia de ponta',
-      'Arquitetura escalável',
-      'UX/UI moderno',
-      'DevOps completo',
-      '360 dias suporte'
-    ],
-    suitable: 'Transformação digital completa',
+    features: ['Solucao customizada', 'Tecnologia de ponta', 'Arquitetura escalavel', 'UX/UI moderno', 'DevOps completo', '360 dias suporte'],
+    suitable: 'Transformacao digital completa',
     cta: 'Reconstruir Sistema'
   }
 ];
 
-const primaryKeyword = 'migração sistema legacy';
-
 export default function MigracaoLegacyPage() {
   return (
-    <>
-      <VoiceSearchOptimizer
-        primaryKeyword={primaryKeyword}
-        title="Migração de Sistema Legacy | Modernização Segura e Sem Interrupções | InovaMente Labs"
-        description="Migração de sistemas legados para tecnologias modernas. Processo seguro, dados preservados, zero downtime e aumento de performance. Especialistas em modernização."
-        url="https://www.inovamentelabs.com.br/solucoes/migracao-legacy"
-      />
-      
+    <div className="min-h-screen bg-background">
       <Navbar />
-      
-      <Breadcrumbs items={[
-        { label: 'Soluções', href: '/solucoes' },
-        { label: 'Migração Legacy', current: true }
-      ]} />
-
-      {/* Hero Section */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-red-900 via-orange-800 to-yellow-600 text-white">
-        <div className="absolute inset-0 bg-black/20"></div>
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-            <div>
-              <div className="inline-flex items-center px-4 py-2 bg-red-500/20 rounded-full text-red-200 text-sm font-medium mb-6">
-                ⚠️ Seu Sistema Precisa de Modernização?
-              </div>
-              
-              <h1 className="text-4xl md:text-6xl font-bold mb-6">
-                Migração de
-                <span className="block text-yellow-300">Sistema Legacy</span>
-              </h1>
-              
-              <p className="text-xl mb-8 opacity-90">
-                Modernize sistemas antigos para tecnologias atuais. Processo seguro, zero downtime, 
-                dados preservados e performance 10x superior. Livre-se das limitações do passado.
-              </p>
-              
-              <div className="flex flex-col sm:flex-row gap-4 mb-8">
-                <Link href="#avaliar" className="btn-secondary bg-white text-red-600 px-8 py-4 text-lg font-semibold">
-                  🔍 Avaliar Meu Sistema
-                </Link>
-                <Link href="#casos" className="btn-primary border-2 border-white bg-transparent px-8 py-4 text-lg font-semibold">
-                  📊 Ver Cases de Sucesso
-                </Link>
-              </div>
-              
-              <div className="grid grid-cols-3 gap-4 text-center">
-                <div>
-                  <div className="text-2xl font-bold text-yellow-300">850%</div>
-                  <div className="text-sm opacity-90">↑ Performance</div>
-                </div>
-                <div>
-                  <div className="text-2xl font-bold text-yellow-300">0%</div>
-                  <div className="text-sm opacity-90">Perda Dados</div>
-                </div>
-                <div>
-                  <div className="text-2xl font-bold text-yellow-300">99.9%</div>
-                  <div className="text-sm opacity-90">Uptime</div>
-                </div>
-              </div>
-            </div>
-            
-            <div className="relative">
-              <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-8 border border-white/20">
-                <h3 className="text-xl font-bold mb-6">Sinais de que seu Sistema Precisa de Migração:</h3>
-                <div className="space-y-4">
-                  <div className="flex items-start space-x-3">
-                    <span className="text-red-400 text-xl">🐌</span>
-                    <div>
-                      <div className="font-semibold">Lentidão Crônica</div>
-                      <div className="text-sm opacity-90">Sistema trava, usuários reclamam</div>
-                    </div>
-                  </div>
-                  <div className="flex items-start space-x-3">
-                    <span className="text-red-400 text-xl">💸</span>
-                    <div>
-                      <div className="font-semibold">Manutenção Cara</div>
-                      <div className="text-sm opacity-90">Difícil encontrar quem saiba manter</div>
-                    </div>
-                  </div>
-                  <div className="flex items-start space-x-3">
-                    <span className="text-red-400 text-xl">🚫</span>
-                    <div>
-                      <div className="font-semibold">Sem Integrações</div>
-                      <div className="text-sm opacity-90">Não conecta com sistemas modernos</div>
-                    </div>
-                  </div>
-                  <div className="flex items-start space-x-3">
-                    <span className="text-red-400 text-xl">🛡️</span>
-                    <div>
-                      <div className="font-semibold">Segurança Falha</div>
-                      <div className="text-sm opacity-90">Vulnerável a ataques modernos</div>
-                    </div>
-                  </div>
-                </div>
-              </div>
+      <main className="pt-20">
+        {/* Breadcrumb */}
+        <section className="py-4">
+          <div className="container mx-auto px-4">
+            <div className="flex items-center gap-2 text-sm text-muted-foreground">
+              <Link href="/" className="hover:text-primary transition-colors">Home</Link>
+              <ChevronRight className="w-3 h-3" />
+              <Link href="/solucoes" className="hover:text-primary transition-colors">Solucoes</Link>
+              <ChevronRight className="w-3 h-3" />
+              <span className="text-foreground">Migracao Legacy</span>
             </div>
           </div>
-        </div>
-      </section>
+        </section>
 
-      {/* Migration Stats */}
-      <section className="py-20 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-              Resultados Reais de Migração
-            </h2>
-            <p className="text-xl text-gray-600">
-              Impacto medido em sistemas migrados
-            </p>
-          </div>
-          
-          <AnimatedStats stats={migrationStats} duration={3000} />
-        </div>
-      </section>
-
-      {/* Migration Challenges */}
-      <section id="avaliar" className="py-20 bg-gray-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-              Problemas Comuns de Sistemas Legacy
-            </h2>
-            <p className="text-xl text-gray-600">
-              Identifique se seu sistema tem estes sinais de alerta
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {migrationChallenges.map((challenge, index) => (
-              <div key={index} className="glassmorphism-card hover-lift">
-                <div className="flex items-start space-x-4">
-                  <div className="text-4xl">{challenge.icon}</div>
-                  <div className="flex-1">
-                    <div className="flex items-center justify-between mb-3">
-                      <h3 className="text-xl font-bold text-red-600">
-                        {challenge.challenge}
-                      </h3>
-                      <span className={`px-2 py-1 text-xs rounded-full font-semibold ${
-                        challenge.urgency === 'Crítica' ? 'bg-red-100 text-red-700' :
-                        challenge.urgency === 'Alta' ? 'bg-orange-100 text-orange-700' :
-                        'bg-yellow-100 text-yellow-700'
-                      }`}>
-                        {challenge.urgency}
-                      </span>
-                    </div>
-                    <p className="text-gray-600 text-sm mb-3">{challenge.impact}</p>
-                    <div className="p-3 bg-green-50 rounded-lg">
-                      <h4 className="font-semibold text-green-700 mb-1">Nossa Solução:</h4>
-                      <p className="text-green-600 text-sm">{challenge.solution}</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Migration Approaches */}
-      <section className="py-20 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-              Estratégias de Migração
-            </h2>
-            <p className="text-xl text-gray-600">
-              Escolhemos a abordagem ideal para seu caso
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            {migrationApproaches.map((approach, index) => (
-              <div key={index} className="glassmorphism-card hover-lift">
-                <div className="text-center mb-6">
-                  <div className="text-4xl mb-4">{approach.icon}</div>
-                  <h3 className="text-2xl font-bold text-gray-900 mb-2">{approach.approach}</h3>
-                  <p className="text-gray-600">{approach.description}</p>
-                </div>
-
-                <div className="space-y-4 mb-6">
-                  <div className="grid grid-cols-3 gap-4 text-center">
-                    <div>
-                      <div className="text-sm text-gray-500">Timeline</div>
-                      <div className="font-semibold">{approach.timeline}</div>
-                    </div>
-                    <div>
-                      <div className="text-sm text-gray-500">Risco</div>
-                      <div className={`font-semibold ${
-                        approach.risk === 'Baixo' ? 'text-green-600' :
-                        approach.risk === 'Médio' ? 'text-yellow-600' : 'text-red-600'
-                      }`}>{approach.risk}</div>
-                    </div>
-                    <div>
-                      <div className="text-sm text-gray-500">Custo</div>
-                      <div className={`font-semibold ${
-                        approach.cost === 'Baixo' ? 'text-green-600' :
-                        approach.cost === 'Médio' ? 'text-yellow-600' : 'text-red-600'
-                      }`}>{approach.cost}</div>
-                    </div>
-                  </div>
-
-                  <div>
-                    <h4 className="font-semibold mb-2">Benefícios:</h4>
-                    <ul className="space-y-1">
-                      {approach.benefits.map((benefit, idx) => (
-                        <li key={idx} className="flex items-center text-sm text-gray-600">
-                          <span className="text-green-500 mr-2">✓</span>
-                          {benefit}
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-
-                  <div className="p-3 bg-blue-50 rounded-lg">
-                    <div className="text-sm text-blue-800 font-semibold mb-1">Ideal para:</div>
-                    <div className="text-sm text-blue-700">{approach.suitable}</div>
-                  </div>
-                </div>
-
-                <Link
-                  href={`/contato?service=migracao-${approach.approach.toLowerCase()}`}
-                  className="btn-primary w-full text-center"
-                >
-                  Avaliar {approach.approach}
-                </Link>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Technology Modernization */}
-      <section className="py-20 bg-gray-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-              Modernização Tecnológica
-            </h2>
-            <p className="text-xl text-gray-600">
-              Migramos de tecnologias antigas para soluções modernas
-            </p>
-          </div>
-
-          <div className="space-y-6">
-            {technologyStack.map((tech, index) => (
-              <div key={index} className="glassmorphism-card">
-                <div className="flex items-center justify-between mb-4">
-                  <div className="flex items-center space-x-4">
-                    <div className="text-center">
-                      <div className="text-red-600 font-semibold text-sm">DE:</div>
-                      <div className="font-bold text-gray-900">{tech.from}</div>
-                    </div>
-                    <div className="text-2xl text-blue-500">→</div>
-                    <div className="text-center">
-                      <div className="text-green-600 font-semibold text-sm">PARA:</div>
-                      <div className="font-bold text-gray-900">{tech.to}</div>
-                    </div>
-                  </div>
-                  <div className="text-right">
-                    <div className="text-sm text-gray-500">Modernização</div>
-                    <div className="text-lg font-bold text-blue-600">{tech.modernization}%</div>
-                  </div>
-                </div>
-                
-                <div className="w-full bg-gray-200 rounded-full h-3">
-                  <div
-                    className="h-3 bg-gradient-to-r from-blue-500 to-green-500 rounded-full transition-all duration-1000"
-                    style={{ width: `${tech.modernization}%` }}
-                  ></div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Migration Timeline */}
-      <section className="py-20 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-              Cronograma de Migração
-            </h2>
-            <p className="text-xl text-gray-600">
-              Processo estruturado para garantir sucesso
-            </p>
-          </div>
-
-          <InteractiveTimeline 
-            events={migrationTimeline}
-            direction="horizontal"
-          />
-        </div>
-      </section>
-
-      {/* Process Steps */}
-      <section className="py-20 bg-gray-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-              Processo de Migração
-            </h2>
-            <p className="text-xl text-gray-600">
-              Metodologia comprovada para migrações seguras
-            </p>
-          </div>
-
-          <ProcessSteps 
-            steps={migrationProcess}
-            interactive={true}
-          />
-        </div>
-      </section>
-
-      {/* Risk Mitigation */}
-      <section className="py-20 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-              Gestão de Riscos
-            </h2>
-            <p className="text-xl text-gray-600">
-              Como minimizamos os riscos de migração
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {riskMitigation.map((risk, index) => (
-              <div key={index} className="glassmorphism-card">
-                <div className="flex items-center justify-between mb-4">
-                  <h3 className="text-lg font-bold text-gray-900">{risk.risk}</h3>
-                  <div className="text-right">
-                    <div className="text-sm text-gray-500">Prevenção</div>
-                    <div className="text-lg font-bold text-green-600">{risk.prevention}</div>
-                  </div>
-                </div>
-                
-                <div className="grid grid-cols-2 gap-4 mb-4 text-sm">
-                  <div>
-                    <span className="text-gray-500">Probabilidade: </span>
-                    <span className={`font-semibold ${
-                      risk.probability.includes('Baixa') ? 'text-green-600' : 'text-yellow-600'
-                    }`}>{risk.probability}</span>
-                  </div>
-                  <div>
-                    <span className="text-gray-500">Impacto: </span>
-                    <span className={`font-semibold ${
-                      risk.impact === 'Crítico' ? 'text-red-600' :
-                      risk.impact === 'Alto' ? 'text-orange-600' : 'text-yellow-600'
-                    }`}>{risk.impact}</span>
-                  </div>
-                </div>
-
-                <div className="p-4 bg-green-50 rounded-lg">
-                  <h4 className="font-semibold text-green-700 mb-2">Mitigação:</h4>
-                  <p className="text-green-600 text-sm">{risk.mitigation}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Voice Search Questions */}
-      <VoiceSearchQuestions primaryKeyword={primaryKeyword} />
-
-      {/* Success Stories */}
-      <section id="casos" className="py-20 bg-gray-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-              Migrações de Sucesso
-            </h2>
-            <p className="text-xl text-gray-600">
-              Cases reais de modernização sem intercorrências
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            {successStories.map((story, index) => (
-              <div key={index} className="glassmorphism-card hover-lift">
-                <div className="mb-4">
-                  <span className="px-3 py-1 bg-orange-100 text-orange-700 text-sm rounded-full font-semibold">
-                    {story.duration}
-                  </span>
-                </div>
-                
-                <h3 className="text-xl font-bold text-gray-900 mb-4">{story.title}</h3>
-                
-                <div className="space-y-4 mb-6">
-                  <div>
-                    <h4 className="font-semibold text-red-600 mb-2">Desafio:</h4>
-                    <p className="text-sm text-gray-600">{story.challenge}</p>
-                  </div>
-                  
-                  <div>
-                    <h4 className="font-semibold text-blue-600 mb-2">Solução:</h4>
-                    <p className="text-sm text-gray-600">{story.solution}</p>
-                  </div>
-                  
-                  <div>
-                    <h4 className="font-semibold text-green-600 mb-2">Resultados:</h4>
-                    <ul className="space-y-1">
-                      {story.results.map((result, idx) => (
-                        <li key={idx} className="flex items-center text-sm text-gray-600">
-                          <span className="text-green-500 mr-2">✓</span>
-                          {result}
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-3 gap-4 pt-4 border-t border-gray-200">
-                  {Object.entries(story.metrics).map(([key, value], idx) => (
-                    <div key={idx} className="text-center">
-                      <div className="text-lg font-bold text-orange-600">{value}</div>
-                      <div className="text-xs text-gray-500 capitalize">{key.replace('_', ' ')}</div>
+        {/* Hero */}
+        <section className="py-16 lg:py-24">
+          <div className="container mx-auto px-4">
+            <div className="grid lg:grid-cols-2 gap-12 items-center">
+              <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
+                <h1 className="font-display text-4xl lg:text-5xl font-bold text-foreground mb-4">
+                  Migracao de <span className="gradient-text">Sistema Legacy</span>
+                </h1>
+                <p className="text-lg text-muted-foreground mb-8">
+                  Modernize sistemas antigos para tecnologias atuais. Processo seguro, zero downtime, dados preservados e performance 10x superior.
+                </p>
+                <div className="grid grid-cols-3 gap-4 mb-8">
+                  {heroStats.map((s) => (
+                    <div key={s.label} className="glass-card rounded-xl p-4 text-center">
+                      <div className="font-display text-2xl font-bold text-primary mb-1">{s.value}</div>
+                      <div className="text-xs text-muted-foreground">{s.label}</div>
                     </div>
                   ))}
                 </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Pricing */}
-      <section className="py-20 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-              Investimento em Modernização
-            </h2>
-            <p className="text-xl text-gray-600">
-              Opções para diferentes necessidades e orçamentos
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            {pricingTiers.map((tier, index) => (
-              <div key={index} className={`glassmorphism-card hover-lift ${tier.popular ? 'ring-2 ring-orange-500' : ''}`}>
-                {tier.popular && (
-                  <div className="absolute -top-4 left-1/2 transform -translate-x-1/2 bg-orange-500 text-white px-4 py-1 rounded-full text-sm font-semibold">
-                    Mais Escolhido
+                <div className="flex flex-col sm:flex-row gap-4">
+                  <Link href="/contato?service=migracao-legacy" className="inline-flex items-center justify-center gap-2 px-8 py-4 rounded-xl bg-primary text-primary-foreground font-semibold hover:opacity-90 transition-opacity">
+                    <Search className="w-4 h-4" /> Avaliar Meu Sistema
+                  </Link>
+                  <Link href="#cases" className="inline-flex items-center justify-center gap-2 px-8 py-4 rounded-xl border border-border text-foreground font-semibold hover:bg-secondary transition-colors">
+                    Ver Cases de Sucesso
+                  </Link>
+                </div>
+              </motion.div>
+              <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.2 }}>
+                <div className="glass-card rounded-2xl p-8">
+                  <h3 className="font-display text-xl font-semibold text-foreground mb-4">Sinais de que seu Sistema Precisa de Migracao:</h3>
+                  <div className="space-y-4">
+                    {[
+                      { icon: Zap, title: 'Lentidao Cronica', desc: 'Sistema trava, usuarios reclamam' },
+                      { icon: DollarSign, title: 'Manutencao Cara', desc: 'Dificil encontrar quem saiba manter' },
+                      { icon: Link2, title: 'Sem Integracoes', desc: 'Nao conecta com sistemas modernos' },
+                      { icon: Shield, title: 'Seguranca Falha', desc: 'Vulneravel a ataques modernos' },
+                    ].map((item) => (
+                      <div key={item.title} className="flex items-start gap-3">
+                        <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
+                          <item.icon className="w-5 h-5 text-primary" />
+                        </div>
+                        <div>
+                          <div className="font-semibold text-foreground">{item.title}</div>
+                          <div className="text-sm text-muted-foreground">{item.desc}</div>
+                        </div>
+                      </div>
+                    ))}
                   </div>
-                )}
-                
-                <div className="text-center mb-6">
-                  <h3 className="text-2xl font-bold text-gray-900 mb-2">{tier.name}</h3>
-                  <div className="text-2xl font-bold text-orange-600 mb-2">{tier.price}</div>
-                  <p className="text-gray-600 mb-2">{tier.description}</p>
-                  <div className="text-sm text-gray-500">Timeline: {tier.timeline}</div>
                 </div>
+              </motion.div>
+            </div>
+          </div>
+        </section>
 
-                <ul className="space-y-3 mb-8">
-                  {tier.features.map((feature, idx) => (
-                    <li key={idx} className="flex items-center text-sm text-gray-600">
-                      <span className="text-green-500 mr-3">✓</span>
-                      {feature}
-                    </li>
-                  ))}
-                </ul>
+        {/* Challenges */}
+        <section className="py-20 border-t border-border">
+          <div className="container mx-auto px-4">
+            <div className="text-center mb-12">
+              <h2 className="font-display text-3xl font-bold text-foreground mb-4">Problemas Comuns de <span className="gradient-text">Sistemas Legacy</span></h2>
+            </div>
+            <div className="grid sm:grid-cols-2 gap-6">
+              {migrationChallenges.map((c, i) => (
+                <motion.div key={c.challenge} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.1 }} className="glass-card rounded-2xl p-6 hover-lift">
+                  <div className="flex items-start gap-4">
+                    <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center flex-shrink-0">
+                      <c.icon className="w-6 h-6 text-primary" />
+                    </div>
+                    <div className="flex-1">
+                      <div className="flex items-center justify-between mb-2">
+                        <h3 className="font-display text-lg font-semibold text-foreground">{c.challenge}</h3>
+                        <span className="px-2 py-1 text-xs rounded-full font-semibold bg-primary/10 text-primary">{c.urgency}</span>
+                      </div>
+                      <p className="text-sm text-muted-foreground mb-3">{c.impact}</p>
+                      <div className="p-3 bg-primary/5 rounded-lg border border-primary/10">
+                        <p className="text-sm text-primary font-medium">Nossa Solucao: {c.solution}</p>
+                      </div>
+                    </div>
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+          </div>
+        </section>
 
-                <div className="text-center mb-6">
-                  <span className="px-4 py-2 bg-gray-100 text-gray-700 text-sm rounded-full font-semibold">
-                    {tier.suitable}
-                  </span>
-                </div>
+        {/* Migration Approaches */}
+        <section className="py-20 border-t border-border">
+          <div className="container mx-auto px-4">
+            <div className="text-center mb-12">
+              <h2 className="font-display text-3xl font-bold text-foreground mb-4">Estrategias de <span className="gradient-text">Migracao</span></h2>
+              <p className="text-muted-foreground">Escolhemos a abordagem ideal para seu caso</p>
+            </div>
+            <div className="grid lg:grid-cols-3 gap-8">
+              {migrationApproaches.map((a, i) => (
+                <motion.div key={a.approach} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.1 }} className="glass-card rounded-2xl p-8 hover-lift">
+                  <div className="text-center mb-6">
+                    <div className="w-14 h-14 rounded-xl bg-primary/10 flex items-center justify-center mx-auto mb-4">
+                      <a.icon className="w-7 h-7 text-primary" />
+                    </div>
+                    <h3 className="font-display text-xl font-semibold text-foreground mb-2">{a.approach}</h3>
+                    <p className="text-sm text-muted-foreground">{a.description}</p>
+                  </div>
+                  <div className="grid grid-cols-3 gap-4 text-center mb-4">
+                    <div>
+                      <div className="text-xs text-muted-foreground">Timeline</div>
+                      <div className="text-sm font-semibold text-foreground">{a.timeline}</div>
+                    </div>
+                    <div>
+                      <div className="text-xs text-muted-foreground">Risco</div>
+                      <div className="text-sm font-semibold text-primary">{a.risk}</div>
+                    </div>
+                    <div>
+                      <div className="text-xs text-muted-foreground">Custo</div>
+                      <div className="text-sm font-semibold text-primary">{a.cost}</div>
+                    </div>
+                  </div>
+                  <ul className="space-y-2 mb-4">
+                    {a.benefits.map((b) => (
+                      <li key={b} className="flex items-center gap-2 text-sm text-muted-foreground">
+                        <CheckCircle2 className="w-3.5 h-3.5 text-primary flex-shrink-0" />{b}
+                      </li>
+                    ))}
+                  </ul>
+                  <div className="p-3 bg-primary/5 rounded-lg text-center mb-4">
+                    <div className="text-xs text-muted-foreground mb-1">Ideal para:</div>
+                    <div className="text-sm text-primary font-medium">{a.suitable}</div>
+                  </div>
+                  <Link href={`/contato?service=migracao-${a.approach.toLowerCase()}`} className="block w-full text-center px-4 py-3 rounded-xl bg-primary text-primary-foreground font-semibold hover:opacity-90 transition-opacity text-sm">
+                    Avaliar {a.approach}
+                  </Link>
+                </motion.div>
+              ))}
+            </div>
+          </div>
+        </section>
 
-                <Link
-                  href={`/contato?service=migracao-legacy&plan=${tier.name.toLowerCase()}`}
-                  className={`btn-primary w-full text-center ${tier.popular ? 'bg-orange-600 hover:bg-orange-700' : ''}`}
-                >
-                  {tier.cta}
+        {/* Technology Modernization */}
+        <section className="py-20 border-t border-border">
+          <div className="container mx-auto px-4">
+            <div className="text-center mb-12">
+              <h2 className="font-display text-3xl font-bold text-foreground mb-4">Modernizacao <span className="gradient-text">Tecnologica</span></h2>
+              <p className="text-muted-foreground">Migramos de tecnologias antigas para solucoes modernas</p>
+            </div>
+            <div className="space-y-4 max-w-3xl mx-auto">
+              {technologyStack.map((tech, i) => (
+                <motion.div key={tech.from} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.1 }} className="glass-card rounded-xl p-6">
+                  <div className="flex items-center justify-between mb-3">
+                    <div className="flex items-center gap-3">
+                      <span className="text-sm font-semibold text-muted-foreground">{tech.from}</span>
+                      <ArrowRight className="w-4 h-4 text-primary" />
+                      <span className="text-sm font-semibold text-primary">{tech.to}</span>
+                    </div>
+                    <span className="text-sm font-bold text-primary">{tech.modernization}%</span>
+                  </div>
+                  <div className="w-full bg-secondary rounded-full h-2">
+                    <div className="h-2 bg-primary rounded-full transition-all duration-1000" style={{ width: `${tech.modernization}%` }}></div>
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* Risk Mitigation */}
+        <section className="py-20 border-t border-border">
+          <div className="container mx-auto px-4">
+            <div className="text-center mb-12">
+              <h2 className="font-display text-3xl font-bold text-foreground mb-4">Gestao de <span className="gradient-text">Riscos</span></h2>
+              <p className="text-muted-foreground">Como minimizamos os riscos de migracao</p>
+            </div>
+            <div className="grid sm:grid-cols-2 gap-6">
+              {riskMitigation.map((r, i) => (
+                <motion.div key={r.risk} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.1 }} className="glass-card rounded-2xl p-6">
+                  <div className="flex items-center justify-between mb-4">
+                    <h3 className="font-display text-lg font-semibold text-foreground">{r.risk}</h3>
+                    <div className="text-right">
+                      <div className="text-xs text-muted-foreground">Prevencao</div>
+                      <div className="font-display text-lg font-bold text-primary">{r.prevention}</div>
+                    </div>
+                  </div>
+                  <div className="p-3 bg-primary/5 rounded-lg">
+                    <p className="text-sm text-primary">{r.mitigation}</p>
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* Success Stories */}
+        <section id="cases" className="py-20 border-t border-border">
+          <div className="container mx-auto px-4">
+            <div className="text-center mb-12">
+              <h2 className="font-display text-3xl font-bold text-foreground mb-4">Migracoes de <span className="gradient-text">Sucesso</span></h2>
+            </div>
+            <div className="grid lg:grid-cols-2 gap-8">
+              {successStories.map((story, i) => (
+                <motion.div key={story.title} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.1 }} className="glass-card rounded-2xl p-8 hover-lift">
+                  <div className="mb-4">
+                    <span className="px-3 py-1 bg-primary/10 text-primary text-xs rounded-full font-semibold">{story.duration}</span>
+                  </div>
+                  <h3 className="font-display text-lg font-semibold text-foreground mb-4">{story.title}</h3>
+                  <div className="space-y-3 mb-6">
+                    <div>
+                      <h4 className="text-sm font-semibold text-foreground mb-1">Desafio:</h4>
+                      <p className="text-sm text-muted-foreground">{story.challenge}</p>
+                    </div>
+                    <div>
+                      <h4 className="text-sm font-semibold text-primary mb-1">Solucao:</h4>
+                      <p className="text-sm text-muted-foreground">{story.solution}</p>
+                    </div>
+                    <div>
+                      <h4 className="text-sm font-semibold text-foreground mb-1">Resultados:</h4>
+                      <ul className="space-y-1">
+                        {story.results.map((r) => (
+                          <li key={r} className="flex items-center gap-2 text-sm text-muted-foreground">
+                            <CheckCircle2 className="w-3.5 h-3.5 text-primary flex-shrink-0" />{r}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  </div>
+                  <div className="grid grid-cols-3 gap-4 pt-4 border-t border-border">
+                    {Object.entries(story.metrics).map(([key, value]) => (
+                      <div key={key} className="text-center">
+                        <div className="font-display text-lg font-bold text-primary">{value}</div>
+                        <div className="text-xs text-muted-foreground capitalize">{key.replace('_', ' ')}</div>
+                      </div>
+                    ))}
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* Pricing */}
+        <section className="py-20 border-t border-border">
+          <div className="container mx-auto px-4">
+            <div className="text-center mb-12">
+              <h2 className="font-display text-3xl font-bold text-foreground mb-4">Investimento em <span className="gradient-text">Modernizacao</span></h2>
+            </div>
+            <div className="grid lg:grid-cols-3 gap-8">
+              {pricingTiers.map((tier, i) => (
+                <motion.div key={tier.name} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.1 }} className={`glass-card rounded-2xl p-8 hover-lift relative ${tier.popular ? 'ring-2 ring-primary' : ''}`}>
+                  {tier.popular && (
+                    <div className="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-primary text-primary-foreground px-4 py-1 rounded-full text-xs font-semibold flex items-center gap-1">
+                      <Star className="w-3 h-3" /> Mais Escolhido
+                    </div>
+                  )}
+                  <div className="text-center mb-6">
+                    <h3 className="font-display text-xl font-semibold text-foreground mb-2">{tier.name}</h3>
+                    <div className="font-display text-2xl font-bold text-primary mb-2">{tier.price}</div>
+                    <p className="text-sm text-muted-foreground mb-1">{tier.description}</p>
+                    <p className="text-xs text-muted-foreground">Timeline: {tier.timeline}</p>
+                  </div>
+                  <ul className="space-y-3 mb-6">
+                    {tier.features.map((f) => (
+                      <li key={f} className="flex items-center gap-2 text-sm text-muted-foreground">
+                        <CheckCircle2 className="w-3.5 h-3.5 text-primary flex-shrink-0" />{f}
+                      </li>
+                    ))}
+                  </ul>
+                  <div className="text-center mb-6">
+                    <span className="px-4 py-2 bg-secondary text-foreground text-xs rounded-full font-semibold">{tier.suitable}</span>
+                  </div>
+                  <Link href={`/contato?service=migracao-legacy&plan=${tier.name.toLowerCase()}`} className="block w-full text-center px-4 py-3 rounded-xl bg-primary text-primary-foreground font-semibold hover:opacity-90 transition-opacity text-sm">
+                    {tier.cta}
+                  </Link>
+                </motion.div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* CTA */}
+        <section className="py-16">
+          <div className="container mx-auto px-4 text-center">
+            <div className="glass-card rounded-2xl p-10 max-w-2xl mx-auto">
+              <h2 className="font-display text-2xl font-bold text-foreground mb-4">Pronto para Modernizar seu Sistema Legacy?</h2>
+              <p className="text-muted-foreground mb-6">Avaliacao gratuita do seu sistema atual e proposta de migracao sem riscos.</p>
+              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                <Link href="/contato?service=migracao-legacy" className="inline-flex items-center justify-center gap-2 px-8 py-4 rounded-xl bg-primary text-primary-foreground font-semibold hover:opacity-90 transition-opacity">
+                  <Search className="w-4 h-4" /> Avaliacao Gratuita
+                </Link>
+                <Link href="https://wa.me/5547992474747?text=Ola! Preciso migrar um sistema legacy" target="_blank" className="inline-flex items-center justify-center gap-2 px-8 py-4 rounded-xl border border-border text-foreground font-semibold hover:bg-secondary transition-colors">
+                  <MessageCircle className="w-4 h-4" /> Falar com Especialista
                 </Link>
               </div>
-            ))}
+            </div>
           </div>
-        </div>
-      </section>
-
-      {/* CTA */}
-      <section className="py-20 bg-gradient-to-r from-red-600 to-orange-600 text-white">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-3xl md:text-4xl font-bold mb-6">
-            Pronto para Modernizar seu Sistema Legacy?
-          </h2>
-          <p className="text-xl mb-8 opacity-90">
-            Avaliação gratuita do seu sistema atual e proposta de migração sem riscos
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link
-              href="/contato?service=migracao-legacy"
-              className="btn-secondary bg-white text-red-600 hover:bg-gray-100 px-8 py-4 text-lg font-semibold"
-            >
-              🔍 Avaliação Gratuita
-            </Link>
-            <Link
-              href="https://wa.me/5511999999999?text=Olá! Preciso migrar um sistema legacy"
-              target="_blank"
-              className="btn-primary border-2 border-white bg-transparent hover:bg-white hover:text-red-600 px-8 py-4 text-lg font-semibold"
-            >
-              💬 Falar com Especialista
-            </Link>
-          </div>
-        </div>
-      </section>
-
-      {/* Structured Data */}
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify({
-            "@context": "https://schema.org",
-            "@type": "Service",
-            "name": "Migração de Sistema Legacy",
-            "description": "Migração segura de sistemas legados para tecnologias modernas com zero downtime",
-            "provider": {
-              "@type": "Organization",
-              "name": "InovaMente Labs",
-              "url": "https://www.inovamentelabs.com.br"
-            },
-            "areaServed": "Brasil",
-            "serviceType": "Modernização de Sistemas",
-            "offers": pricingTiers.map(tier => ({
-              "@type": "Offer",
-              "name": tier.name,
-              "description": tier.description,
-              "price": tier.price,
-              "priceCurrency": "BRL"
-            }))
-          })
-        }}
-      />
-    </>
+        </section>
+      </main>
+      <Footer />
+      <FloatingWhatsApp />
+    </div>
   );
 }

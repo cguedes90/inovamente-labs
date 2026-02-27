@@ -76,7 +76,7 @@ async function getClientsHandler(request: NextRequest) {
     prisma.client.count({ where })
   ]);
 
-  const formattedClients = clients.map(client => ({
+  const formattedClients = clients.map((client: any) => ({
     ...client,
     ticketCount: client._count.tickets,
     _count: undefined

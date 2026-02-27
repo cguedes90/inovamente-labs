@@ -3,7 +3,8 @@ import type { ReactElement } from 'react';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import Navbar from '@/components/Navbar';
-import WhatsAppButton from '@/components/WhatsAppButton';
+import Footer from '@/components/Footer';
+import FloatingWhatsApp from '@/components/FloatingWhatsApp';
 
 interface BlogPostProps {
   params: Promise<{
@@ -54,11 +55,7 @@ function buildBlocks(content: string) {
     blocks.push(
       <p
         key={`p-${keyIndex++}`}
-        style={{
-          fontSize: '1.1rem',
-          color: '#475569',
-          marginBottom: '24px'
-        }}
+        className="text-lg text-muted-foreground mb-6 leading-relaxed"
       >
         {paragraph.join(' ')}
       </p>
@@ -71,14 +68,10 @@ function buildBlocks(content: string) {
     blocks.push(
       <ul
         key={`ul-${keyIndex++}`}
-        style={{
-          paddingLeft: '20px',
-          marginBottom: '24px',
-          color: '#475569'
-        }}
+        className="pl-5 mb-6 text-muted-foreground space-y-2"
       >
         {list.map((item, index) => (
-          <li key={`li-${keyIndex++}-${index}`} style={{ marginBottom: '10px' }}>
+          <li key={`li-${keyIndex++}-${index}`} className="list-disc">
             {item}
           </li>
         ))}
@@ -101,13 +94,7 @@ function buildBlocks(content: string) {
       blocks.push(
         <h3
           key={`h3-${keyIndex++}`}
-          style={{
-            fontSize: '1.5rem',
-            fontWeight: '600',
-            color: '#0f172a',
-            marginTop: '32px',
-            marginBottom: '16px'
-          }}
+          className="font-display text-2xl font-semibold text-foreground mt-8 mb-4"
         >
           {trimmed.slice(4)}
         </h3>
@@ -121,13 +108,7 @@ function buildBlocks(content: string) {
       blocks.push(
         <h2
           key={`h2-${keyIndex++}`}
-          style={{
-            fontSize: '2rem',
-            fontWeight: '700',
-            color: '#0f172a',
-            marginTop: '40px',
-            marginBottom: '20px'
-          }}
+          className="font-display text-3xl font-bold text-foreground mt-10 mb-5"
         >
           {trimmed.slice(3)}
         </h2>
@@ -141,13 +122,7 @@ function buildBlocks(content: string) {
       blocks.push(
         <h1
           key={`h1-${keyIndex++}`}
-          style={{
-            fontSize: '2.4rem',
-            fontWeight: '800',
-            color: '#0f172a',
-            marginTop: '40px',
-            marginBottom: '20px'
-          }}
+          className="font-display text-4xl font-extrabold text-foreground mt-10 mb-5"
         >
           {trimmed.slice(2)}
         </h1>
@@ -230,185 +205,79 @@ export default async function BlogPost({ params }: BlogPostProps) {
   const showImage = heroImage.startsWith('http');
 
   return (
-    <div style={{
-      minHeight: '100vh',
-      background: 'linear-gradient(135deg, #f8fafc 0%, #ffffff 50%, #f1f5f9 100%)',
-      color: '#1e293b',
-      fontFamily: 'system-ui, -apple-system, sans-serif'
-    }}>
+    <div className="min-h-screen bg-background">
       <Navbar />
-      <WhatsAppButton />
+      <FloatingWhatsApp />
 
       {/* Article Hero */}
-      <section style={{
-        background: 'linear-gradient(135deg, #3b82f6, #8b5cf6)',
-        color: 'white',
-        padding: '80px 20px 60px',
-        textAlign: 'center'
-      }}>
-        <div style={{
-          maxWidth: '1200px',
-          margin: '0 auto'
-        }}>
-          <div style={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            gap: '12px',
-            marginBottom: '20px'
-          }}>
+      <section className="bg-primary pt-28 pb-16 px-4 text-center text-primary-foreground">
+        <div className="container mx-auto max-w-4xl">
+          <div className="flex items-center justify-center gap-3 mb-5">
             <Link
               href="/blog"
-              style={{
-                color: 'rgba(255, 255, 255, 0.8)',
-                textDecoration: 'none',
-                fontSize: '14px',
-                fontWeight: '500'
-              }}
+              className="text-primary-foreground/80 hover:text-primary-foreground text-sm font-medium transition-colors"
             >
-              &lt;- Voltar ao Blog
+              &larr; Voltar ao Blog
             </Link>
-            <span style={{
-              color: 'rgba(255, 255, 255, 0.5)'
-            }}>
-              •
-            </span>
-            <span style={{
-              background: 'rgba(255, 255, 255, 0.2)',
-              padding: '4px 12px',
-              borderRadius: '20px',
-              fontSize: '12px',
-              fontWeight: '600'
-            }}>
+            <span className="text-primary-foreground/50">&bull;</span>
+            <span className="bg-primary-foreground/20 px-3 py-1 rounded-full text-xs font-semibold">
               {post.category}
             </span>
           </div>
 
-          <h1 style={{
-            fontSize: '3rem',
-            fontWeight: '800',
-            marginBottom: '20px',
-            lineHeight: '1.2'
-          }}>
+          <h1 className="font-display text-3xl lg:text-5xl font-extrabold mb-5 leading-tight">
             {post.title}
           </h1>
 
-          <div style={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            gap: '20px',
-            fontSize: '14px',
-            opacity: '0.9'
-          }}>
+          <div className="flex items-center justify-center gap-5 text-sm text-primary-foreground/90">
             <span>Por {post.author}</span>
-            <span>•</span>
+            <span>&bull;</span>
             <span>{date}</span>
-            <span>•</span>
+            <span>&bull;</span>
             <span>{post.readTime} de leitura</span>
           </div>
         </div>
       </section>
 
       {/* Article Content */}
-      <main style={{
-        maxWidth: '800px',
-        margin: '0 auto',
-        padding: '60px 20px'
-      }}>
-        <article style={{
-          background: 'white',
-          padding: '60px',
-          borderRadius: '24px',
-          boxShadow: '0 20px 60px rgba(0, 0, 0, 0.1)',
-          border: '1px solid #e2e8f0'
-        }}>
-          <div style={{ marginBottom: '40px' }}>
+      <main className="container mx-auto max-w-3xl px-4 py-16">
+        <article className="glass-card rounded-3xl p-8 sm:p-12 lg:p-16">
+          <div className="mb-10">
             {showImage ? (
               <img
                 src={heroImage}
                 alt={post.title}
-                style={{
-                  width: '100%',
-                  maxHeight: '420px',
-                  objectFit: 'cover',
-                  borderRadius: '16px',
-                  marginBottom: '30px'
-                }}
+                className="w-full max-h-[420px] object-cover rounded-2xl mb-8"
               />
             ) : (
-              <div style={{
-                background: 'linear-gradient(135deg, #eef2ff, #e2e8f0)',
-                borderRadius: '16px',
-                padding: '40px',
-                textAlign: 'center',
-                fontSize: '3rem',
-                marginBottom: '30px'
-              }}>
+              <div className="bg-secondary rounded-2xl p-10 text-center text-5xl mb-8">
                 {heroImage}
               </div>
             )}
           </div>
 
-          <div style={{
-            fontSize: '1.1rem',
-            lineHeight: '1.8',
-            color: '#374151'
-          }}>
+          <div className="text-lg leading-relaxed text-foreground">
             {buildBlocks(post.content)}
           </div>
 
-          <div style={{
-            background: 'linear-gradient(135deg, #3b82f6, #8b5cf6)',
-            color: 'white',
-            padding: '30px',
-            borderRadius: '16px',
-            marginTop: '40px',
-            textAlign: 'center'
-          }}>
-            <h3 style={{
-              fontSize: '1.3rem',
-              fontWeight: '700',
-              marginBottom: '15px'
-            }}>
+          {/* CTA inside article */}
+          <div className="bg-primary text-primary-foreground rounded-2xl p-8 mt-10 text-center">
+            <h3 className="font-display text-xl font-bold mb-4">
               Pronto para acelerar sua transformacao digital?
             </h3>
-            <p style={{
-              marginBottom: '20px',
-              opacity: '0.9'
-            }}>
+            <p className="mb-5 text-primary-foreground/90">
               Fale com a InovaMente Labs e descubra como aplicar automacao e IA com foco em ROI.
             </p>
-            <div style={{
-              display: 'flex',
-              gap: '15px',
-              justifyContent: 'center',
-              flexWrap: 'wrap'
-            }}>
+            <div className="flex gap-4 justify-center flex-wrap">
               <Link
                 href="/contato"
-                style={{
-                  background: 'white',
-                  color: '#3b82f6',
-                  padding: '12px 24px',
-                  borderRadius: '8px',
-                  textDecoration: 'none',
-                  fontWeight: '600'
-                }}
+                className="inline-flex items-center justify-center px-6 py-3 rounded-xl bg-primary-foreground text-primary font-semibold hover:opacity-90 transition-opacity"
               >
                 Fale Conosco
               </Link>
               <Link
                 href="/solucoes"
-                style={{
-                  background: 'rgba(255, 255, 255, 0.2)',
-                  color: 'white',
-                  padding: '12px 24px',
-                  borderRadius: '8px',
-                  textDecoration: 'none',
-                  fontWeight: '600',
-                  border: '1px solid rgba(255, 255, 255, 0.4)'
-                }}
+                className="inline-flex items-center justify-center px-6 py-3 rounded-xl border border-primary-foreground/40 text-primary-foreground font-semibold hover:bg-primary-foreground/10 transition-colors"
               >
                 Ver Solucoes
               </Link>
@@ -416,6 +285,8 @@ export default async function BlogPost({ params }: BlogPostProps) {
           </div>
         </article>
       </main>
+
+      <Footer />
     </div>
   );
 }
